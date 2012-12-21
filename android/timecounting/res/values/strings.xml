@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">计数器，最后10秒将语音倒计时</string>
+    <string name="app_name">倒计时</string>
+    <string name="label_time_value">00</string>
+    <string name="label_start">开始</string>
+    <string name="label_stop">停止</string>
+    <string name="label_exit">退出</string>
+
+</resources>

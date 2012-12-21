@@ -1,0 +1,25 @@
+<resources>
+
+    <string name="app_name">下载测试</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">设置</string>
+    <string name="title_activity_main">主界面</string>
+    <string name="fileSize">文件大小:</string>
+    <string name="fileLength">0</string>
+    <string name="label_downloading">下        载:</string>
+    <string name="fileDownloading">0</string>
+    <string name="label_start">开始</string>
+    <string name="label_pause">暂停</string>
+    <string name="label_clear">清除</string>
+    <string name="label_reset">重置</string>
+    <string name="label_tmp_show_log">显示日志</string>
+    
+    <string name="connection_open"><Data><![CDATA[<font color="yellow">%1$s</font>]]></Data></string>
+    <string name="connection_connecting"><Data><![CDATA[<font color="yellow">%1$s</font>]]></Data></string>
+    <string name="connection_connected"><Data><![CDATA[<font color="green">%1$s</font>]]></Data></string>
+    <string name="rate_notice">下载缓存大小倍率</string>
+    <string name="label_rate">下载倍率:</string>
+    <string name="download_url">下载地址</string>
+    <string name="default_download_url">http://www.6188.com/upload_6188s/flashAll/20121129/1354150405qsHrfp.jpg</string>
+    
+</resources>

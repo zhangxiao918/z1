@@ -1,0 +1,85 @@
+package com.autohome.unit;
+
+import net.sf.json.JsonConfig;
+import net.sf.json.processors.JsonValueProcessor;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+/**
+ * @author wangqi
+ */
+public class DateJsonValueProcessor implements JsonValueProcessor {
+	/** * logger. */
+	private static Logger logger = LoggerFactory
+			.getLogger(DateJsonValueProcessor.class);
+
+	/** * 默认的日期转换格式. */
+	public static final String DEFAULT_DATE_PATTERN = "yyyy-MM-dd";
+
+	/** * 日期转换器. */
+	private DateFormat dateFormat;
+
+	/**
+	 * 构造方法.
+	 * 
+	 * @param datePattern
+	 *            日期格式
+	 */
+	public DateJsonValueProcessor(String datePattern) {
+		try {
+			dateFormat = new SimpleDateFormat(datePattern);
+		} catch (Exception ex) {
+			logger.info("", ex);
+			dateFormat = new SimpleDateFormat(DEFAULT_DATE_PATTERN);
+		}
+	}
+
+	/**
+	 * 转换数组
+	 * 
+	 * @param value
+	 *            Object
+	 * @param jsonConfig
+	 *            配置
+	 * @return Object
+	 */
+	public Object processArrayValue(Object value, JsonConfig jsonConfig) {
+		return process(value);
+	}
+
+	/**
+	 * 转换对象.
+	 * 
+	 * @param key
+	 *            String
+	 * @param value
+	 *            Object
+	 * @param jsonConfig
+	 *            配置
+	 * @return Object
+	 */
+	public Object processObjectValue(String key, Object value,
+			JsonConfig jsonConfig) {
+		return process(value);
+	}
+
+	/**
+	 * 格式化日期.
+	 * 
+	 * @param value
+	 *            Object
+	 * @return Object
+	 */
+	private Object process(Object value) {
+		try {
+			return dateFormat.format((Date) value);
+		} catch (Exception ex) {
+			return null;
+		}
+	}
+}

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">详细内容:</string>
+    <string name="app_name">ShortCut</string>
+    <string name="detail"></string>
+    <string name="title">顶部标题</string>
+
+</resources>

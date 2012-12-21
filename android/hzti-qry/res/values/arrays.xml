@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+
+    <!-- 车辆类型 -->
+    <string-array name="select_car_type">
+        <item>小型汽车</item>
+        <item>大型汽车</item>
+        <item>使馆汽车</item>
+        <item>领馆汽车</item>
+        <item>境外汽车</item>
+        <item>外籍汽车</item>
+        <item>普通摩托车</item>
+        <item>轻便摩托车</item>
+        <item>使馆摩托车</item>
+        <item>领馆摩托车</item>
+        <item>境外摩托车</item>
+        <item>外籍摩托车</item>
+        <item>低速车</item>
+        <item>拖拉机</item>
+        <item>挂车</item>
+        <item>教练汽车</item>
+        <item>教练摩托车</item>
+        <item>试验汽车</item>
+        <item>试验摩托车</item>
+        <item>临时入境汽车</item>
+        <item>临时入境摩托车</item>
+        <item>临时行驶车</item>
+        <item>警用汽车</item>
+        <item>警用摩托</item>
+    </string-array>
+
+</resources>

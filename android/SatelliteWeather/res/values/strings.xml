@@ -1,0 +1,16 @@
+<resources>
+
+    <string name="app_name">天气卫星云图</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_main">卫星云图</string>
+    <string name="label_start">开始</string>
+    <string name="label_update">更新</string>
+    <string name="label_play">播放</string>
+    <string name="label_stop">停止</string>
+    <string name="label_forward">跳转</string>
+    <string name="label_tmp_show_log"></string>
+    <string name="label_clear_console">清屏</string>
+    <string name="label_choose_date">选择日期:</string>
+    
+</resources>

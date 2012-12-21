@@ -1,0 +1,104 @@
+PCPOPHtmlParser.java
+
+	/**
+	 * 获取文章作者，发布时间等数据
+	 *
+	 */
+	static void processAuthor(int webId) throws Exception{
+		List<ArticleDoc> list = articleDocDao.findDoc(webId, 1);
+		for(ArticleDoc bean : list){
+			
+			if(!bean.getUrl().startsWith("http://www.pcpop.com/doc/")){
+				continue;
+			}
+			//更新文章的作者和发布时间
+			try{
+				String author = author(bean.getUrl());
+				if(null == author){
+					author = author2(bean.getUrl());
+				}
+				String tmp1 = author.substring(author.lastIndexOf("作者")+3,author.lastIndexOf("编辑")-1);
+				String tmp2 = author.substring(0,author.indexOf(":")-2);
+				if(null == tmp1 || null ==  tmp2){
+					break;
+				}
+				bean.setAuthor(tmp1);
+				bean.setPublishTime(tmp2);
+				bean.setStatus(2);
+				if(!articleDocDao.update(bean)){
+					logger.error("更新作者失败:"+bean.getUrl());
+				}else{
+					logger.debug("["+bean.getId()+"]更新成功:"+bean.getUrl());
+				}
+			}catch(java.io.FileNotFoundException e){
+				bean.setStatus(10);
+				if(!articleDocDao.update(bean)){
+					logger.error("更新作者失败:"+bean.getUrl());
+				}else{
+					logger.error("["+bean.getId()+"]更新记录状态为10[文件或地址查找找不到]:"+bean.getUrl());
+				}
+				continue;
+			}catch(org.htmlparser.util.ParserException e){
+				bean.setStatus(10);
+				if(!articleDocDao.update(bean)){
+					logger.error("更新作者失败:"+bean.getUrl());
+				}else{
+					logger.error("["+bean.getId()+"]更新记录状态为10[URL解析失败]:"+bean.getUrl());
+				}
+				continue;
+			}catch(Exception e){
+				bean.setStatus(11);
+				bean.setContent(e.getMessage());
+//				ResourceQueneUpdate.getInstance().setElement(bean);
+				if(!articleDocDao.update(bean)){
+					logger.error("更新作者和文章发布时间失败:"+bean.getUrl());
+				}else{
+					logger.error("["+bean.getId()+"]更新记录状态为11[其他异常情况]:"+bean.getUrl());
+				}
+				logger.error(" > Error:"+bean.getUrl());
+				continue;
+			}
+		}
+		
+	}
+	
+	/**
+	 * 
+	 * @param url
+	 * @return
+	 * @throws Exception
+	 */
+	static String author2(String url) throws Exception{
+		Parser parser = new Parser();
+		parser.setURL(url);
+		parser.setEncoding("GB2312");
+
+		NodeFilter fileter = new NodeClassFilter(Div.class);
+		NodeList list = parser.extractAllNodesThatMatch(fileter).extractAllNodesThatMatch(
+				new HasAttributeFilter("class", "otb14"));
+		String author = null;
+		if (list != null && list.size() > 0) {
+			Div div = (Div)list.elementAt(0);
+			String tmp = div.getStringText();
+			author = tmp;
+		}
+		
+		if(null == author){
+//			logger.debug("重新解析作者栏");
+			parser = new Parser();
+			parser.setURL(url);
+			parser.setEncoding("GB2312");
+			
+			NodeFilter fileter1 = new NodeClassFilter(Div.class);
+			NodeList list1 = parser.extractAllNodesThatMatch(fileter1).extractAllNodesThatMatch(
+					new HasAttributeFilter("class", "pop_2_1_2"));
+			if(null != list1 && list1.size() > 0){
+				Div div = (Div)list1.elementAt(1);
+				String tmp = div.getStringText();
+				author = tmp.substring(tmp.indexOf("</a>")+4);
+				logger.debug("author:"+author);
+			}
+		}
+		return author;
+	}
+	

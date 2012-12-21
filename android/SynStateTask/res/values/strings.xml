@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="app_name">同步状态机</string>
+    <string name="hello_world">状态机演示</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_main">同步状态机</string>
+    <string name="lanuncher">正在启动</string>
+
+</resources>

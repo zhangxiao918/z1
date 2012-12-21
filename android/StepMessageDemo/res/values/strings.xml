@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">StepMessageDemo</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="step_start">开始</string>
+    <string name="step_one">第一步</string>
+    <string name="step_two">第二步</string>
+    <string name="step_three">第三步</string>
+    <string name="step_four">第四步</string>
+    <string name="step_end">结束</string>
+</resources>

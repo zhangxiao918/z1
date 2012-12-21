@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/car_license_type"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+        	        
+	    <Spinner
+	        android:id="@+id/spinner1"
+	        android:prompt="@+string/tip_spinner"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content" >
+	    </Spinner>
+
+    </LinearLayout>
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/car_license_num"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <EditText
+        android:id="@+id/e_car_license_num"
+        android:inputType="text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:hint="@string/notice_car_num" 
+        android:textColorHint="#238745" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/car_id"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <EditText
+        android:id="@+id/e_car_id"
+        android:inputType="number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:hint="@string/notice_car_id"
+        android:textColorHint="#238745" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:text="@string/check_code"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+        
+        <ImageView
+            android:id="@+id/checkCodeView"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:paddingBottom="5dp"
+            android:contentDescription="@string/check_code"/>
+
+
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/e_check_code"
+        android:inputType="text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:hint="@string/notice_check_code"
+        android:textColorHint="#238745"/>
+
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/btn_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_ok" />
+
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_cancel" />
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,13 @@
+<resources>
+
+    <string name="app_name">AsyncTask</string>
+    <string name="hello_world">Hello!</string>
+    <string name="hi_blog">移动网络下载速度测试</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_main">异步下载</string>
+    
+	<string name="show_progress">显示当前进度</string>
+    
+	<string name="download">开始下载</string>
+
+</resources>

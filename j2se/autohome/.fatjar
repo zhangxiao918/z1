@@ -1,0 +1,14 @@
+#Fat Jar Configuration File
+#Wed Oct 31 09:23:51 CST 2012
+onejar.license.required=true
+manifest.classpath=
+manifest.removesigners=true
+onejar.checkbox=false
+jarname=autohome.jar
+manifest.mergeall=true
+manifest.mainclass=com.autohome.C
+manifest.file=<createnew>
+jarname.isextern=false
+onejar.expand=
+excludes=
+includes=

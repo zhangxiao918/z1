@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="white">#FFFFFF</color>
+	<color name="black">#FF000000</color>
+    <color name="blue">#FFCCDDFF</color>
+    <color name="grey">#FF58616D</color>
+    <color name="red">#FFFF0000</color>
+	<color name="transparent">#00000000</color>
+	<color name="halftransparent">#80000000</color>
+	<color name="emphasize_color">#F23A1C</color>
+	
+	<color name="master_color">#FF393939</color>
+	<color name="slave_color">#FF7B7B7B</color>
+	<color name="weaker_color">#FFBCBCBC</color>
+	<color name="linker_color">#FF3B52DF</color>
+	<color name="stronger_color">#FFF23A1C</color>
+	
+	
+	
+	
+    <!-- 消息列表分割线 -->
+    <color name="message_list_separate">#D9D9D9</color>
+	<!-- 消息列表中昵称文字颜色-->
+	<color name="message_list_item_nickname">#2C2C2C</color>
+	<!-- 消息列表中最后一条消息颜色-->
+	<color name="message_list_item_lastmsg">#727272</color>
+	<!-- 消息列表中更新时间颜色-->
+	<color name="message_list_item_updatetime">#727272</color>
+	<!-- 消息列表item背景色 -->
+	<color name="message_list_item_focus">#e0e1ed</color>
+	<color name="message_list_item_normal">#f6f6f6</color>
+	
+	<!--聊天界面时间字体颜色 -->
+	<color name="chat_time">#7b7b7b</color>
+	<!--聊天界面表情输入背景颜色  -->
+	<color name="smiley_input_bg">#ff404040</color>
+	<!-- 推荐好友消息分隔 -->
+	<color name="chat_frd_separate">#92BB3B</color>
+    <!-- 联系人列表 -->
+    <color name="contacts_list_separate_below">#F9F9F9</color>
+    
+    <color name="black_75_transparent">#c0000000</color>
+    <!-- 编辑联系人Hint color -->
+    <color name="contact_edit_hint_color">#BCBCBC</color>
+    
+    <!-- 短语列表 -->
+    <color name="phrase_list_item_bg">#F5F5F5</color>
+    
+    <color name="forget_password">#3b52df</color>
+    <color name="forget_password_bg">#a5a5a5</color>
+    
+    <!-- 搜索键盘分割线上/右 -->    <color name="search_input_ur">#353537</color>    <!-- 搜索键盘分割线下/左 -->
+    <color name="search_input_dl">#717278</color></resources>
