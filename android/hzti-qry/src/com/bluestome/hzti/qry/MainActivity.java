@@ -1,5 +1,14 @@
 package com.bluestome.hzti.qry;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -19,15 +28,6 @@ import android.widget.Toast;
 
 import com.bluestome.hzti.qry.common.Constants;
 import com.bluestome.hzti.qry.net.QueryTools;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 public class MainActivity extends Activity implements OnClickListener {
 
@@ -192,6 +192,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	// }
 
 	void loadImage2(final String site, final int id) {
+		System.out.println("\tzhang:loadImage2:");
 		new Thread(new Runnable() {
 
 			@Override
@@ -203,32 +204,24 @@ public class MainActivity extends Activity implements OnClickListener {
 				try {
 					url = new URL(site);
 					connection = (HttpURLConnection) url.openConnection();
+					connection.addRequestProperty("Accept", "*/*");
 					connection.addRequestProperty("Accept-Charset",
 							"GBK,utf-8;q=0.7,*;q=0.3");
 					connection.addRequestProperty("Accept-Encoding",
 							"gzip,deflate,sdch");
 					connection.addRequestProperty("Accept-Language",
 							"zh-CN,zh;q=0.8");
+					connection.addRequestProperty("Cache-Control", "max-age=0");
 					connection.addRequestProperty("Connection", "keep-alive");
-					connection.addRequestProperty("Origin",
-							"http://www.hzti.com");
-					connection.addRequestProperty("X-MicrosoftAjax",
-							"Delta=true");
-					connection.addRequestProperty("Accept", "*/*");
-					connection.addRequestProperty("Referer", Constants.URL); // ?type=2&node=249
-					connection.addRequestProperty("Cookie", sb.toString());
-					connection.addRequestProperty("Cache-Control", "no-cache");
+					if (null != sb)
+						connection.addRequestProperty("Cookie", sb.toString());
 					connection
 							.addRequestProperty(
 									"User-Agent",
 									"Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.63 Safari/535.7");
-					connection.addRequestProperty("Content-Type",
-							"application/x-www-form-urlencoded; charset=UTF-8");
-					connection.setReadTimeout(10 * 1000);
-					connection.setConnectTimeout(15 * 1000);
-					connection.setRequestMethod("POST");
-					connection.setDoOutput(true);
-					connection.setDoInput(true);
+					connection.setReadTimeout(15 * 1000);
+					connection.setConnectTimeout(10 * 1000);
+					connection.setRequestMethod("GET");
 					connection.connect();
 
 					if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
@@ -242,6 +235,7 @@ public class MainActivity extends Activity implements OnClickListener {
 						byte[] body = baos.toByteArray();
 						Bitmap bitMap = BitmapFactory.decodeByteArray(body, 0,
 								body.length);
+						System.out.println("\tzhang:图片大小:" + body.length);
 						Message message = handler2.obtainMessage();
 						message.arg1 = id;
 						message.obj = bitMap;
@@ -274,8 +268,26 @@ public class MainActivity extends Activity implements OnClickListener {
 					.addRequestProperty(
 							"User-Agent",
 							"Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.89 Safari/537.1");
+			connection.setRequestMethod("GET");
 			connection.connect();
 			if (HttpURLConnection.HTTP_OK == connection.getResponseCode()) {
+				try {
+					InputStream is = connection.getInputStream();
+					byte[] buffer = new byte[2 * 1024];
+					int c;
+					ByteArrayOutputStream baos = new ByteArrayOutputStream();
+					while ((c = is.read(buffer)) != -1) {
+						baos.write(buffer, 0, c);
+						baos.flush();
+					}
+					baos.close();
+					byte[] body = baos.toByteArray();
+					if (null != body && body.length > 0) {
+						QueryTools.setCONTENT_BODY(body);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				// 服务端响应成功
 				Map<String, List<String>> map = connection.getHeaderFields();
 				if (null == sb) {
@@ -313,9 +325,9 @@ public class MainActivity extends Activity implements OnClickListener {
 				}
 			}
 		} catch (IOException e) {
-
+			e.printStackTrace();
 		} catch (Exception e) {
-
+			e.printStackTrace();
 		} finally {
 			if (null != connection)
 				connection.disconnect();

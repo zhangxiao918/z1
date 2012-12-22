@@ -1,6 +1,13 @@
 package com.bluestome.hzti.qry.net;
 
-import com.bluestome.hzti.qry.common.Constants;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.HashMap;
 
 import junit.framework.Assert;
 
@@ -11,18 +18,15 @@ import org.htmlparser.filters.NodeClassFilter;
 import org.htmlparser.tags.InputTag;
 import org.htmlparser.util.NodeList;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.util.HashMap;
+import com.bluestome.hzti.qry.common.Constants;
 
 public class QueryTools {
 
 	static byte[] CONTENT_BODY = null;
+
+	public static void setCONTENT_BODY(byte[] cONTENT_BODY) {
+		CONTENT_BODY = cONTENT_BODY;
+	}
 
 	/**
 	 * 初始化数据获取网站正文
@@ -196,7 +200,10 @@ public class QueryTools {
 	 */
 	public static void doQuery(String cookie, String reffer, String carType,
 			String carNum, String carId, String checkCode) {
-		init(cookie);
+		if (null == CONTENT_BODY) {
+			System.out.println("CONTENT_BODY is null");
+			return;
+		}
 		HashMap<String, String> params = queryHTML(CONTENT_BODY);
 		URL url = null;
 		HttpURLConnection connection = null;
@@ -228,12 +235,14 @@ public class QueryTools {
 			sb.append("&");
 			sb.append("__EVENTARGUMENT=");
 			sb.append("&");
-			sb.append("__VIEWSTATE="
-					+ URLEncoder.encode(params.get("__VIEWSTATE"), "UTF-8"));
+			String __VIEWSTATE = params.get("__VIEWSTATE");
+			System.out.println("\tzhang:__VIEWSTATE_1:" + __VIEWSTATE.length());
+			System.out.println("\tzhang:__VIEWSTATE_2:" + __VIEWSTATE.length());
+			sb.append("__VIEWSTATE=" + __VIEWSTATE);
 			sb.append("&");
-			sb.append("__EVENTVALIDATION="
-					+ URLEncoder.encode(params.get("__EVENTVALIDATION"),
-							"UTF-8"));
+			String __EVENTVALIDATION = URLEncoder.encode(
+					params.get("__EVENTVALIDATION"), "UTF-8");
+			sb.append("__EVENTVALIDATION=" + __EVENTVALIDATION);
 			sb.append("&");
 			sb.append("__ASYNCPOST=true");
 			sb.append("&");
@@ -271,7 +280,7 @@ public class QueryTools {
 			connection.setRequestMethod("POST");
 			connection.setDoOutput(true);
 			connection.setDoInput(true);
-			connection.setChunkedStreamingMode(5);
+			// connection.setChunkedStreamingMode(5);
 			connection.connect();
 
 			out = connection.getOutputStream();

@@ -19,6 +19,7 @@ tmp/
 !*.properties
 *.log
 *.log.*
+*-log.txt
 
 # External tool builders
 .externalToolBuilders/

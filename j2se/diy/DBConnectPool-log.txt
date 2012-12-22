@@ -160,3 +160,28 @@ Fri Dec 21 18:50:45 CST 2012: 连接池zeroDay创建一个新的连接
 Fri Dec 21 18:50:45 CST 2012: 连接池zeroDay创建一个新的连接
 Fri Dec 21 18:50:45 CST 2012: 连接池zeroDay创建一个新的连接
 Fri Dec 21 18:51:05 CST 2012: 撤销JDBC驱动程序 org.gjt.mm.mysql.Driver的注册
+Sat Dec 22 18:04:18 CST 2012: 成功注册JDBC驱动程序org.gjt.mm.mysql.Driver
+Sat Dec 22 18:04:18 CST 2012: 成功创建连接池zeroDay
+Sat Dec 22 18:04:18 CST 2012: 连接池zeroDay创建一个新的连接
+Sat Dec 22 18:04:18 CST 2012: 连接池zeroDay创建一个新的连接
+Sat Dec 22 18:04:18 CST 2012: 连接池zeroDay创建一个新的连接
+Sat Dec 22 18:04:18 CST 2012: 连接池zeroDay创建一个新的连接
+Sat Dec 22 18:04:20 CST 2012: 撤销JDBC驱动程序 org.gjt.mm.mysql.Driver的注册
+Sat Dec 22 18:04:25 CST 2012: 成功注册JDBC驱动程序org.gjt.mm.mysql.Driver
+Sat Dec 22 18:04:25 CST 2012: 成功创建连接池zeroDay
+Sat Dec 22 18:04:25 CST 2012: 连接池zeroDay创建一个新的连接
+Sat Dec 22 18:04:25 CST 2012: 连接池zeroDay创建一个新的连接
+Sat Dec 22 18:04:36 CST 2012: 成功注册JDBC驱动程序org.gjt.mm.mysql.Driver
+Sat Dec 22 18:04:36 CST 2012: 成功创建连接池zeroDay
+Sat Dec 22 18:04:36 CST 2012: 连接池zeroDay创建一个新的连接
+Sat Dec 22 18:04:36 CST 2012: 连接池zeroDay创建一个新的连接
+Sat Dec 22 18:04:36 CST 2012: 连接池zeroDay创建一个新的连接
+Sat Dec 22 18:04:36 CST 2012: 连接池zeroDay创建一个新的连接
+Sat Dec 22 18:04:52 CST 2012: 成功注册JDBC驱动程序org.gjt.mm.mysql.Driver
+Sat Dec 22 18:04:52 CST 2012: 成功创建连接池zeroDay
+Sat Dec 22 18:04:52 CST 2012: 连接池zeroDay创建一个新的连接
+Sat Dec 22 18:04:52 CST 2012: 连接池zeroDay创建一个新的连接
+Sat Dec 22 18:04:52 CST 2012: 连接池zeroDay创建一个新的连接
+Sat Dec 22 18:04:52 CST 2012: 连接池zeroDay创建一个新的连接
+Sat Dec 22 18:04:56 CST 2012: 撤销JDBC驱动程序 org.gjt.mm.mysql.Driver的注册
+Sat Dec 22 18:08:01 CST 2012: 撤销JDBC驱动程序 org.gjt.mm.mysql.Driver的注册
