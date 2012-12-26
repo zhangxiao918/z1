@@ -15,7 +15,6 @@ import org.bluestome.satelliteweather.MainActivity;
 import org.bluestome.satelliteweather.MainApp;
 import org.bluestome.satelliteweather.R;
 import org.bluestome.satelliteweather.common.Constants;
-import org.bluestome.satelliteweather.utils.HttpClientUtils;
 import org.htmlparser.NodeFilter;
 import org.htmlparser.Parser;
 import org.htmlparser.filters.HasAttributeFilter;
@@ -30,6 +29,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
+
+import com.bluestome.android.utils.HttpClientUtils;
 
 /**
  * 简单卫星云图业务类
@@ -181,10 +182,9 @@ public class SatelliteWeatherSimpleBiz {
 	 * 从文件名中分析出时间信息
 	 */
 	private String analysisURL2(String name) {
-		String date = org.bluestome.satelliteweather.utils.DateUtils
-				.formatDate(
-						new Date(),
-						org.bluestome.satelliteweather.utils.DateUtils.DEFAULT_PATTERN);
+		String date = com.bluestome.android.utils.DateUtils.formatDate(
+				new Date(),
+				com.bluestome.android.utils.DateUtils.DEFAULT_PATTERN);
 		if (null != name && name.length() > 0 && !name.equals("")) {
 			String[] tmps = name.substring(0, name.lastIndexOf(".")).split("_");
 			if (tmps.length > 8) {

@@ -3,7 +3,6 @@ package org.bluestome.satelliteweather.services;
 import org.bluestome.satelliteweather.MainApp;
 import org.bluestome.satelliteweather.biz.SatelliteWeatherSimpleBiz;
 import org.bluestome.satelliteweather.common.Constants;
-import org.bluestome.satelliteweather.utils.HttpClientUtils;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -16,6 +15,8 @@ import android.os.IBinder;
 import android.os.SystemClock;
 import android.text.format.DateUtils;
 import android.util.Log;
+
+import com.bluestome.android.utils.HttpClientUtils;
 
 /**
  * 后台定时更新列表
@@ -138,7 +139,7 @@ public class UpdateService extends Service {
 							&& !lastModifyTime.equals(MainApp.i()
 									.getLastModifyTime())) {
 						biz.notifyNS("服务端有最新数据,"
-								+ org.bluestome.satelliteweather.utils.DateUtils
+								+ com.bluestome.android.utils.DateUtils
 										.getNow());
 						biz.catalog(lastModifyTime);
 					}

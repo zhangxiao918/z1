@@ -18,9 +18,6 @@ import org.bluestome.satelliteweather.common.Constants;
 import org.bluestome.satelliteweather.db.DaoFactory;
 import org.bluestome.satelliteweather.db.dao.FY2DAO;
 import org.bluestome.satelliteweather.services.UpdateService;
-import org.bluestome.satelliteweather.utils.DateUtils;
-import org.bluestome.satelliteweather.utils.FileUtils;
-import org.bluestome.satelliteweather.utils.HttpClientUtils;
 import org.htmlparser.NodeFilter;
 import org.htmlparser.Parser;
 import org.htmlparser.filters.HasAttributeFilter;
@@ -54,6 +51,10 @@ import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.bluestome.android.utils.DateUtils;
+import com.bluestome.android.utils.FileUtils;
+import com.bluestome.android.utils.HttpClientUtils;
 
 public class MainActivity extends Activity implements OnClickListener {
 

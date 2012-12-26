@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.bluestome.satelliteweather.utils;
+package com.bluestome.android.utils;
 
 import java.text.DateFormat;
 import java.text.DateFormatSymbols;
@@ -13,7 +13,9 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 
 /**
- * @author wangqi
+ * 日期工具类
+ * 
+ * @author bluestome
  * 
  */
 public class DateUtils {
@@ -50,7 +52,7 @@ public class DateUtils {
 	public static final String FULL_STANDARD_PATTERN = "yyyyMMdd HH:mm:ss";
 
 	public static final String FULL_STANDARD_PATTERN2 = "yyyy-MM-dd HH:mm:ss";
-	
+
 	/**
 	 * 返回中文格式的当前日期
 	 * 
@@ -115,26 +117,25 @@ public class DateUtils {
 
 	/*
 	 * 查看前后时间是否在一定的时间范围内
-	 * 
-	 * */
-	
+	 */
+
 	public static boolean isInTimePeriod(Date date1, Date date2, int sec) {
-		if(date1==null||date2==null){
+		if (date1 == null || date2 == null) {
 			return false;
 		}
-		long seconds = (date2.getTime() - date1.getTime())/ 1000;
+		long seconds = (date2.getTime() - date1.getTime()) / 1000;
 		long date = seconds / (24 * 60 * 60); // 相差的天数
 		long hour = (seconds - date * 24 * 60 * 60) / (60 * 60);// 相差的小时数
 		long minut = (seconds - date * 24 * 60 * 60 - hour * 60 * 60) / (60);// 相差的分钟数
-		long second = (seconds - date * 24 * 60 * 60 - hour * 60 * 60 - minut * 60) + minut*60;// 相差总的秒数
-		if(second>sec){
+		long second = (seconds - date * 24 * 60 * 60 - hour * 60 * 60 - minut * 60)
+				+ minut * 60;// 相差总的秒数
+		if (second > sec) {
 			return false;
-		}
-		else{
+		} else {
 			return true;
 		}
 	}
-	
+
 	/**
 	 * Format date as given date format.
 	 * 
@@ -405,18 +406,20 @@ public class DateUtils {
 	}
 
 	public static Date convertStringToDate(String dateString) {
-		 Locale locale=new Locale("en");
-		 SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy",DateFormatSymbols.getInstance(locale));
-		 Date result = null;
-		 try {
-			 result= sdf.parse(dateString);
+		Locale locale = new Locale("en");
+		SimpleDateFormat sdf = new SimpleDateFormat(
+				"EEE MMM dd HH:mm:ss zzz yyyy",
+				DateFormatSymbols.getInstance(locale));
+		Date result = null;
+		try {
+			result = sdf.parse(dateString);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return result;
 	}
-	
+
 	public static void main(String[] args) {
 		/*
 		 * System.out.println(DateUtils.getFirstOfMonth(DateUtils.addMonths(
@@ -424,20 +427,25 @@ public class DateUtils {
 		 * System.out.println(DateUtils.getEndOfMonth(DateUtils.currentDate()));
 		 * System.out.println("now:" + DateUtils.now());
 		 */
-/*		System.out.println("previous monday:" + DateUtils.getPreviousMonday());
-		System.out.println("current monday:" + DateUtils.getCurrentMonday());
-		System.out.println("monday before 4 weeks:"
-				+ DateUtils.getMondayBefore4Week());*/
+		/*
+		 * System.out.println("previous monday:" +
+		 * DateUtils.getPreviousMonday()); System.out.println("current monday:"
+		 * + DateUtils.getCurrentMonday());
+		 * System.out.println("monday before 4 weeks:" +
+		 * DateUtils.getMondayBefore4Week());
+		 */
 
-		String dateString =  new Date().toString();
-		 Locale locale=new Locale("en");
-		 SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy",DateFormatSymbols.getInstance(locale));
+		String dateString = new Date().toString();
+		Locale locale = new Locale("en");
+		SimpleDateFormat sdf = new SimpleDateFormat(
+				"EEE MMM dd HH:mm:ss zzz yyyy",
+				DateFormatSymbols.getInstance(locale));
 
 		System.out.println(dateString);
 		Date date;
 		try {
 			date = sdf.parse(dateString);
-			
+
 			System.out.println(date);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
@@ -534,14 +542,15 @@ public class DateUtils {
 		return (cal2.get(Calendar.YEAR) - cal1.get(Calendar.YEAR)) * 12
 				+ (cal2.get(Calendar.MONTH) - cal1.get(Calendar.MONTH));
 	}
-	
+
 	/**
 	 * 根据时间解析，并且得到一个时间对象
+	 * 
 	 * @param value
 	 * @return
 	 */
 	public static Date parserDate(String value) {
-		if(null == value || "".equals(value)){
+		if (null == value || "".equals(value)) {
 			return new Date();
 		}
 		Date clientIfModifiedSince = new Date();
@@ -555,5 +564,5 @@ public class DateUtils {
 		}
 		return clientIfModifiedSince;
 	}
-	
+
 }

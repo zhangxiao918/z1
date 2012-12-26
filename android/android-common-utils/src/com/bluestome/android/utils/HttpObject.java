@@ -1,12 +1,18 @@
-package org.bluestome.satelliteweather.utils;
+package com.bluestome.android.utils;
 
 import java.util.HashMap;
 
+/**
+ * Http响应对象
+ * 
+ * @author bluestome
+ * 
+ */
 public class HttpObject {
 
 	// 响应头
-	private HashMap<String,String> header =new HashMap<String,String>();
-	
+	private HashMap<String, String> header = new HashMap<String, String>();
+
 	// 响应内容体
 	private byte[] body = null;
 
@@ -25,6 +31,5 @@ public class HttpObject {
 	public void setHeader(HashMap<String, String> header) {
 		this.header = header;
 	}
-	
-	
+
 }

@@ -1,4 +1,4 @@
-package org.bluestome.satelliteweather.utils;
+package com.bluestome.android.utils;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;

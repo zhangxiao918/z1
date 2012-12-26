@@ -1,7 +1,6 @@
 package org.bluestome.satelliteweather.broadcasts;
 
 import org.bluestome.satelliteweather.MainApp;
-import org.bluestome.satelliteweather.utils.HttpClientUtils;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -9,6 +8,8 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
+
+import com.bluestome.android.utils.HttpClientUtils;
 
 /**
  * @ClassName: NetChangedReceiver

@@ -147,9 +147,11 @@ public class MainActivity extends Activity implements OnClickListener {
 			new Thread(new Runnable() {
 				@Override
 				public void run() {
-					if (null != sb && !sb.toString().equals(""))
+					if (null != sb && !sb.toString().equals("")) {
+						request(Constants.URL);
 						QueryTools.doQuery(sb.toString(), Constants.URL, carId,
 								carNum, carId, checkCode);
+					}
 				}
 			}).start();
 			// TODO 将参数传入另一个界面处理网络相关
