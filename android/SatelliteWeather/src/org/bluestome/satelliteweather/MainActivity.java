@@ -391,87 +391,89 @@ public class MainActivity extends Activity implements OnClickListener {
         synchronized (lock) {
             String lastModifyTime = HttpClientUtils
                     .getLastModifiedByUrl(Constants.SATELINE_CLOUD_URL);
-            if (null != lastModifyTime
-                    && !lastModifyTime.equals(MainApp.i().getLastModifyTime())) {
-                byte[] body = HttpClientUtils
-                        .getBody(Constants.SATELINE_CLOUD_URL);
-                Message msg = new Message();
-                msg.what = 0x0102;
-                msg.obj = "正在获取网页页面内容";
-                mHandler.sendMessage(msg);
-                if (null == body || body.length == 0) {
-                    msg = new Message();
-                    msg.what = 0x0102;
-                    msg.obj = "获取服务端返回的内容为空";
-                    mHandler.sendMessage(msg);
-                    return urlList;
-                }
-                Parser parser = new Parser();
-                String html = new String(body, "GB2312");
-                parser.setInputHTML(html);
-                parser.setEncoding("GB2312");
+            // if (null != lastModifyTime
+            // && !lastModifyTime.equals(MainApp.i().getLastModifyTime())) {
+            byte[] body = HttpClientUtils
+                    .getBody(Constants.SATELINE_CLOUD_URL);
+            Message msg = new Message();
+            msg.what = 0x0102;
+            msg.obj = "正在获取网页页面内容";
+            mHandler.sendMessage(msg);
+            if (null == body || body.length == 0) {
                 msg = new Message();
                 msg.what = 0x0102;
-                msg.obj = "正在解析页面内容";
+                msg.obj = "获取服务端返回的内容为空";
                 mHandler.sendMessage(msg);
-                NodeFilter fileter = new NodeClassFilter(CompositeTag.class);
-                NodeList list = parser.extractAllNodesThatMatch(fileter)
-                        .extractAllNodesThatMatch(
-                                new HasAttributeFilter("id", "mycarousel")); // id
+                return urlList;
+            }
+            Parser parser = new Parser();
+            String html = new String(body, "GB2312");
+            parser.setInputHTML(html);
+            parser.setEncoding("GB2312");
+            msg = new Message();
+            msg.what = 0x0102;
+            msg.obj = "正在解析页面内容";
+            mHandler.sendMessage(msg);
+            NodeFilter fileter = new NodeClassFilter(CompositeTag.class);
+            NodeList list = parser.extractAllNodesThatMatch(fileter)
+                    .extractAllNodesThatMatch(
+                            new HasAttributeFilter("id", "mycarousel")); // id
 
-                if (null != list && list.size() > 0) {
-                    CompositeTag div = (CompositeTag) list.elementAt(0);
-                    parser = new Parser();
-                    parser.setInputHTML(div.toHtml());
-                    NodeFilter linkFilter = new NodeClassFilter(LinkTag.class);
-                    NodeList linkList = parser
-                            .extractAllNodesThatMatch(linkFilter);
-                    msg = new Message();
-                    msg.what = 0x0102;
-                    msg.obj = "正在解析页面子元素";
-                    mHandler.sendMessage(msg);
-                    if (linkList != null && linkList.size() > 0) {
-                        for (int i = 0; i < linkList.size(); i++) {
-                            LinkTag link = (LinkTag) linkList.elementAt(i);
-                            String str = link.getLink()
-                                    .replace("view_text_img(", "")
-                                    .replace(")", "").replace("'", "");
-                            if (null != str && str.length() > 0) {
-                                final String[] tmps = str.split(",");
-                                FY2DAO dao = factory.getFY2DAO();
-                                if (null != tmps[0] && tmps[0].length() > 0
-                                        && !tmps[0].equals("")) {
-                                    String name = analysisURL(tmps[0]);
-                                    if (!dao.checkNImage(name)) {
-                                        // 数据库操作
-                                        String date = analysisURL2(name);
-                                        String spath = analysisURL3(tmps[0]);
-                                        String bpath = analysisURL3(tmps[1]);
-                                        int id = dao.insert(name, spath, bpath,
-                                                date);
-                                        if (id > 0) {
-                                            Log.d(TAG, "\tzhang 添加数据成功");
-                                        }
-                                    }
-                                    urlList.add(0, tmps[0]);
-                                    if (!MainApp.i().getImageCache()
-                                            .containsKey(tmps[0])) {
-                                        MainApp.i().getExecutorService()
-                                                .execute(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        loadImageFromUrl(Constants.PREFIX_SATELINE_CLOUD_IMG_URL
-                                                                + tmps[0]);
-                                                    }
-                                                });
+            if (null != list && list.size() > 0) {
+                CompositeTag div = (CompositeTag) list.elementAt(0);
+                parser = new Parser();
+                parser.setInputHTML(div.toHtml());
+                NodeFilter linkFilter = new NodeClassFilter(LinkTag.class);
+                NodeList linkList = parser
+                        .extractAllNodesThatMatch(linkFilter);
+                msg = new Message();
+                msg.what = 0x0102;
+                msg.obj = "正在解析页面子元素";
+                mHandler.sendMessage(msg);
+                if (linkList != null && linkList.size() > 0) {
+                    for (int i = 0; i < linkList.size(); i++) {
+                        LinkTag link = (LinkTag) linkList.elementAt(i);
+                        String str = link.getLink()
+                                .replace("view_text_img(", "")
+                                .replace(")", "").replace("'", "");
+                        if (null != str && str.length() > 0) {
+                            final String[] tmps = str.split(",");
+                            FY2DAO dao = factory.getFY2DAO();
+                            if (null != tmps[0] && tmps[0].length() > 0
+                                    && !tmps[0].equals("")) {
+                                Log.d(TAG, "tmps[0]:" + tmps[0]);
+                                String name = analysisURL(tmps[0]);
+                                Log.d(TAG, "name:" + name);
+                                if (!dao.checkNImage(name)) {
+                                    // 数据库操作
+                                    String date = analysisURL2(name);
+                                    String spath = analysisURL3(tmps[0]);
+                                    String bpath = analysisURL3(tmps[1]);
+                                    int id = dao.insert(name, spath, bpath,
+                                            date);
+                                    if (id > 0) {
+                                        Log.d(TAG, "\tzhang 添加数据成功");
                                     }
                                 }
+                                urlList.add(0, tmps[0]);
+                                if (!MainApp.i().getImageCache()
+                                        .containsKey(tmps[0])) {
+                                    MainApp.i().getExecutorService()
+                                            .execute(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    loadImageFromUrl(Constants.PREFIX_SATELINE_CLOUD_IMG_URL
+                                                            + tmps[0]);
+                                                }
+                                            });
+                                }
                             }
-
                         }
-                        MainApp.i().setLastModifyTime(lastModifyTime);
+
                     }
+                    MainApp.i().setLastModifyTime(lastModifyTime);
                 }
+                // }
                 if (null != parser)
                     parser = null;
                 msg = new Message();
@@ -816,7 +818,9 @@ public class MainActivity extends Activity implements OnClickListener {
     }
 
     /**
-     * 分析URL,获取图片文件名
+     * 分析URL,获取图片文件名,将文件名中无需要的文字去掉， eg:
+     * SEVP_NSMC_WXCL_ASC_E99_ACHN_LNO_PY_20130315010000000.JPG?v=1363312970836
+     * ?v=1363312970836 这段数据不需要，要截取掉
      * 
      * @param url
      * @return
@@ -826,6 +830,10 @@ public class MainActivity extends Activity implements OnClickListener {
         String name = url.substring(s + 1, url.length());
         if (null == name || name.equals("")) {
             name = String.valueOf(System.currentTimeMillis());
+        }
+        if (name.indexOf("?") != -1) {
+            int pos = name.indexOf("?");
+            name = name.substring(0, pos);
         }
         return name;
     }
