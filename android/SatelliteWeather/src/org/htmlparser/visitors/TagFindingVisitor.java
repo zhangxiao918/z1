@@ -62,6 +62,7 @@ public class TagFindingVisitor extends NodeVisitor {
         return count[index];
     }
 
+    @Override
     public void visitTag(Tag tag)
     {
         for (int i=0;i<tagsToBeFound.length;i++)
@@ -71,6 +72,7 @@ public class TagFindingVisitor extends NodeVisitor {
             }
     }
 
+    @Override
     public void visitEndTag(Tag tag)
     {
         if (!endTagCheck) return;

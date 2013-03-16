@@ -26,14 +26,6 @@
 
 package org.htmlparser.beans;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-import java.io.Serializable;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.Vector;
-
 import org.htmlparser.NodeFilter;
 import org.htmlparser.Parser;
 import org.htmlparser.filters.NodeClassFilter;
@@ -41,6 +33,14 @@ import org.htmlparser.tags.LinkTag;
 import org.htmlparser.util.EncodingChangeException;
 import org.htmlparser.util.NodeList;
 import org.htmlparser.util.ParserException;
+
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.io.Serializable;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.Vector;
 
 /**
  * Extract links from a URL.

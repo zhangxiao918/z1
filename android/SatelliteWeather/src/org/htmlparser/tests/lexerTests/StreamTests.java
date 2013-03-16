@@ -26,6 +26,9 @@
 
 package org.htmlparser.tests.lexerTests;
 
+import org.htmlparser.lexer.Stream;
+import org.htmlparser.tests.ParserTestCase;
+
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -33,9 +36,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-
-import org.htmlparser.lexer.Stream;
-import org.htmlparser.tests.ParserTestCase;
 
 public class StreamTests extends ParserTestCase
 {

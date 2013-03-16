@@ -26,13 +26,13 @@
 
 package org.htmlparser.tests.lexerTests;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
-
 import org.htmlparser.lexer.Page;
 import org.htmlparser.tests.ParserTestCase;
 import org.htmlparser.util.ParserException;
+
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLConnection;
 
 public class PageTests extends ParserTestCase
 {

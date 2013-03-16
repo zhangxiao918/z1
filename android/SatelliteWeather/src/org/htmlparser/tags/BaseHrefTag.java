@@ -54,6 +54,7 @@ public class BaseHrefTag
      * Return the set of names handled by this tag.
      * @return The names to be matched that create tags of this type.
      */
+    @Override
     public String[] getIds ()
     {
         return (mIds);
@@ -89,6 +90,7 @@ public class BaseHrefTag
      * This sets the base URL to use for the rest of the page.
      * @exception ParserException If setting the base URL fails.
      */
+    @Override
     public void doSemanticAction () throws ParserException
     {
         Page page;

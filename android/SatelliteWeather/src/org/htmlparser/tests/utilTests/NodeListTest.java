@@ -47,6 +47,7 @@ public class NodeListTest extends ParserTestCase {
         super(name);
     }
 
+    @Override
     protected void setUp() {
         nodeList = new NodeList();
     }
@@ -125,21 +126,26 @@ public class NodeListTest extends ParserTestCase {
     private Node createHTMLNodeObject ()
     {
         Node node = new AbstractNode(null,10,20) {
+            @Override
             public void accept(NodeVisitor visitor) {
             }
 
+            @Override
             public String toHtml() {
                 return null;
             }
 
+            @Override
             public String toHtml(boolean verbatim) {
                 return null;
             }
 
+            @Override
             public String toPlainTextString() {
                 return null;
             }
 
+            @Override
             public String toString() {
                 return "";
             }

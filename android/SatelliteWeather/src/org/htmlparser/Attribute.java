@@ -725,6 +725,7 @@ public class Attribute
      * </code>
      * @return A string that can be used within a tag.
      */
+    @Override
     public String toString ()
     {
         int length;

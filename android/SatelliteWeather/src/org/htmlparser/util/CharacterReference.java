@@ -6,9 +6,9 @@
 
 package org.htmlparser.util;
 
-import java.io.Serializable;
-
 import org.htmlparser.util.sort.Ordered;
+
+import java.io.Serializable;
 
 /**
  * Structure to hold a character and it's equivalent entity reference kernel.
@@ -90,6 +90,7 @@ public class CharacterReference
      * Visualize this character reference as a string.
      * @return A string with the character and kernel.
      */
+    @Override
     public String toString ()
     {
         String hex;
@@ -116,6 +117,7 @@ public class CharacterReference
      * Compare one reference to another.
      * @see org.htmlparser.util.sort.Ordered
      */
+    @Override
     public int compare (Object that)
     {
         CharacterReference r;

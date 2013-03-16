@@ -26,19 +26,19 @@
 
 package org.htmlparser.beans;
 
+import org.htmlparser.Parser;
+import org.htmlparser.Tag;
+import org.htmlparser.Text;
+import org.htmlparser.tags.LinkTag;
+import org.htmlparser.util.EncodingChangeException;
+import org.htmlparser.util.ParserException;
+import org.htmlparser.util.Translate;
+import org.htmlparser.visitors.NodeVisitor;
+
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 import java.net.URLConnection;
-
-import org.htmlparser.Parser;
-import org.htmlparser.Text;
-import org.htmlparser.tags.LinkTag;
-import org.htmlparser.Tag;
-import org.htmlparser.util.ParserException;
-import org.htmlparser.util.EncodingChangeException;
-import org.htmlparser.util.Translate;
-import org.htmlparser.visitors.NodeVisitor;
 
 /**
  * Extract strings from a URL.
@@ -630,6 +630,7 @@ public class StringBean extends NodeVisitor implements Serializable
      * Appends the text to the output.
      * @param string The text node.
      */
+    @Override
     public void visitStringNode (Text string)
     {
         if (!mIsScript && !mIsStyle)
@@ -655,6 +656,7 @@ public class StringBean extends NodeVisitor implements Serializable
      * possibly sets the state of the PRE and SCRIPT flags.
      * @param tag The tag to examine.
      */
+    @Override
     public void visitTag (Tag tag)
     {
         String name;
@@ -681,6 +683,7 @@ public class StringBean extends NodeVisitor implements Serializable
      * Resets the state of the PRE and SCRIPT flags.
      * @param tag The end tag to process.
      */
+    @Override
     public void visitEndTag (Tag tag)
     {
         String name;

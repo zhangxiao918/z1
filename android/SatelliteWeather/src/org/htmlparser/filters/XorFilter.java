@@ -105,6 +105,7 @@ public class XorFilter implements NodeFilter
      * @return <code>true</code> if an odd number of the predicate filters find the node
      * is acceptable, <code>false</code> otherwise.
      */
+    @Override
     public boolean accept (Node node)
     {
         int countTrue;

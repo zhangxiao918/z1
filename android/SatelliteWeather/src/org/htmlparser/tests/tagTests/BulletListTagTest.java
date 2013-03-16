@@ -27,11 +27,11 @@
 package org.htmlparser.tests.tagTests;
 
 import org.htmlparser.Node;
-import org.htmlparser.tests.ParserTestCase;
 import org.htmlparser.Text;
 import org.htmlparser.tags.Bullet;
 import org.htmlparser.tags.BulletList;
 import org.htmlparser.tags.CompositeTag;
+import org.htmlparser.tests.ParserTestCase;
 import org.htmlparser.util.NodeList;
 import org.htmlparser.util.ParserException;
 

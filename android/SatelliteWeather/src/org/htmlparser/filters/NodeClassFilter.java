@@ -81,6 +81,7 @@ public class NodeClassFilter implements NodeFilter
      * @return <code>true</code> if the node is the right class,
      * <code>false</code> otherwise.
      */
+    @Override
     public boolean accept (Node node)
     {
         return ((null != mClass) && mClass.isAssignableFrom (node.getClass ()));

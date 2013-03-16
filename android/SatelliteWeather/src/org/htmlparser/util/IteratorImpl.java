@@ -32,7 +32,6 @@ import org.htmlparser.lexer.Cursor;
 import org.htmlparser.lexer.Lexer;
 import org.htmlparser.lexer.Page;
 import org.htmlparser.scanners.Scanner;
-import org.htmlparser.util.NodeIterator;
 
 public class IteratorImpl implements NodeIterator
 {
@@ -51,6 +50,7 @@ public class IteratorImpl implements NodeIterator
      * Check if more nodes are available.
      * @return <code>true</code> if a call to <code>nextNode()</code> will succeed.
      */
+    @Override
     public boolean hasMoreNodes() throws ParserException
     {
         boolean ret;
@@ -66,6 +66,7 @@ public class IteratorImpl implements NodeIterator
      * @return The next node in the HTML stream, or null if there are no more nodes.
      * @exception ParserException If an unrecoverable error occurs.
      */
+    @Override
     public Node nextNode () throws ParserException
     {
         Tag tag;

@@ -26,13 +26,13 @@
 
 package org.htmlparser.filters;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.htmlparser.Node;
 import org.htmlparser.NodeFilter;
 import org.htmlparser.Tag;
 import org.htmlparser.util.NodeList;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * A NodeFilter that accepts nodes based on whether they match a CSS2 selector.
@@ -127,6 +127,7 @@ public class CssSelectorNodeFilter implements NodeFilter
      * @return <code>true</code> if the node matches,
      * <code>false</code> otherwise.
      */
+    @Override
     public boolean accept (Node node)
     {
         return (therule.accept (node));
@@ -329,6 +330,7 @@ public class CssSelectorNodeFilter implements NodeFilter
             atest = n;
         }
 
+        @Override
         public boolean accept(Node n)
         {
             while (n != null)
@@ -350,6 +352,7 @@ public class CssSelectorNodeFilter implements NodeFilter
             sibtest = n;
         }
 
+        @Override
         public boolean accept(Node n)
         {
             if (n.getParent() != null)
@@ -365,6 +368,7 @@ public class CssSelectorNodeFilter implements NodeFilter
 
     private static class YesFilter implements NodeFilter
     {
+        @Override
         public boolean accept(Node n)
         {return true;}
     }
@@ -380,6 +384,7 @@ public class CssSelectorNodeFilter implements NodeFilter
             this.attrib = attrib;
         }
 
+        @Override
         public boolean accept(Node node)
         {
             if (node instanceof Tag && ((Tag)node).getAttribute(attrib) != null)

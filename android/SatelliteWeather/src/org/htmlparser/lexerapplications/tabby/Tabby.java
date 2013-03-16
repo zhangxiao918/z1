@@ -26,17 +26,16 @@
 
 package org.htmlparser.lexerapplications.tabby;
 
+import org.htmlparser.lexer.Cursor;
+import org.htmlparser.lexer.Page;
+
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
-
-import org.htmlparser.lexer.Cursor;
-import org.htmlparser.lexer.Page;
 
 /**
  * Replace tabs with spaces.
@@ -240,6 +239,7 @@ public class Tabby
          * @return <code>true</code> if and only if <code>pathname</code>
          * should be included.
          */
+        @Override
         public boolean accept (final File pathname)
         {
             Matcher matcher;

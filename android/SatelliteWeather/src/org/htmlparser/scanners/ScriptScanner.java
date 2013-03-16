@@ -26,22 +26,15 @@
 
 package org.htmlparser.scanners;
 
-import java.util.Vector;
-
 import org.htmlparser.Attribute;
 import org.htmlparser.Node;
-import org.htmlparser.NodeFactory;
-import org.htmlparser.PrototypicalNodeFactory;
-import org.htmlparser.Remark;
 import org.htmlparser.Tag;
-import org.htmlparser.Text;
-import org.htmlparser.lexer.Cursor;
 import org.htmlparser.lexer.Lexer;
-import org.htmlparser.lexer.Page;
-import org.htmlparser.scanners.ScriptDecoder;
 import org.htmlparser.tags.ScriptTag;
 import org.htmlparser.util.NodeList;
 import org.htmlparser.util.ParserException;
+
+import java.util.Vector;
 
 /**
  * The ScriptScanner handles script CDATA.
@@ -89,6 +82,7 @@ public class ScriptScanner
      * @param lexer The source of CDATA.
      * @param stack The parse stack, <em>not used</em>.
      */
+    @Override
     public Tag scan (Tag tag, Lexer lexer, NodeList stack)
         throws ParserException
     {

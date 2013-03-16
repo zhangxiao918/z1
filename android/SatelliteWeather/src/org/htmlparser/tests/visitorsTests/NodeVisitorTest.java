@@ -26,13 +26,13 @@
 
 package org.htmlparser.tests.visitorsTests;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.htmlparser.Tag;
 import org.htmlparser.Text;
 import org.htmlparser.tests.ParserTestCase;
 import org.htmlparser.visitors.NodeVisitor;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class NodeVisitorTest extends ParserTestCase {
 
@@ -66,10 +66,12 @@ public class NodeVisitorTest extends ParserTestCase {
             return (String)paramsMap.get(key);
         }
 
+        @Override
         public void visitStringNode(Text stringNode) {
             paramsMap.put(lastKeyVisited,stringNode.getText());
         }
 
+        @Override
         public void visitTag(Tag tag) {
             if (tag.getTagName().equals("PARAM")) {
                 lastKeyVisited = tag.getAttribute("NAME");

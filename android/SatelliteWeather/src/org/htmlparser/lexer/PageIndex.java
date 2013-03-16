@@ -26,10 +26,11 @@
 
 package org.htmlparser.lexer;
 
-import java.io.Serializable;
 import org.htmlparser.util.sort.Ordered;
 import org.htmlparser.util.sort.Sort;
 import org.htmlparser.util.sort.Sortable;
+
+import java.io.Serializable;
 
 /**
  * A sorted array of integers, the positions of the first characters of each line.
@@ -368,6 +369,7 @@ public class PageIndex
      * Returns the first index of the Sortable.
      * @return The index of the first element.
      */
+    @Override
     public int first ()
     {
         return (0);
@@ -379,6 +381,7 @@ public class PageIndex
      * If this were an array object this would be (object.length - 1).
      * For an empty index this will return -1.
      */
+    @Override
     public int last ()
     {
         return (mCount - 1);
@@ -395,6 +398,7 @@ public class PageIndex
      * object if that would normally be the strategy.
      * @return The Ordered object at that index.
      */
+    @Override
     public Ordered fetch (int index, Ordered reuse)
     {
         Cursor ret;
@@ -416,6 +420,7 @@ public class PageIndex
      * @param i One index.
      * @param j The other index.
      */
+    @Override
     public void swap (int i, int j)
     {
         int temp = mIndices[i];

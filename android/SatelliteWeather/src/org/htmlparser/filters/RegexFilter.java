@@ -26,12 +26,12 @@
 
 package org.htmlparser.filters;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.htmlparser.Node;
 import org.htmlparser.NodeFilter;
 import org.htmlparser.Text;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * This filter accepts all string nodes matching a regular expression.
@@ -185,6 +185,7 @@ public class RegexFilter implements NodeFilter
      * @return <code>true</code> if the regular expression matches the
      * text of the node, <code>false</code> otherwise.
      */
+    @Override
     public boolean accept (Node node)
     {
         String string;

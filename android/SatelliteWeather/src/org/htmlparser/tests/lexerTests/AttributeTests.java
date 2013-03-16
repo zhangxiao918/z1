@@ -26,10 +26,8 @@
 
 package org.htmlparser.tests.lexerTests;
 
-import java.util.Vector;
-import org.htmlparser.Node;
-
 import org.htmlparser.Attribute;
+import org.htmlparser.Node;
 import org.htmlparser.PrototypicalNodeFactory;
 import org.htmlparser.Tag;
 import org.htmlparser.lexer.PageAttribute;
@@ -39,6 +37,8 @@ import org.htmlparser.tags.LinkTag;
 import org.htmlparser.tests.ParserTestCase;
 import org.htmlparser.util.NodeIterator;
 import org.htmlparser.util.ParserException;
+
+import java.util.Vector;
 
 public class AttributeTests extends ParserTestCase
 {

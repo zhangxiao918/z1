@@ -26,13 +26,9 @@
 
 package org.htmlparser.tests;
 
-import java.util.Enumeration;
-import java.util.Properties;
-import java.util.Vector;
-
 import junit.framework.TestCase;
-import org.htmlparser.Attribute;
 
+import org.htmlparser.Attribute;
 import org.htmlparser.Node;
 import org.htmlparser.Parser;
 import org.htmlparser.Tag;
@@ -46,6 +42,10 @@ import org.htmlparser.util.DefaultParserFeedback;
 import org.htmlparser.util.NodeIterator;
 import org.htmlparser.util.ParserException;
 import org.htmlparser.util.ParserUtils;
+
+import java.util.Enumeration;
+import java.util.Properties;
+import java.util.Vector;
 
 public class ParserTestCase extends TestCase {
 

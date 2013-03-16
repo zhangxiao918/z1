@@ -48,6 +48,7 @@ public class ObjectFindingVisitor extends NodeVisitor {
         return (tags.size ());
     }
 
+    @Override
     public void visitTag(Tag tag) {
         if (tag.getClass().equals(classTypeToFind))
             tags.add(tag);

@@ -1,14 +1,15 @@
 package org.bluestome.satelliteweather.db.dao.impl;
 
-import org.bluestome.satelliteweather.db.Satellite.FY2Columns;
-import org.bluestome.satelliteweather.db.dao.FY2DAO;
-import org.bluestome.satelliteweather.utils.StringUtil;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
+import android.provider.BaseColumns;
 import android.util.Log;
+
+import org.bluestome.satelliteweather.db.Satellite.FY2Columns;
+import org.bluestome.satelliteweather.db.dao.FY2DAO;
+import org.bluestome.satelliteweather.utils.StringUtil;
 
 public class FY2DAOImpl extends BaseImpl implements FY2DAO {
 
@@ -37,7 +38,7 @@ public class FY2DAOImpl extends BaseImpl implements FY2DAO {
 	public boolean checkNImage(String nImage) {
 		boolean isExists = false;
 		Cursor cur = null;
-		String sql = "select count(" + FY2Columns._ID + ") from "
+		String sql = "select count(" + BaseColumns._ID + ") from "
 				+ FY2Columns.TABLE_NAME + " where " + FY2Columns.NIMAGE
 				+ " = ?";
 		String[] selectionArgs = { nImage };

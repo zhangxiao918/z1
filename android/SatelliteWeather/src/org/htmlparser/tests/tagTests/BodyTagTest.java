@@ -26,10 +26,9 @@
 
 package org.htmlparser.tests.tagTests;
 
-import java.util.Hashtable;
 import junit.framework.TestSuite;
-import org.htmlparser.Node;
 
+import org.htmlparser.Node;
 import org.htmlparser.PrototypicalNodeFactory;
 import org.htmlparser.Tag;
 import org.htmlparser.tags.BodyTag;
@@ -53,6 +52,7 @@ public class BodyTagTest extends ParserTestCase {
         super(name);
     }
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         createParser("<html><head><title>body tag test</title></head>" + html + "</html>");

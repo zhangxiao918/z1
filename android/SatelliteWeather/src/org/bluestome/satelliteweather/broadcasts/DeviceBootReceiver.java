@@ -1,10 +1,10 @@
 package org.bluestome.satelliteweather.broadcasts;
 
-import org.bluestome.satelliteweather.services.UpdateService;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+
+import org.bluestome.satelliteweather.services.UpdateService;
 
 public class DeviceBootReceiver extends BroadcastReceiver {
 	@Override

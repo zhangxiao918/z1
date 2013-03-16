@@ -1,11 +1,11 @@
 package org.bluestome.satelliteweather.db;
 
+import android.content.Context;
+
 import org.bluestome.satelliteweather.db.dao.BaseDAO;
 import org.bluestome.satelliteweather.db.dao.FY2DAO;
 import org.bluestome.satelliteweather.db.dao.impl.BaseImpl;
 import org.bluestome.satelliteweather.db.dao.impl.FY2DAOImpl;
-
-import android.content.Context;
 
 /**
  * DAO工厂

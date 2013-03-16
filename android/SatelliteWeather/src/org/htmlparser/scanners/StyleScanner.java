@@ -26,18 +26,14 @@
 
 package org.htmlparser.scanners;
 
-import java.util.Vector;
-
 import org.htmlparser.Attribute;
 import org.htmlparser.Node;
-import org.htmlparser.NodeFactory;
-import org.htmlparser.PrototypicalNodeFactory;
-import org.htmlparser.Remark;
-import org.htmlparser.Text;
-import org.htmlparser.lexer.Lexer;
 import org.htmlparser.Tag;
+import org.htmlparser.lexer.Lexer;
 import org.htmlparser.util.NodeList;
 import org.htmlparser.util.ParserException;
+
+import java.util.Vector;
 
 /**
  * The StyleScanner handles style elements.
@@ -59,6 +55,7 @@ public class StyleScanner extends CompositeTagScanner
      * @param lexer The source of CDATA.
      * @param stack The parse stack, <em>not used</em>.
      */
+    @Override
     public Tag scan (Tag tag, Lexer lexer, NodeList stack)
         throws ParserException
     {

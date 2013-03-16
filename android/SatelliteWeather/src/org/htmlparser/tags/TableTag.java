@@ -28,9 +28,9 @@ package org.htmlparser.tags;
 
 import org.htmlparser.NodeFilter;
 import org.htmlparser.filters.AndFilter;
+import org.htmlparser.filters.HasParentFilter;
 import org.htmlparser.filters.IsEqualFilter;
 import org.htmlparser.filters.NodeClassFilter;
-import org.htmlparser.filters.HasParentFilter;
 import org.htmlparser.filters.NotFilter;
 import org.htmlparser.filters.OrFilter;
 import org.htmlparser.util.NodeList;
@@ -61,6 +61,7 @@ public class TableTag extends CompositeTag
      * Return the set of names handled by this tag.
      * @return The names to be matched that create tags of this type.
      */
+    @Override
     public String[] getIds ()
     {
         return (mIds);
@@ -70,6 +71,7 @@ public class TableTag extends CompositeTag
      * Return the set of end tag names that cause this tag to finish.
      * @return The names of following end tags that stop further scanning.
      */
+    @Override
     public String[] getEndTagEnders ()
     {
         return (mEndTagEnders);
@@ -148,6 +150,7 @@ public class TableTag extends CompositeTag
      * Return a string suitable for debugging display.
      * @return The table as HTML, sorry.
      */
+    @Override
     public String toString()
     {
         return

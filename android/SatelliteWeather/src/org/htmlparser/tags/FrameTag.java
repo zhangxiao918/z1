@@ -51,6 +51,7 @@ public class FrameTag
      * Return the set of names handled by this tag.
      * @return The names to be matched that create tags of this type.
      */
+    @Override
     public String[] getIds ()
     {
         return (mIds);
@@ -96,6 +97,7 @@ public class FrameTag
      * Return a string representation of the contents of this <code>FRAME</code> tag suitable for debugging.
      * @return A string with this tag's contents.
      */
+    @Override
     public String toString()
     {
         return "FRAME TAG : Frame " +getFrameName() + " at "+getFrameLocation()+"; begins at : "+getStartPosition ()+"; ends at : "+getEndPosition ();

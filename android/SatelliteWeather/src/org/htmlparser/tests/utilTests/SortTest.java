@@ -26,16 +26,16 @@
 
 package org.htmlparser.tests.utilTests;
 
-import java.io.File;
-import java.util.StringTokenizer;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.Vector;
-
 import org.htmlparser.tests.ParserTestCase;
 import org.htmlparser.util.sort.Ordered;
 import org.htmlparser.util.sort.Sort;
 import org.htmlparser.util.sort.Sortable;
+
+import java.io.File;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.StringTokenizer;
+import java.util.Vector;
 
 /**
  * Sort testing.
@@ -67,11 +67,13 @@ public class SortTest extends ParserTestCase
             mData = data;
         }
 
+        @Override
         public int compare (Object o)
         {
             return (mData.compareTo (((Item)o).mData));
         }
 
+        @Override
         public String toString ()
         {
             return (mData);
@@ -98,18 +100,22 @@ public class SortTest extends ParserTestCase
         // Sortable interface
         //
 
+        @Override
         public int first ()
         {
             return (0);
         }
+        @Override
         public int last ()
         {
             return (size () - 1);
         }
+        @Override
         public Ordered fetch (int index, Ordered reuse)
         {
             return ((Ordered)elementAt (index));
         }
+        @Override
         public void swap (int i, int j)
         {
             Object o = elementAt (i);
@@ -133,6 +139,7 @@ public class SortTest extends ParserTestCase
             super (dir, name);
         }
 
+        @Override
         public int compare (Object o)
         {
             long ret;
@@ -151,6 +158,7 @@ public class SortTest extends ParserTestCase
             return ((int)ret);
         }
         
+        @Override
         public String toString ()
         {
             StringBuffer ret;

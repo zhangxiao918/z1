@@ -26,7 +26,9 @@
 
 package org.htmlparser.util.sort;
 
-import java.util.*;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Vector;
 
 /**
  * A quick sort algorithm to sort Vectors or arrays.

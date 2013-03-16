@@ -26,10 +26,10 @@
 
 package org.htmlparser.visitors;
 
-import java.util.Locale;
+import org.htmlparser.Tag;
 import org.htmlparser.tags.LinkTag;
 
-import org.htmlparser.Tag;
+import java.util.Locale;
 
 public class LinkFindingVisitor extends NodeVisitor
 {
@@ -49,6 +49,7 @@ public class LinkFindingVisitor extends NodeVisitor
         this.linkTextToFind = linkTextToFind.toUpperCase (this.locale);
     }
 
+    @Override
     public void visitTag(Tag tag)
     {
         if (tag instanceof LinkTag)

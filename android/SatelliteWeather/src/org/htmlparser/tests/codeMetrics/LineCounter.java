@@ -76,6 +76,7 @@ public class LineCounter {
 
     public int recurseDirectory(File file, int count) {
         File [] files = file.listFiles(new FileFilter() {
+            @Override
             public boolean accept(File file) {
                 if (file.getName().indexOf(".java")!=-1 || file.isDirectory()) {
                     return true;

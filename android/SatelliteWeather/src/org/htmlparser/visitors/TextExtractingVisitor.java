@@ -26,8 +26,8 @@
 
 package org.htmlparser.visitors;
 
-import org.htmlparser.Text;
 import org.htmlparser.Tag;
+import org.htmlparser.Text;
 import org.htmlparser.util.Translate;
 
 
@@ -54,6 +54,7 @@ public class TextExtractingVisitor extends NodeVisitor {
         return textAccumulator.toString();
     }
 
+    @Override
     public void visitStringNode(Text stringNode) {
         String text = stringNode.getText();
         if (!preTagBeingProcessed) {
@@ -67,12 +68,14 @@ public class TextExtractingVisitor extends NodeVisitor {
         return text.replace('\u00a0',' ');
     }
 
+    @Override
     public void visitTag(Tag tag)
     {
         if (isPreTag(tag))
             preTagBeingProcessed = true;
     }
 
+    @Override
     public void visitEndTag(Tag tag)
     {
         if (isPreTag(tag))

@@ -26,12 +26,12 @@
 
 package org.htmlparser.scanners;
 
-import java.io.Serializable;
-
 import org.htmlparser.Tag;
 import org.htmlparser.lexer.Lexer;
 import org.htmlparser.util.NodeList;
 import org.htmlparser.util.ParserException;
+
+import java.io.Serializable;
 
 /**
  * TagScanner is an abstract superclass, subclassed to create specific scanners.
@@ -64,6 +64,7 @@ public class TagScanner
      * this tag.
      * @return The resultant tag (may be unchanged).
      */
+    @Override
     public Tag scan (Tag tag, Lexer lexer, NodeList stack) throws ParserException
     {
         tag.doSemanticAction ();

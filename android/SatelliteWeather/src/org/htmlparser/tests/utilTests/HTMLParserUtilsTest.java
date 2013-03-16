@@ -27,8 +27,13 @@
 package org.htmlparser.tests.utilTests;
 
 import org.htmlparser.NodeFilter;
-import org.htmlparser.filters.*;
-import org.htmlparser.tags.*;
+import org.htmlparser.filters.NodeClassFilter;
+import org.htmlparser.filters.OrFilter;
+import org.htmlparser.filters.TagNameFilter;
+import org.htmlparser.tags.Div;
+import org.htmlparser.tags.LinkTag;
+import org.htmlparser.tags.TableColumn;
+import org.htmlparser.tags.TableRow;
 import org.htmlparser.tests.ParserTestCase;
 import org.htmlparser.util.ParserUtils;
 

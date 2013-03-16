@@ -26,9 +26,6 @@
 
 package org.htmlparser.util;
 
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-
 import org.htmlparser.Node;
 import org.htmlparser.NodeFilter;
 import org.htmlparser.Parser;
@@ -38,8 +35,9 @@ import org.htmlparser.filters.TagNameFilter;
 import org.htmlparser.lexer.Lexer;
 import org.htmlparser.lexer.Page;
 import org.htmlparser.tags.CompositeTag;
-import org.htmlparser.util.NodeList;
-import org.htmlparser.util.ParserException;
+
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 
 
 public class ParserUtils

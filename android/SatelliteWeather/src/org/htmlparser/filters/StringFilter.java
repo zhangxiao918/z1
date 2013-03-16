@@ -26,11 +26,11 @@
 
 package org.htmlparser.filters;
 
-import java.util.Locale;
-
 import org.htmlparser.Node;
 import org.htmlparser.NodeFilter;
 import org.htmlparser.Text;
+
+import java.util.Locale;
 
 /**
  * This class accepts all string nodes containing the given string.
@@ -193,6 +193,7 @@ public class StringFilter
      * @return <code>true</code> if <code>node</code> is a {@link Text} node
      * and contains the pattern string, <code>false</code> otherwise.
      */
+    @Override
     public boolean accept (Node node)
     {
         String string;

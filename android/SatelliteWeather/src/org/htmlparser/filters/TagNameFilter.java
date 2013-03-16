@@ -26,11 +26,11 @@
 
 package org.htmlparser.filters;
 
-import java.util.Locale;
-
 import org.htmlparser.Node;
 import org.htmlparser.NodeFilter;
 import org.htmlparser.Tag;
+
+import java.util.Locale;
 
 /**
  * This class accepts all tags matching the tag name.
@@ -89,6 +89,7 @@ public class TagNameFilter
      * @return <code>true</code> if the tag name matches,
      * <code>false</code> otherwise.
      */
+    @Override
     public boolean accept (Node node)
     {
         return ((node instanceof Tag)

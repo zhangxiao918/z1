@@ -57,6 +57,7 @@ public class OptionTag extends CompositeTag
      * Return the set of names handled by this tag.
      * @return The names to be matched that create tags of this type.
      */
+    @Override
     public String[] getIds ()
     {
         return (mIds);
@@ -66,6 +67,7 @@ public class OptionTag extends CompositeTag
      * Return the set of tag names that cause this tag to finish.
      * @return The names of following tags that stop further scanning.
      */
+    @Override
     public String[] getEnders ()
     {
         return (mEnders);
@@ -75,6 +77,7 @@ public class OptionTag extends CompositeTag
      * Return the set of end tag names that cause this tag to finish.
      * @return The names of following end tags that stop further scanning.
      */
+    @Override
     public String[] getEndTagEnders ()
     {
         return (mEndTagEnders);
@@ -112,6 +115,7 @@ public class OptionTag extends CompositeTag
      * Return a string representation of this node suitable for debugging.
      * @return The value and text of this tag in a string.
      */
+    @Override
     public String toString()
     {
         String output = "OPTION VALUE: " + getValue() + " TEXT: " + getOptionText()+"\n";

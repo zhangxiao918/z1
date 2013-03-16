@@ -26,16 +26,15 @@
 
 package org.htmlparser.scanners;
 
-import java.util.Vector;
-
 import org.htmlparser.Attribute;
 import org.htmlparser.Node;
 import org.htmlparser.Tag;
 import org.htmlparser.lexer.Lexer;
 import org.htmlparser.lexer.Page;
-import org.htmlparser.scanners.Scanner;
 import org.htmlparser.util.NodeList;
 import org.htmlparser.util.ParserException;
+
+import java.util.Vector;
 
 /**
  * The main scanning logic for nested tags.
@@ -93,6 +92,7 @@ public class CompositeTagScanner extends TagScanner
      * this tag.
      * @return The resultant tag (may be unchanged).
      */
+    @Override
     public Tag scan (Tag tag, Lexer lexer, NodeList stack) throws ParserException
     {
         Node node;

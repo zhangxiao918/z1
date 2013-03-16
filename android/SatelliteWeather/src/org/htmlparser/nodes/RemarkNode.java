@@ -73,6 +73,7 @@ public class RemarkNode
      * Returns the text contents of the comment tag.
      * @return The contents of the text inside the comment delimiters.
      */
+    @Override
     public String getText ()
     {
         int start;
@@ -99,6 +100,7 @@ public class RemarkNode
      * If the text has the remark delimiters (&lt;!-- --&gt;), these are stripped off.
      * @param text The new text for the node.
      */
+    @Override
     public void setText (String text)
     {
         mText = text;
@@ -112,6 +114,7 @@ public class RemarkNode
      * Return the remark text.
      * @return The HTML comment.
      */
+    @Override
     public String toPlainTextString ()
     {
         return ("");
@@ -123,6 +126,7 @@ public class RemarkNode
      * page text as possible.
      * @return The comment, i.e. {@.html <!-- this is a comment -->}.
      */
+    @Override
     public String toHtml (boolean verbatim)
     {
         StringBuffer buffer;
@@ -149,6 +153,7 @@ public class RemarkNode
      * sequence and contents is truncated to 80 characters.
      * @return A string representation of the remark node.
      */
+    @Override
     public String toString()
     {
         int startpos;
@@ -243,6 +248,7 @@ public class RemarkNode
      * @param visitor The <code>NodeVisitor</code> object to invoke 
      * <code>visitRemarkNode()</code> on.
      */
+    @Override
     public void accept (NodeVisitor visitor)
     {
         visitor.visitRemarkNode (this);

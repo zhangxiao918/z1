@@ -130,6 +130,7 @@ public class HasChildFilter
      * @return <code>true</code> if the node has an acceptable child,
      * <code>false</code> otherwise.
      */
+    @Override
     public boolean accept (Node node)
     {
         CompositeTag tag;

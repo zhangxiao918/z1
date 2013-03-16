@@ -1,13 +1,14 @@
 package org.bluestome.satelliteweather;
 
+import android.app.Application;
+
+import junit.framework.Assert;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import junit.framework.Assert;
-import android.app.Application;
 
 /** 该类提供全局方法和变量功能，由系统启动时自动构造 */
 public class MainApp extends Application {

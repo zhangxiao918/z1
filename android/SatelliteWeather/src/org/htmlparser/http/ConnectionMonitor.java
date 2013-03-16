@@ -26,9 +26,9 @@
                                                                                                                             
 package org.htmlparser.http;
 
-import java.net.HttpURLConnection;
-
 import org.htmlparser.util.ParserException;
+
+import java.net.HttpURLConnection;
 
 /**
  * Interface for HTTP connection notification callbacks.

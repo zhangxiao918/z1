@@ -88,6 +88,7 @@ public class HasSiblingFilter
      * @return <code>true</code> if the node has an acceptable sibling,
      * <code>false</code> otherwise.
      */
+    @Override
     public boolean accept (Node node)
     {
         Node parent;

@@ -93,6 +93,7 @@ public class LinkTag extends CompositeTag
      * Return the set of names handled by this tag.
      * @return The names to be matched that create tags of this type.
      */
+    @Override
     public String[] getIds ()
     {
         return (mIds);
@@ -102,6 +103,7 @@ public class LinkTag extends CompositeTag
      * Return the set of tag names that cause this tag to finish.
      * @return The names of following tags that stop further scanning.
      */
+    @Override
     public String[] getEnders ()
     {
         return (mEnders);
@@ -111,6 +113,7 @@ public class LinkTag extends CompositeTag
      * Return the set of end tag names that cause this tag to finish.
      * @return The names of following end tags that stop further scanning.
      */
+    @Override
     public String[] getEndTagEnders ()
     {
         return (mEndTagEnders);
@@ -265,6 +268,7 @@ public class LinkTag extends CompositeTag
      * Return the contents of this link node as a string suitable for debugging.
      * @return A string representation of this node.
      */
+    @Override
     public String toString()
     {
         StringBuffer sb = new StringBuffer();

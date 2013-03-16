@@ -211,6 +211,7 @@ public class Stream extends InputStream implements Runnable
      * Continually read the underlying stream untill exhausted.
      * @see java.lang.Thread#run()
      */
+    @Override
     public void run ()
     {
         boolean filled;
@@ -247,6 +248,7 @@ public class Stream extends InputStream implements Runnable
      * stream is reached.
      * @exception IOException If an I/O error occurs.
      */
+    @Override
     public int read () throws IOException
     {
         int ret;
@@ -282,6 +284,7 @@ public class Stream extends InputStream implements Runnable
      * without blocking.
      * @exception IOException If an I/O error occurs.
      */
+    @Override
     public int available () throws IOException
     {
         return (mLevel - mOffset);
@@ -292,6 +295,7 @@ public class Stream extends InputStream implements Runnable
      * with the stream.
      * @exception IOException If an I/O error occurs.
      */
+    @Override
     public synchronized void close () throws IOException
     {
         if (null != mIn)
@@ -348,6 +352,7 @@ public class Stream extends InputStream implements Runnable
      * @see java.io.IOException
      *
      */
+    @Override
     public void reset () throws IOException
     {
         if (-1 != mMark)
@@ -368,6 +373,7 @@ public class Stream extends InputStream implements Runnable
      * @see java.io.InputStream#reset()
      *
      */
+    @Override
     public boolean markSupported ()
     {
         return (true);
@@ -394,6 +400,7 @@ public class Stream extends InputStream implements Runnable
      * @see java.io.InputStream#reset()
      *
      */
+    @Override
     public void mark (int readlimit)
     {
         mMark = mOffset;

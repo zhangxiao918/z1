@@ -26,10 +26,6 @@
 
 package org.htmlparser.tests;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.util.Locale;
-
 import junit.framework.TestSuite;
 
 import org.htmlparser.Node;
@@ -40,6 +36,10 @@ import org.htmlparser.tags.ImageTag;
 import org.htmlparser.util.DefaultParserFeedback;
 import org.htmlparser.util.NodeIterator;
 import org.htmlparser.util.ParserException;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.util.Locale;
 
 public class FunctionalTests extends ParserTestCase {
 

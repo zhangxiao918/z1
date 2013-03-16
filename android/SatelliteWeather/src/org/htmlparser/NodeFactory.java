@@ -26,10 +26,10 @@
 
 package org.htmlparser;
 
-import java.util.Vector;
-
 import org.htmlparser.lexer.Page;
 import org.htmlparser.util.ParserException;
+
+import java.util.Vector;
 
 /**
  * This interface defines the methods needed to create new nodes.

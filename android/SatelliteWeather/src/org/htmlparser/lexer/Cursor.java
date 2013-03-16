@@ -26,8 +26,9 @@
 
 package org.htmlparser.lexer;
 
-import java.io.Serializable;
 import org.htmlparser.util.sort.Ordered;
+
+import java.io.Serializable;
 
 /**
  * A bookmark in a page.
@@ -127,6 +128,7 @@ public class Cursor
      * @return A string of the form "n[r,c]", where n is the character position,
      * r is the row (zero based) and c is the column (zero based) on the page.
      */
+    @Override
     public String toString ()
     {
         StringBuffer ret;
@@ -160,6 +162,7 @@ public class Cursor
      * or greater than that object.
      * @see org.htmlparser.util.sort.Ordered
      */
+    @Override
     public int compare (Object that)
     {
         Cursor r = (Cursor)that;

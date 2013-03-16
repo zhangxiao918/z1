@@ -106,6 +106,7 @@ public class AndFilter
      * @return <code>true</code> if all the predicate filters find the node
      * is acceptable, <code>false</code> otherwise.
      */
+    @Override
     public boolean accept (Node node)
     {
         boolean ret;

@@ -104,6 +104,7 @@ public class OrFilter implements NodeFilter
      * @return <code>true</code> if any of the predicate filters find the node
      * is acceptable, <code>false</code> otherwise.
      */
+    @Override
     public boolean accept (Node node)
     {
         boolean ret;

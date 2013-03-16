@@ -26,11 +26,6 @@
 
 package org.htmlparser.nodes;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Locale;
-import java.util.Vector;
-
 import org.htmlparser.Attribute;
 import org.htmlparser.Tag;
 import org.htmlparser.lexer.Cursor;
@@ -40,6 +35,10 @@ import org.htmlparser.scanners.Scanner;
 import org.htmlparser.scanners.TagScanner;
 import org.htmlparser.util.ParserException;
 import org.htmlparser.visitors.NodeVisitor;
+
+import java.util.Hashtable;
+import java.util.Locale;
+import java.util.Vector;
 
 /**
  * TagNode represents a generic tag.
@@ -165,6 +164,7 @@ public class TagNode
      * @return The value associated with the attribute or null if it does
      * not exist, or is a stand-alone or
      */
+    @Override
     public String getAttribute (String name)
     {
         Attribute attribute;
@@ -185,6 +185,7 @@ public class TagNode
      * @param key The name of the attribute.
      * @param value The value of the attribute.
      */
+    @Override
     public void setAttribute (String key, String value)
     {
         char ch;
@@ -256,6 +257,7 @@ public class TagNode
      * Remove the attribute with the given key, if it exists.
      * @param key The name of the attribute.
      */
+    @Override
     public void removeAttribute (String key)
     {
         Attribute attribute;
@@ -272,6 +274,7 @@ public class TagNode
      * @param quote The quote character to be used around value.
      * If zero, it is an unquoted value.
      */
+    @Override
     public void setAttribute (String key, String value, char quote)
     {
         setAttribute (new Attribute (key, value, quote));
@@ -283,6 +286,7 @@ public class TagNode
      * @return The attribute or null if it does
      * not exist.
      */
+    @Override
     public Attribute getAttributeEx (String name)
     {
         Vector attributes;
@@ -317,6 +321,7 @@ public class TagNode
      * @param attribute The attribute to set.
      * @see #setAttribute(Attribute)
      */
+    @Override
     public void setAttributeEx (Attribute attribute)
     {
         setAttribute (attribute);
@@ -370,6 +375,7 @@ public class TagNode
      * The first element is the tag name, subsequent elements being either
      * whitespace or real attributes.
      */
+    @Override
     public Vector getAttributesEx ()
     {
         return (mAttributes);
@@ -388,6 +394,7 @@ public class TagNode
      * </em>
      * @return The tag name.
      */
+    @Override
     public String getTagName ()
     {
         String ret;
@@ -410,6 +417,7 @@ public class TagNode
      * @return The tag name or null if this tag contains nothing or only
      * whitespace.
      */
+    @Override
     public String getRawTagName ()
     {
         Vector attributes;
@@ -430,6 +438,7 @@ public class TagNode
      * zeroth element of the attribute vector).
      * @param name The tag name.
      */
+    @Override
     public void setTagName (String name)
     {
         Attribute attribute;
@@ -461,6 +470,7 @@ public class TagNode
      * Return the text contained in this tag.
      * @return The complete contents of the tag (within the angle brackets).
      */
+    @Override
     public String getText ()
     {
         String ret;
@@ -478,6 +488,7 @@ public class TagNode
      * and the second element being the value.
      * @param attribs The attribute collection to set.
      */
+    @Override
     public void setAttributesEx (Vector attribs)
     {
         mAttributes = attribs;
@@ -523,6 +534,7 @@ public class TagNode
      * Parses the given text to create the tag contents.
      * @param text A string of the form &lt;TAGNAME xx="yy"&gt;.
      */
+    @Override
     public void setText (String text)
     {
         Lexer lexer;
@@ -548,6 +560,7 @@ public class TagNode
      * @return An empty string (tag contents do not display in a browser).
      * If you want this tags HTML equivalent, use {@link #toHtml toHtml()}.
      */
+    @Override
     public String toPlainTextString ()
     {
         return ("");
@@ -561,6 +574,7 @@ public class TagNode
      * @return The tag as an HTML fragment.
      * @see org.htmlparser.Node#toHtml()
      */
+    @Override
     public String toHtml (boolean verbatim)
     {
         int length;
@@ -593,6 +607,7 @@ public class TagNode
      * Print the contents of the tag.
      * @return An string describing the tag. For text that looks like HTML use #toHtml().
      */
+    @Override
     public String toString ()
     {
         String text;
@@ -632,6 +647,7 @@ public class TagNode
      * @return <code>true</code> if following text would start on a new line,
      * <code>false</code> otherwise.
      */
+    @Override
     public boolean breaksFlow ()
     {
         return (breakTags.containsKey (getTagName ()));
@@ -643,6 +659,7 @@ public class TagNode
      * <code>visitEndTag()</code>.
      * @param visitor The visitor that is visiting this node.
      */
+    @Override
     public void accept (NodeVisitor visitor)
     {
         if (isEndTag ())
@@ -655,6 +672,7 @@ public class TagNode
      * Is this an empty xml tag of the form &lt;tag/&gt;.
      * @return true if the last character of the last attribute is a '/'.
      */
+    @Override
     public boolean isEmptyXmlTag ()
     {
         Vector attributes;
@@ -688,6 +706,7 @@ public class TagNode
      * @param emptyXmlTag If true, ensures there is an ending slash in the node,
      * i.e. &lt;tag/&gt;, otherwise removes it.
      */
+    @Override
     public void setEmptyXmlTag (boolean emptyXmlTag)
     {
         Vector attributes;
@@ -771,6 +790,7 @@ public class TagNode
      * Predicate to determine if this tag is an end tag (i.e. &lt;/HTML&gt;).
      * @return <code>true</code> if this tag is an end tag.
      */
+    @Override
     public boolean isEndTag ()
     {
         String raw;
@@ -784,6 +804,7 @@ public class TagNode
      * Get the line number where this tag starts.
      * @return The (zero based) line number in the page where this tag starts.
      */
+    @Override
     public int getStartingLineNumber ()
     {
         return (getPage ().row (getStartPosition ()));
@@ -793,6 +814,7 @@ public class TagNode
      * Get the line number where this tag ends.
      * @return The (zero based) line number in the page where this tag ends.
      */
+    @Override
     public int getEndingLineNumber ()
     {
         return (getPage ().row (getEndPosition ()));
@@ -803,6 +825,7 @@ public class TagNode
      * Since this a a generic tag, it has no ids.
      * @return The names to be matched that create tags of this type.
      */
+    @Override
     public String[] getIds ()
     {
         return (NONE);
@@ -816,6 +839,7 @@ public class TagNode
      * Since this a a non-composite tag, the default is no enders.
      * @return The names of following tags that stop further scanning.
      */
+    @Override
     public String[] getEnders ()
     {
         return (NONE);
@@ -829,6 +853,7 @@ public class TagNode
      * Since this a a non-composite tag, it has no end tag enders.
      * @return The names of following end tags that stop further scanning.
      */
+    @Override
     public String[] getEndTagEnders ()
     {
         return (NONE);
@@ -838,6 +863,7 @@ public class TagNode
      * Return the scanner associated with this tag.
      * @return The scanner associated with this tag.
      */
+    @Override
     public Scanner getThisScanner ()
     {
         return (mScanner);
@@ -847,6 +873,7 @@ public class TagNode
      * Set the scanner associated with this tag.
      * @param scanner The scanner for this tag.
      */
+    @Override
     public void setThisScanner (Scanner scanner)
     {
         mScanner = scanner;
@@ -857,6 +884,7 @@ public class TagNode
      * For a non-composite tag this always returns <code>null</code>.
      * @return The tag that terminates this composite tag, i.e. &lt;/HTML&gt;.
      */
+    @Override
     public Tag getEndTag ()
     {
         return (null);
@@ -867,6 +895,7 @@ public class TagNode
      * For a non-composite tag this is a no-op.
      * @param end The tag that terminates this composite tag, i.e. &lt;/HTML&gt;.
      */
+    @Override
     public void setEndTag (Tag end)
     {
     }

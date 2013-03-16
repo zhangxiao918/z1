@@ -84,6 +84,7 @@ public class UrlModifyingVisitorTest extends ParserTestCase {
         NodeVisitor visitor = new NodeVisitor ()
         {
             String linkPrefix = "localhost://";
+            @Override
             public void visitTag (Tag tag)
             {
                 if (tag instanceof LinkTag)

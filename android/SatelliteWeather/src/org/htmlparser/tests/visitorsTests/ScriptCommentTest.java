@@ -26,9 +26,9 @@
 
 package org.htmlparser.tests.visitorsTests;
 
+import org.htmlparser.Tag;
 import org.htmlparser.tags.CompositeTag;
 import org.htmlparser.tags.ScriptTag;
-import org.htmlparser.Tag;
 import org.htmlparser.tests.ParserTestCase;
 import org.htmlparser.visitors.NodeVisitor;
 
@@ -123,6 +123,7 @@ public class ScriptCommentTest extends ParserTestCase {
         /**
          * @see org.htmlparser.visitors.NodeVisitor
          */
+        @Override
         public void visitTag(final Tag n) {
             if ((null != n.getParent())
                 || ((n instanceof CompositeTag)

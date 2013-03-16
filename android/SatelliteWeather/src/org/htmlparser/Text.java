@@ -38,6 +38,7 @@ public interface Text
      * @return The text of the node.
      * @see #setText
      */
+    @Override
     String getText ();
 
     /**
@@ -45,6 +46,7 @@ public interface Text
      * @param text The new text for the node.
      * @see #getText
      */
+    @Override
     void setText (String text);
 
     //

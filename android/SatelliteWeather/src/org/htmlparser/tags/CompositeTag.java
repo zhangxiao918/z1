@@ -26,12 +26,10 @@
 
 package org.htmlparser.tags;
 
-import java.util.Locale;
-
 import org.htmlparser.Node;
 import org.htmlparser.NodeFilter;
-import org.htmlparser.Text;
 import org.htmlparser.Tag;
+import org.htmlparser.Text;
 import org.htmlparser.filters.NodeClassFilter;
 import org.htmlparser.nodes.AbstractNode;
 import org.htmlparser.nodes.TagNode;
@@ -39,6 +37,8 @@ import org.htmlparser.scanners.CompositeTagScanner;
 import org.htmlparser.util.NodeList;
 import org.htmlparser.util.SimpleNodeIterator;
 import org.htmlparser.visitors.NodeVisitor;
+
+import java.util.Locale;
 
 /**
  * The base class for tags that have an end tag.
@@ -132,6 +132,7 @@ public class CompositeTag extends TagNode
      * Return the textual contents of this tag and it's children.
      * @return The 'browser' text contents of this tag.
      */
+    @Override
     public String toPlainTextString() {
         StringBuffer stringRepresentation = new StringBuffer();
         for (SimpleNodeIterator e=children();e.hasMoreNodes();) {
@@ -178,6 +179,7 @@ public class CompositeTag extends TagNode
      * @return This tag and it's contents (children) and the end tag
      * as HTML code.
      */
+    @Override
     public String toHtml (boolean verbatim)
     {
         StringBuffer ret;
@@ -429,6 +431,7 @@ public class CompositeTag extends TagNode
      * @param filter The filter to apply.
      * @see org.htmlparser.filters
      */
+    @Override
     public void collectInto (NodeList list, NodeFilter filter)
     {
         super.collectInto (list, filter);
@@ -461,6 +464,7 @@ public class CompositeTag extends TagNode
      * @param visitor The <code>NodeVisitor</code> object to be signalled
      * for each child and possibly this tag.
      */
+    @Override
     public void accept (NodeVisitor visitor)
     {
         SimpleNodeIterator children;
@@ -505,6 +509,7 @@ public class CompositeTag extends TagNode
      * <em>Note: If the start and end position of the end tag is the same,
      * then the end tag was injected (it's a virtual end tag).</em>
      */
+    @Override
     public Tag getEndTag()
     {
         return (mEndTag);
@@ -517,6 +522,7 @@ public class CompositeTag extends TagNode
      * the end tag with a name not equal to the name of the start tag,
      * i.e. {@.html <LABEL>The label</TITLE>}
      */
+    @Override
     public void setEndTag (Tag tag)
     {
         mEndTag = tag;
@@ -556,6 +562,7 @@ public class CompositeTag extends TagNode
      * Return a string representation of the contents of this tag, it's children and it's end tag suitable for debugging.
      * @return A textual representation of the tag.
      */
+    @Override
     public String toString ()
     {
         StringBuffer ret;
@@ -570,6 +577,7 @@ public class CompositeTag extends TagNode
      * Return the text contained in this tag.
      * @return The complete contents of the tag (within the angle brackets).
      */
+    @Override
     public String getText ()
     {
         String ret;

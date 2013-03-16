@@ -26,11 +26,11 @@
 
 package org.htmlparser.lexer;
 
+import org.htmlparser.util.ParserException;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Serializable;
-
-import org.htmlparser.util.ParserException;
 
 /**
  * A buffered source of characters.
@@ -92,6 +92,7 @@ public abstract class Source
      * @exception IOException <em>not used</em>
      * @see #destroy
      */
+    @Override
     public abstract void close () throws IOException;
 
     /**
@@ -102,6 +103,7 @@ public abstract class Source
      * (<tt>0x00-0xffff</tt>), or {@link #EOF} if the source is exhausted.
      * @exception IOException If an I/O error occurs.
      */
+    @Override
     public abstract int read () throws IOException;
 
     /**
@@ -115,6 +117,7 @@ public abstract class Source
      * exhausted.
      * @exception IOException If an I/O error occurs.
      */
+    @Override
     public abstract int read (char[] cbuf, int off, int len) throws IOException;
 
     /**
@@ -126,6 +129,7 @@ public abstract class Source
      * exhausted.
      * @exception IOException If an I/O error occurs.
      */
+    @Override
     public abstract int read (char[] cbuf) throws IOException;
 
     /**
@@ -135,12 +139,14 @@ public abstract class Source
      * Note that returning false does not guarantee that the next read will block.
      * @exception IOException If an I/O error occurs.
      */
+    @Override
     public abstract boolean ready () throws IOException;
 
     /**
      * Reset the source.
      * Repositions the read point to begin at zero.
      */
+    @Override
     public abstract void reset ();
 
     /**
@@ -148,6 +154,7 @@ public abstract class Source
      * @return <code>true</code> if and only if this source supports the mark
      * operation.
      */
+    @Override
     public abstract boolean markSupported ();
 
     /**
@@ -159,6 +166,7 @@ public abstract class Source
      * before this mark becomes invalid.
      * @exception IOException If an I/O error occurs.
      */
+    @Override
     public abstract void mark (int readAheadLimit) throws IOException;
 
     /**
@@ -170,6 +178,7 @@ public abstract class Source
      * @return The number of characters actually skipped
      * @exception IOException If an I/O error occurs.
      */
+    @Override
     public abstract long skip (long n) throws IOException;
 
     //

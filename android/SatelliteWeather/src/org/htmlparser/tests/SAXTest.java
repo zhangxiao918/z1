@@ -2,11 +2,6 @@
 
 package org.htmlparser.tests;
 
-import java.io.IOException;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.ErrorHandler;
@@ -16,8 +11,11 @@ import org.xml.sax.SAXNotRecognizedException;
 import org.xml.sax.SAXNotSupportedException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
-
 import org.xml.sax.helpers.XMLReaderFactory;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 
 /**
@@ -227,23 +225,27 @@ public class SAXTest implements ContentHandler, ErrorHandler
     // Implementation of org.xml.sax.ContentHandler.
     ////////////////////////////////////////////////////////////////////
 
+    @Override
     public void setDocumentLocator (Locator locator)
     {
 	System.out.println("  EVENT: setDocumentLocator");
     }
 
+    @Override
     public void startDocument ()
 	throws SAXException
     {
 	System.out.println("  EVENT: startDocument");
     }
 
+    @Override
     public void endDocument ()
 	throws SAXException
     {
 	System.out.println("  EVENT: endDocument");
     }
 
+    @Override
     public void startPrefixMapping (String prefix, String uri)
 	throws SAXException
     {
@@ -251,12 +253,14 @@ public class SAXTest implements ContentHandler, ErrorHandler
 			   prefix + " = " + uri);
     }
 
+    @Override
     public void endPrefixMapping (String prefix)
 	throws SAXException
     {
 	System.out.println("  EVENT: endPrefixMapping " + prefix);
     }
 
+    @Override
     public void startElement (String namespaceURI, String localName,
 			      String qName, Attributes atts)
 	throws SAXException
@@ -275,6 +279,7 @@ public class SAXTest implements ContentHandler, ErrorHandler
 	}
     }
 
+    @Override
     public void endElement (String namespaceURI, String localName,
 			    String qName)
 	throws SAXException
@@ -283,6 +288,7 @@ public class SAXTest implements ContentHandler, ErrorHandler
 			   makeNSName(namespaceURI, localName, qName));
     }
 
+    @Override
     public void characters (char ch[], int start, int length)
 	throws SAXException
     {
@@ -290,6 +296,7 @@ public class SAXTest implements ContentHandler, ErrorHandler
 			   escapeData(ch, start, length));
     }
 
+    @Override
     public void ignorableWhitespace (char ch[], int start, int length)
 	throws SAXException
     {
@@ -297,6 +304,7 @@ public class SAXTest implements ContentHandler, ErrorHandler
 			   escapeData(ch, start, length));
     }
 
+    @Override
     public void processingInstruction (String target, String data)
 	throws SAXException
     {
@@ -304,6 +312,7 @@ public class SAXTest implements ContentHandler, ErrorHandler
 			   target + ' ' + data);
     }
 
+    @Override
     public void skippedEntity (String name)
 	throws SAXException
     {
@@ -315,6 +324,7 @@ public class SAXTest implements ContentHandler, ErrorHandler
     // Implementation of org.xml.sax.ErrorHandler.
     ////////////////////////////////////////////////////////////////////
 
+    @Override
     public void warning (SAXParseException e)
 	throws SAXException
     {
@@ -325,6 +335,7 @@ public class SAXTest implements ContentHandler, ErrorHandler
 			   e.getColumnNumber());
     }
 
+    @Override
     public void error (SAXParseException e)
 	throws SAXException
     {
@@ -335,6 +346,7 @@ public class SAXTest implements ContentHandler, ErrorHandler
 			   e.getColumnNumber());
     }
 
+    @Override
     public void fatalError (SAXParseException e)
 	throws SAXException
     {

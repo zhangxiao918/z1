@@ -26,10 +26,18 @@
 
 package org.htmlparser.sax;
 
-import java.io.IOException;
+import org.htmlparser.Node;
+import org.htmlparser.Parser;
+import org.htmlparser.Remark;
+import org.htmlparser.Tag;
+import org.htmlparser.Text;
 import org.htmlparser.lexer.Lexer;
 import org.htmlparser.lexer.Page;
-
+import org.htmlparser.util.DefaultParserFeedback;
+import org.htmlparser.util.NodeIterator;
+import org.htmlparser.util.NodeList;
+import org.htmlparser.util.ParserException;
+import org.htmlparser.util.ParserFeedback;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.DTDHandler;
 import org.xml.sax.EntityResolver;
@@ -41,16 +49,7 @@ import org.xml.sax.SAXNotSupportedException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.NamespaceSupport;
 
-import org.htmlparser.Node;
-import org.htmlparser.Parser;
-import org.htmlparser.Remark;
-import org.htmlparser.Tag;
-import org.htmlparser.Text;
-import org.htmlparser.util.DefaultParserFeedback;
-import org.htmlparser.util.NodeIterator;
-import org.htmlparser.util.NodeList;
-import org.htmlparser.util.ParserException;
-import org.htmlparser.util.ParserFeedback;
+import java.io.IOException;
 
 /**
  * SAX parser.
@@ -208,6 +207,7 @@ public class XMLReader
      *            cannot determine its value at this time.
      * @see #setFeature
      */
+    @Override
     public boolean getFeature (String name)
         throws SAXNotRecognizedException, SAXNotSupportedException
     {
@@ -247,6 +247,7 @@ public class XMLReader
      *            cannot set the requested value.
      * @see #getFeature
      */
+    @Override
     public void setFeature (String name, boolean value)
 	throws SAXNotRecognizedException, SAXNotSupportedException
     {
@@ -284,6 +285,7 @@ public class XMLReader
      *            cannot determine its value at this time.
      * @see #setProperty
      */
+    @Override
     public Object getProperty (String name)
 	throws SAXNotRecognizedException, SAXNotSupportedException
     {
@@ -316,6 +318,7 @@ public class XMLReader
      *            XMLReader recognizes the property name but 
      *            cannot set the requested value.
      */
+    @Override
     public void setProperty (String name, Object value)
 	throws SAXNotRecognizedException, SAXNotSupportedException
     {
@@ -340,6 +343,7 @@ public class XMLReader
      * @param resolver The entity resolver.
      * @see #getEntityResolver
      */
+    @Override
     public void setEntityResolver (EntityResolver resolver)
     {
         mEntityResolver = resolver;
@@ -353,6 +357,7 @@ public class XMLReader
      *         has been registered.
      * @see #setEntityResolver
      */
+    @Override
     public EntityResolver getEntityResolver ()
     {
         return (mEntityResolver);
@@ -372,6 +377,7 @@ public class XMLReader
      * @param handler The DTD handler.
      * @see #getDTDHandler
      */
+    @Override
     public void setDTDHandler (DTDHandler handler)
     {
         mDTDHandler = handler;
@@ -385,6 +391,7 @@ public class XMLReader
      *         has been registered.
      * @see #setDTDHandler
      */
+    @Override
     public DTDHandler getDTDHandler ()
     {
         return (mDTDHandler);
@@ -405,6 +412,7 @@ public class XMLReader
      * @param handler The content handler.
      * @see #getContentHandler
      */
+    @Override
     public void setContentHandler (ContentHandler handler)
     {
         mContentHandler = handler;
@@ -418,6 +426,7 @@ public class XMLReader
      *         has been registered.
      * @see #setContentHandler
      */
+    @Override
     public ContentHandler getContentHandler ()
     {
         return (mContentHandler);
@@ -440,6 +449,7 @@ public class XMLReader
      * @param handler The error handler.
      * @see #getErrorHandler
      */
+    @Override
     public void setErrorHandler (ErrorHandler handler)
     {
         mErrorHandler = handler;
@@ -453,6 +463,7 @@ public class XMLReader
      *         has been registered.
      * @see #setErrorHandler
      */
+    @Override
     public ErrorHandler getErrorHandler ()
     {
         return (mErrorHandler);
@@ -505,6 +516,7 @@ public class XMLReader
      * @see #setContentHandler
      * @see #setErrorHandler 
      */
+    @Override
     public void parse (InputSource input)
 	throws IOException, SAXException
     {
@@ -571,6 +583,7 @@ public class XMLReader
      *            supplied by the application.
      * @see #parse(org.xml.sax.InputSource)
      */
+    @Override
     public void parse (String systemId)
 	throws IOException, SAXException
     {

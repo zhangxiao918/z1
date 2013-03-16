@@ -27,9 +27,9 @@
 package org.htmlparser.visitors;
 
 import org.htmlparser.Parser;
+import org.htmlparser.Tag;
 import org.htmlparser.tags.BodyTag;
 import org.htmlparser.tags.TableTag;
-import org.htmlparser.Tag;
 import org.htmlparser.tags.TitleTag;
 import org.htmlparser.util.NodeList;
 
@@ -53,6 +53,7 @@ public class HtmlPage extends NodeVisitor {
         this.title = title;
     }
 
+    @Override
     public void visitTag(Tag tag)
     {
         if (isTable(tag))

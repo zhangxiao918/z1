@@ -26,12 +26,7 @@
 
 package org.htmlparser;
 
-import java.io.Serializable;
-import java.net.HttpURLConnection;
-import java.net.URLConnection;
-
 import org.htmlparser.filters.TagNameFilter;
-import org.htmlparser.filters.NodeClassFilter;
 import org.htmlparser.http.ConnectionManager;
 import org.htmlparser.http.ConnectionMonitor;
 import org.htmlparser.http.HttpHeader;
@@ -44,6 +39,10 @@ import org.htmlparser.util.NodeList;
 import org.htmlparser.util.ParserException;
 import org.htmlparser.util.ParserFeedback;
 import org.htmlparser.visitors.NodeVisitor;
+
+import java.io.Serializable;
+import java.net.HttpURLConnection;
+import java.net.URLConnection;
 
 /**
  * The main parser class.
@@ -171,7 +170,8 @@ public class Parser
 
     static
     {
-        getConnectionManager ().getDefaultRequestProperties ().put (
+        getConnectionManager ();
+        ConnectionManager.getDefaultRequestProperties ().put (
             "User-Agent", "HTMLParser/" + getVersionNumber ());
     
     }
@@ -782,6 +782,7 @@ public class Parser
      * @throws ParserException <em>Not used</em>
      * @see ConnectionMonitor#preConnect
      */
+    @Override
     public void preConnect (HttpURLConnection connection)
         throws
             ParserException
@@ -797,6 +798,7 @@ public class Parser
      * @throws ParserException <em>Not used.</em>
      * @see ConnectionMonitor#postConnect
      */
+    @Override
     public void postConnect (HttpURLConnection connection)
         throws
             ParserException

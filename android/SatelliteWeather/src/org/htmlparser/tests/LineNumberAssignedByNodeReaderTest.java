@@ -26,13 +26,13 @@
 
 package org.htmlparser.tests;
 
-import java.util.Arrays;
-
 import junit.framework.TestSuite;
 
 import org.htmlparser.PrototypicalNodeFactory;
 import org.htmlparser.tests.scannersTests.CompositeTagScannerTest.CustomTag;
 import org.htmlparser.util.ParserException;
+
+import java.util.Arrays;
 
 /**
  * @author Somik Raha

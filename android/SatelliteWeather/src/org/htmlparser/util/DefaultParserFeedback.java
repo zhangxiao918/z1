@@ -100,6 +100,7 @@ public class DefaultParserFeedback
      * Print an info message.
      * @param message The message to print.
      */
+    @Override
     public void info (String message)
     {
         if (QUIET != mMode)
@@ -110,6 +111,7 @@ public class DefaultParserFeedback
      * Print an warning message.
      * @param message The message to print.
      */
+    @Override
     public void warning (String message)
     {
         if (QUIET != mMode)
@@ -121,6 +123,7 @@ public class DefaultParserFeedback
      * @param message The message to print.
      * @param exception The exception for stack tracing.
      */
+    @Override
     public void error (String message, ParserException exception)
     {
         if (QUIET != mMode)

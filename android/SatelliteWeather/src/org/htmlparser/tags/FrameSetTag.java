@@ -26,11 +26,11 @@
 
 package org.htmlparser.tags;
 
-import java.util.Locale;
-
 import org.htmlparser.Node;
 import org.htmlparser.util.NodeList;
 import org.htmlparser.util.SimpleNodeIterator;
+
+import java.util.Locale;
 
 /**
  * Identifies an frame set tag.
@@ -58,6 +58,7 @@ public class FrameSetTag extends CompositeTag
      * Return the set of names handled by this tag.
      * @return The names to be matched that create tags of this type.
      */
+    @Override
     public String[] getIds ()
     {
         return (mIds);
@@ -67,6 +68,7 @@ public class FrameSetTag extends CompositeTag
      * Return the set of end tag names that cause this tag to finish.
      * @return The names of following end tags that stop further scanning.
      */
+    @Override
     public String[] getEndTagEnders ()
     {
         return (mEndTagEnders);
@@ -76,6 +78,7 @@ public class FrameSetTag extends CompositeTag
      * Return a string representation of the contents of this <code>FRAMESET</code> tag suitable for debugging.
      * @return A string with this tag's contents.
      */
+    @Override
     public String toString()
     {
         return "FRAMESET TAG : begins at : "+getStartPosition ()+"; ends at : "+getEndPosition ();

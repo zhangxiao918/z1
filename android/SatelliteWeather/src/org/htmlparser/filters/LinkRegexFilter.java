@@ -26,12 +26,12 @@
 
 package org.htmlparser.filters;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.htmlparser.Node;
 import org.htmlparser.NodeFilter;
 import org.htmlparser.tags.LinkTag;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * This class accepts tags of class LinkTag that contain a link matching a given
@@ -77,6 +77,7 @@ public class LinkRegexFilter implements NodeFilter
      * @param node The node to check.
      * @return <code>true</code> if the node is a link with the pattern.
      */
+    @Override
     public boolean accept (Node node)
     {
         boolean ret;

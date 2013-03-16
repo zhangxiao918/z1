@@ -361,6 +361,7 @@ public class Cookie
      * Returns a copy of this object.
      * @return The clone of this cookie.
      */
+    @Override
     public Object clone ()
     {
         try
@@ -377,6 +378,7 @@ public class Cookie
      * Convert this cookie into a user friendly string.
      * @return A short form string representing this cookie.
      */
+    @Override
     public String toString ()
     {
         StringBuffer ret;

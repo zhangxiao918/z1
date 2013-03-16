@@ -1,20 +1,20 @@
 package org.bluestome.satelliteweather.db.dao.impl;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.bluestome.satelliteweather.db.DBException;
-import org.bluestome.satelliteweather.db.DatabaseHelper;
-import org.bluestome.satelliteweather.db.dao.BaseDAO;
-
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
+
+import org.bluestome.satelliteweather.db.DBException;
+import org.bluestome.satelliteweather.db.DatabaseHelper;
+import org.bluestome.satelliteweather.db.dao.BaseDAO;
+
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @ClassName: BaseImpl

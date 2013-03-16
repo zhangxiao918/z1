@@ -27,7 +27,6 @@
 package org.htmlparser.tests.tagTests;
 
 import org.htmlparser.Attribute;
-
 import org.htmlparser.Node;
 import org.htmlparser.PrototypicalNodeFactory;
 import org.htmlparser.Tag;

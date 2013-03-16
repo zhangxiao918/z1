@@ -26,10 +26,6 @@
 
 package org.htmlparser.tags;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Vector;
-
 import org.htmlparser.Attribute;
 import org.htmlparser.Node;
 import org.htmlparser.Tag;
@@ -37,6 +33,10 @@ import org.htmlparser.Text;
 import org.htmlparser.nodes.TagNode;
 import org.htmlparser.util.NodeList;
 import org.htmlparser.util.SimpleNodeIterator;
+
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Vector;
 
 /**
  * AppletTag represents an &lt;Applet&gt; tag.
@@ -68,6 +68,7 @@ public class AppletTag
      * Return the set of names handled by this tag.
      * @return The names to be matched that create tags of this type.
      */
+    @Override
     public String[] getIds ()
     {
         return (mIds);
@@ -77,6 +78,7 @@ public class AppletTag
      * Return the set of end tag names that cause this tag to finish.
      * @return The names of following end tags that stop further scanning.
      */
+    @Override
     public String[] getEndTagEnders ()
     {
         return (mEndTagEnders);
@@ -269,6 +271,7 @@ public class AppletTag
      * Output a string representing this applet tag.
      * @return A string showing the contents of the applet tag.
      */
+    @Override
     public String toString ()
     {
         Hashtable parameters;

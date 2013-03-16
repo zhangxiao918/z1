@@ -26,13 +26,12 @@
 
 package org.htmlparser.sax;
 
-import org.xml.sax.ErrorHandler;
-import org.xml.sax.Locator;
-import org.xml.sax.SAXParseException;
-
 import org.htmlparser.util.ParserException;
 import org.htmlparser.util.ParserFeedback;
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 /**
  * Mediates between the feedback mechanism of the htmlparser and an error handler.
@@ -67,6 +66,7 @@ public class Feedback
      * <em>Just eats the info message.</em>
      * @param message {@inheritDoc} 
      */
+    @Override
     public void info (String message)
     {
         // swallow
@@ -77,6 +77,7 @@ public class Feedback
      * Calls {@link ErrorHandler#warning(SAXParseException) ErrorHandler.warning}.
      * @param message {@inheritDoc} 
      */
+    @Override
     public void warning (String message)
     {
         try
@@ -96,6 +97,7 @@ public class Feedback
      * @param message {@inheritDoc} 
      * @param e {@inheritDoc} 
      */
+    @Override
     public void error (String message, ParserException e)
     {
         try

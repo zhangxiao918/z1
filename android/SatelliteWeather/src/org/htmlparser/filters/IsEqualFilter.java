@@ -53,6 +53,7 @@ public class IsEqualFilter implements NodeFilter
      * @param node The node to check.
      * @return <code>false</code> unless <code>node</code> is the one and only.
      */
+    @Override
     public boolean accept (Node node)
     {
         return (mNode == node);

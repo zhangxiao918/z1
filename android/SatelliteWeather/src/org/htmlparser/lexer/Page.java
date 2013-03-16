@@ -26,8 +26,11 @@
 
 package org.htmlparser.lexer;
 
-import java.io.InputStream;
+import org.htmlparser.http.ConnectionManager;
+import org.htmlparser.util.ParserException;
+
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
@@ -41,9 +44,6 @@ import java.net.UnknownHostException;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
-
-import org.htmlparser.http.ConnectionManager;
-import org.htmlparser.util.ParserException;
 
 /**
  * Represents the contents of an HTML page.
@@ -497,6 +497,7 @@ public class Page
      * @exception Throwable if <code>close()</code> throws an
      * <code>IOException</code>.
      */
+    @Override
     protected void finalize ()
         throws
             Throwable
@@ -1224,6 +1225,7 @@ public class Page
      * Display some of this page as a string.
      * @return The last few characters the source read in.
      */
+    @Override
     public String toString ()
     {
         StringBuffer buffer;

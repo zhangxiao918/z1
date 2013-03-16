@@ -61,6 +61,7 @@ public class Locator
      *         null if none is available.
      * @see #getSystemId
      */
+    @Override
     public String getPublicId ()
     {
         return (null); // I assume this would be <title></title>
@@ -83,6 +84,7 @@ public class Locator
      *         if none is available.
      * @see #getPublicId
      */
+    @Override
     public String getSystemId ()
     {
         return (mParser.getURL ());
@@ -113,6 +115,7 @@ public class Locator
      * @return The line number, or -1 if none is available.
      * @see #getColumnNumber
      */
+    @Override
     public int getLineNumber ()
     {
         Lexer lexer;
@@ -146,6 +149,7 @@ public class Locator
      * @return The column number, or -1 if none is available.
      * @see #getLineNumber
      */
+    @Override
     public int getColumnNumber ()
     {
         Lexer lexer;

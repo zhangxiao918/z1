@@ -26,17 +26,10 @@
 
 package org.htmlparser;
 
-import java.io.Serializable;
-import java.util.Hashtable;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-import java.util.Vector;
-
 import org.htmlparser.lexer.Page;
-import org.htmlparser.nodes.TextNode;
 import org.htmlparser.nodes.RemarkNode;
 import org.htmlparser.nodes.TagNode;
+import org.htmlparser.nodes.TextNode;
 import org.htmlparser.tags.AppletTag;
 import org.htmlparser.tags.BaseHrefTag;
 import org.htmlparser.tags.BodyTag;
@@ -49,8 +42,8 @@ import org.htmlparser.tags.DoctypeTag;
 import org.htmlparser.tags.FormTag;
 import org.htmlparser.tags.FrameSetTag;
 import org.htmlparser.tags.FrameTag;
-import org.htmlparser.tags.HeadingTag;
 import org.htmlparser.tags.HeadTag;
+import org.htmlparser.tags.HeadingTag;
 import org.htmlparser.tags.Html;
 import org.htmlparser.tags.ImageTag;
 import org.htmlparser.tags.InputTag;
@@ -72,6 +65,13 @@ import org.htmlparser.tags.TableRow;
 import org.htmlparser.tags.TableTag;
 import org.htmlparser.tags.TextareaTag;
 import org.htmlparser.tags.TitleTag;
+
+import java.io.Serializable;
+import java.util.Hashtable;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.Vector;
 
 /**
  * A node factory based on the prototype pattern.
@@ -429,6 +429,7 @@ public class PrototypicalNodeFactory
      * @param end The ending position of the string.
      * @return A text node comprising the indicated characters from the page.
      */
+    @Override
     public Text createStringNode (Page page, int start, int end)
     {
         Text ret;
@@ -455,6 +456,7 @@ public class PrototypicalNodeFactory
      * @param end The ending positiong of the remark.
      * @return A remark node comprising the indicated characters from the page.
      */
+    @Override
     public Remark createRemarkNode (Page page, int start, int end)
     {
         Remark ret;
@@ -486,6 +488,7 @@ public class PrototypicalNodeFactory
      * @param attributes The attributes contained in this tag.
      * @return A tag node comprising the indicated characters from the page.
      */
+    @Override
     public Tag createTagNode (Page page, int start, int end, Vector attributes)
     {
         Attribute attribute;

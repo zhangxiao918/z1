@@ -206,6 +206,7 @@ public class NodeTreeWalker implements NodeIterator
      * Traverses to the next Node from the current Node, using either depth-first or breadth-first tree traversal as appropriate.
      * @return The next Node from the current Node.
      */
+    @Override
     public Node nextNode()
     {
         if (this.mNextNode != null)//check if we've already found the next Node by calling hasMoreNodes()
@@ -254,6 +255,7 @@ public class NodeTreeWalker implements NodeIterator
      * Returns whether or not there are more nodes available based on the current configuration of this NodeTreeWalker.
      * @return True if there are more Nodes available, based on the current configuration, or false otherwise.
      */
+    @Override
     public boolean hasMoreNodes()
     {
         if (this.mNextNode == null)//if we've already generated mNextNode

@@ -51,6 +51,7 @@ public class JspTag
      * Return the set of names handled by this tag.
      * @return The names to be matched that create tags of this type.
      */
+    @Override
     public String[] getIds ()
     {
         return (mIds);
@@ -60,6 +61,7 @@ public class JspTag
      * Returns a string representation of this jsp tag suitable for debugging.
      * @return A string representing this tag.
      */
+    @Override
     public String toString()
     {
         String guts = toHtml();

@@ -51,6 +51,7 @@ public class DoctypeTag
      * Return the set of names handled by this tag.
      * @return The names to be matched that create tags of this type.
      */
+    @Override
     public String[] getIds ()
     {
         return (mIds);
@@ -60,6 +61,7 @@ public class DoctypeTag
      * Return a string representation of the contents of this <code>!DOCTYPE</code> tag suitable for debugging.
      * @return The contents of the document declaration tag as a string.
      */
+    @Override
     public String toString()
     {
         String guts = toHtml();

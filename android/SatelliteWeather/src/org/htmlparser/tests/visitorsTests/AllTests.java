@@ -27,6 +27,7 @@
 package org.htmlparser.tests.visitorsTests;
 
 import junit.framework.TestSuite;
+
 import org.htmlparser.tests.ParserTestCase;
 
 public class AllTests extends ParserTestCase

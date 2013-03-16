@@ -132,6 +132,7 @@ public class HasParentFilter
      * @return <code>true</code> if the node has an acceptable parent,
      * <code>false</code> otherwise.
      */
+    @Override
     public boolean accept (Node node)
     {
         Node parent;

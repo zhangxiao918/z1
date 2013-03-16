@@ -28,11 +28,11 @@ package org.htmlparser.visitors;
 
 import org.htmlparser.Node;
 import org.htmlparser.Remark;
+import org.htmlparser.Tag;
 import org.htmlparser.Text;
 import org.htmlparser.tags.CompositeTag;
 import org.htmlparser.tags.ImageTag;
 import org.htmlparser.tags.LinkTag;
-import org.htmlparser.Tag;
 
 public class UrlModifyingVisitor extends NodeVisitor {
     private String linkPrefix;
@@ -44,16 +44,19 @@ public class UrlModifyingVisitor extends NodeVisitor {
         modifiedResult = new StringBuffer();
     }
 
+    @Override
     public void visitRemarkNode (Remark remarkNode)
     {
         modifiedResult.append (remarkNode.toHtml());
     }
 
+    @Override
     public void visitStringNode(Text stringNode)
     {
         modifiedResult.append (stringNode.toHtml());
     }
 
+    @Override
     public void visitTag(Tag tag)
     {
         if (tag instanceof LinkTag)
@@ -69,6 +72,7 @@ public class UrlModifyingVisitor extends NodeVisitor {
             modifiedResult.append(tag.toHtml());
     }
 
+    @Override
     public void visitEndTag(Tag tag)
     {
         Node parent;

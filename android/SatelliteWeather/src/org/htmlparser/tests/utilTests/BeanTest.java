@@ -26,6 +26,16 @@
 
 package org.htmlparser.tests.utilTests;
 
+import org.htmlparser.Node;
+import org.htmlparser.Parser;
+import org.htmlparser.beans.LinkBean;
+import org.htmlparser.beans.StringBean;
+import org.htmlparser.lexer.Lexer;
+import org.htmlparser.lexer.Page;
+import org.htmlparser.tests.ParserTestCase;
+import org.htmlparser.util.NodeIterator;
+import org.htmlparser.util.ParserException;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.ByteArrayInputStream;
@@ -38,16 +48,6 @@ import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.util.Vector;
-
-import org.htmlparser.Node;
-import org.htmlparser.Parser;
-import org.htmlparser.beans.LinkBean;
-import org.htmlparser.beans.StringBean;
-import org.htmlparser.lexer.Lexer;
-import org.htmlparser.lexer.Page;
-import org.htmlparser.tests.*;
-import org.htmlparser.util.NodeIterator;
-import org.htmlparser.util.ParserException;
 
 public class BeanTest extends ParserTestCase
 {
@@ -289,6 +289,7 @@ public class BeanTest extends ParserTestCase
         sb.addPropertyChangeListener (
             new PropertyChangeListener ()
             {
+                @Override
                 public void propertyChange (PropertyChangeEvent event)
                 {
                     if (event.getSource ().equals (sb))
@@ -320,6 +321,7 @@ public class BeanTest extends ParserTestCase
         lb.addPropertyChangeListener (
             new PropertyChangeListener ()
             {
+                @Override
                 public void propertyChange (PropertyChangeEvent event)
                 {
                     if (event.getSource ().equals (lb))

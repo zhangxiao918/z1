@@ -1,7 +1,5 @@
 package org.bluestome.satelliteweather.db;
 
-import org.bluestome.satelliteweather.db.Satellite.FY2Columns;
-
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -10,6 +8,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.util.Log;
+
+import org.bluestome.satelliteweather.db.Satellite.FY2Columns;
 
 /**
  * 卫星云图内容提供器

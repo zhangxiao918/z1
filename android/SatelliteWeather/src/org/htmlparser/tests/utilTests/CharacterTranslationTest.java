@@ -26,6 +26,19 @@
 
 package org.htmlparser.tests.utilTests;
 
+import org.htmlparser.Node;
+import org.htmlparser.Parser;
+import org.htmlparser.Remark;
+import org.htmlparser.Tag;
+import org.htmlparser.Text;
+import org.htmlparser.tags.LinkTag;
+import org.htmlparser.tests.ParserTestCase;
+import org.htmlparser.util.CharacterReference;
+import org.htmlparser.util.NodeIterator;
+import org.htmlparser.util.NodeList;
+import org.htmlparser.util.ParserException;
+import org.htmlparser.util.Translate;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -40,20 +53,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Random;
-
-import org.htmlparser.Node;
-import org.htmlparser.Parser;
-import org.htmlparser.Remark;
-import org.htmlparser.Tag;
-import org.htmlparser.Text;
-import org.htmlparser.tags.LinkTag;
-import org.htmlparser.tests.ParserTestCase;
-import org.htmlparser.util.CharacterReference;
-import org.htmlparser.util.NodeIterator;
-import org.htmlparser.util.NodeList;
-import org.htmlparser.util.ParserException;
-import org.htmlparser.util.Translate;
-import org.htmlparser.util.sort.Sort;
 
 public class CharacterTranslationTest
     extends
@@ -91,6 +90,7 @@ public class CharacterTranslationTest
             mRoot = root;
         }
 
+        @Override
         public Class loadClass (String className)
             throws
                 ClassNotFoundException
@@ -98,6 +98,7 @@ public class CharacterTranslationTest
             return (loadClass (className, true));
         }
         
+        @Override
         public synchronized Class loadClass (String className, boolean resolveIt)
             throws
                 ClassNotFoundException

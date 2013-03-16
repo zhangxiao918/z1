@@ -26,10 +26,9 @@
 
 package org.htmlparser;
 
-import java.util.Hashtable;
-import java.util.Vector;
-
 import org.htmlparser.scanners.Scanner;
+
+import java.util.Vector;
 
 /**
  * This interface represents a tag (&lt;xxx yyy="zzz"&gt;) in the HTML document.

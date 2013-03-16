@@ -47,6 +47,7 @@ public class CompositeTagScannerHelperTest extends ParserTestCase {
         super(name);
     }
 
+    @Override
     protected void setUp() {
     }
 

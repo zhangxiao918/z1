@@ -26,12 +26,12 @@
 
 package org.htmlparser.util;
 
-import java.io.Serializable;
-import java.util.NoSuchElementException;
-
 import org.htmlparser.Node;
 import org.htmlparser.NodeFilter;
 import org.htmlparser.visitors.NodeVisitor;
+
+import java.io.Serializable;
+import java.util.NoSuchElementException;
 
 public class NodeList implements Serializable
 {
@@ -117,11 +117,13 @@ public class NodeList implements Serializable
         {
             int count = 0;
             
+            @Override
             public boolean hasMoreNodes ()
             {
                 return count < size;
             }
             
+            @Override
             public Node nextNode ()
             {
                 synchronized (NodeList.this)
@@ -259,6 +261,7 @@ public class NodeList implements Serializable
      * Suitable for debugging.
      * @return A string representation of the list. 
      */
+    @Override
     public String toString()
     {
         StringBuffer ret;

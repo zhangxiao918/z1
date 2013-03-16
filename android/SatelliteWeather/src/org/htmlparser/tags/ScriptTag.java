@@ -62,6 +62,7 @@ public class ScriptTag extends CompositeTag
      * Return the set of names handled by this tag.
      * @return The names to be matched that create tags of this type.
      */
+    @Override
     public String[] getIds ()
     {
         return (mIds);
@@ -71,6 +72,7 @@ public class ScriptTag extends CompositeTag
      * Return the set of end tag names that cause this tag to finish.
      * @return The names of following end tags that stop further scanning.
      */
+    @Override
     public String[] getEndTagEnders ()
     {
         return (mEndTagEnders);
@@ -145,6 +147,7 @@ public class ScriptTag extends CompositeTag
      * page text as possible.
      * @param sb The buffer to add the script to.
      */
+    @Override
     protected void putChildrenInto (StringBuffer sb, boolean verbatim)
     {
         Node node;
@@ -165,6 +168,7 @@ public class ScriptTag extends CompositeTag
      * Print the contents of the script tag suitable for debugging display.
      * @return The script language or type and code as a string.
      */
+    @Override
     public String toString()
     {
         StringBuffer sb = new StringBuffer();

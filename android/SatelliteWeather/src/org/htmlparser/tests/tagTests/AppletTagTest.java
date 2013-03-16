@@ -26,12 +26,12 @@
 
 package org.htmlparser.tests.tagTests;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
-
 import org.htmlparser.tags.AppletTag;
 import org.htmlparser.tests.ParserTestCase;
 import org.htmlparser.util.ParserException;
+
+import java.util.Enumeration;
+import java.util.Hashtable;
 
 public class AppletTagTest extends ParserTestCase {
 

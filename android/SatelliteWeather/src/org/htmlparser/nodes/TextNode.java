@@ -74,6 +74,7 @@ public class TextNode
      * This is the same as {@link #toHtml} for this type of node.
      * @return The contents of this text node.
      */
+    @Override
     public String getText ()
     {
         return (toHtml ());
@@ -83,6 +84,7 @@ public class TextNode
      * Sets the string contents of the node.
      * @param text The new text for the node.
      */
+    @Override
     public void setText (String text)
     {
         mText = text;
@@ -95,6 +97,7 @@ public class TextNode
      * This is the same as {@link #toHtml} for this type of node.
      * @return The contents of this text node.
      */
+    @Override
     public String toPlainTextString ()
     {
         return (toHtml ());
@@ -106,6 +109,7 @@ public class TextNode
      * page text as possible.
      * @return The contents of this text node.
      */
+    @Override
     public String toHtml (boolean verbatim)
     {
         String ret;
@@ -124,6 +128,7 @@ public class TextNode
      * sequence and contents is truncated to 80 characters.
      * @return A string representation of the string node.
      */
+    @Override
     public String toString ()
     {
         int startpos;
@@ -227,6 +232,7 @@ public class TextNode
      * @param visitor The <code>NodeVisitor</code> object to invoke 
      * <code>visitStringNode()</code> on.
      */
+    @Override
     public void accept (NodeVisitor visitor)
     {
         visitor.visitStringNode (this);

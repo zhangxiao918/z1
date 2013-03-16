@@ -38,6 +38,7 @@ public interface Remark
      * @return The contents of the text inside the comment delimiters.
      * @see #setText
      */
+    @Override
     String getText();
 
     /**
@@ -47,6 +48,7 @@ public interface Remark
      * @param text The new text for the node.
      * @see #getText
      */
+    @Override
     void setText (String text);
 
     //

@@ -199,6 +199,7 @@ public class PageAttribute
      * @return The name, or <code>null</code> if it's just a whitepace
      * 'attribute'.
      */
+    @Override
     public String getName ()
     {
         String ret;
@@ -221,6 +222,7 @@ public class PageAttribute
      * @param buffer The buffer to place the name in.
      * @see #getName()
      */
+    @Override
     public void getName (StringBuffer buffer)
     {
         String name;
@@ -241,6 +243,7 @@ public class PageAttribute
      * can include whitespace on either or both sides of an equals sign.
      * @return The assignment string.
      */
+    @Override
     public String getAssignment ()
     {
         String ret;
@@ -267,6 +270,7 @@ public class PageAttribute
      * @param buffer The buffer to place the assignment string in.
      * @see #getAssignment()
      */
+    @Override
     public void getAssignment (StringBuffer buffer)
     {
         int length;
@@ -301,6 +305,7 @@ public class PageAttribute
      * @return The value, or <code>null</code> if it's a stand-alone or
      * empty attribute, or the text if it's just a whitepace 'attribute'.
      */
+    @Override
     public String getValue ()
     {
         String ret;
@@ -323,6 +328,7 @@ public class PageAttribute
      * @param buffer The buffer to place the value in.
      * @see #getValue()
      */
+    @Override
     public void getValue (StringBuffer buffer)
     {
         String value;
@@ -344,6 +350,7 @@ public class PageAttribute
      * @return The value, or <code>null</code> if it's a stand-alone attribute,
      * or the text if it's just a whitepace 'attribute'.
      */
+    @Override
     public String getRawValue ()
     {
         char quote;
@@ -370,6 +377,7 @@ public class PageAttribute
      * @param buffer The string buffer to append the attribute value to.
      * @see #getRawValue()
      */
+    @Override
     public void getRawValue (StringBuffer buffer)
     {
         char quote;
@@ -500,6 +508,7 @@ public class PageAttribute
      * @return <code>true</code> if this attribute is whitespace,
      * <code>false</code> if it is a real attribute.
      */
+    @Override
     public boolean isWhitespace ()
     {
         return (((null == super.getName ()) && (null == mPage))
@@ -511,6 +520,7 @@ public class PageAttribute
      * @return <code>true</code> if this attribute is a standalone attribute.
      * <code>false</code> if has an equals sign.
      */
+    @Override
     public boolean isStandAlone ()
     {
         return (!isWhitespace () // not whitespace
@@ -526,6 +536,7 @@ public class PageAttribute
      * @return <code>true</code> if this attribute is an empty attribute.
      * <code>false</code> if has an equals sign and a value.
      */
+    @Override
     public boolean isEmpty ()
     {
         return (!isWhitespace () // not whitespace
@@ -541,6 +552,7 @@ public class PageAttribute
      * @return <code>true</code> if this attribute has a value.
      * <code>false</code> if it is empty or standalone.
      */
+    @Override
     public boolean isValued ()
     {
         return ((null != super.getValue ()) // an explicit value provided
@@ -552,6 +564,7 @@ public class PageAttribute
      * Get the length of the string value of this attribute.
      * @return The number of characters required to express this attribute.
      */
+    @Override
     public int getLength ()
     {
         String name;

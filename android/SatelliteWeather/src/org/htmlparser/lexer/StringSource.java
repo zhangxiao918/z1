@@ -26,8 +26,9 @@
 
 package org.htmlparser.lexer;
 
-import java.io.IOException;
 import org.htmlparser.util.ParserException;
+
+import java.io.IOException;
 
 /**
  * A source of characters based on a String.
@@ -85,6 +86,7 @@ public class StringSource
      * Get the encoding being used to convert characters.
      * @return The current encoding.
      */
+    @Override
     public String getEncoding ()
     {
         return (mEncoding);
@@ -96,6 +98,7 @@ public class StringSource
      * @param character_set The character set to use to convert characters.
      * @exception ParserException <em>Not thrown</em>.
      */
+    @Override
     public void setEncoding (String character_set)
         throws
             ParserException
@@ -113,6 +116,7 @@ public class StringSource
      * @exception IOException <em>not used</em>
      * @see #destroy
      */
+    @Override
     public void close () throws IOException
     {
     }
@@ -123,6 +127,7 @@ public class StringSource
      * (<tt>0x00-0xffff</tt>), or {@link #EOF EOF} if the source is exhausted.
      * @exception IOException If an I/O error occurs.
      */
+    @Override
     public int read () throws IOException
     {
         int ret;
@@ -149,6 +154,7 @@ public class StringSource
      * is exhausted.
      * @exception IOException If an I/O error occurs.
      */
+    @Override
     public int read (char[] cbuf, int off, int len) throws IOException
     {
         int length;
@@ -182,6 +188,7 @@ public class StringSource
      * @exception IOException If an I/O error occurs.
      */
 
+    @Override
     public int read (char[] cbuf) throws IOException
     {
         return (read (cbuf, 0, cbuf.length));
@@ -193,6 +200,7 @@ public class StringSource
      * still more characters to read.
      * @exception IOException Thrown if the source is closed.
      */
+    @Override
     public boolean ready () throws IOException
     {
         if (null == mString)
@@ -205,6 +213,7 @@ public class StringSource
      * Repositions the read point to begin at zero.
      * @exception IllegalStateException If the source has been closed.
      */
+    @Override
     public void reset ()
         throws
             IllegalStateException
@@ -222,6 +231,7 @@ public class StringSource
      * Tell whether this source supports the mark() operation.
      * @return <code>true</code>.
      */
+    @Override
     public boolean markSupported ()
     {
         return (true);
@@ -235,6 +245,7 @@ public class StringSource
      * @exception IOException Thrown if the source is closed.
      *
      */
+    @Override
     public void mark (int readAheadLimit) throws IOException
     {
         if (null == mString)
@@ -250,6 +261,7 @@ public class StringSource
      * @exception IllegalArgumentException If <code>n</code> is negative.
      * @exception IOException If the source is closed.
      */
+    @Override
     public long skip (long n)
         throws
             IOException,
@@ -284,6 +296,7 @@ public class StringSource
      * Undo the read of a single character.
      * @exception IOException If no characters have been read or the source is closed.
      */
+    @Override
     public void unread () throws IOException
     {
         if (null == mString)
@@ -301,6 +314,7 @@ public class StringSource
      * @exception IOException If the source is closed or an attempt is made to
      * read beyond {@link #offset()}.
      */
+    @Override
     public char getCharacter (int offset) throws IOException
     {
         char ret;
@@ -326,6 +340,7 @@ public class StringSource
      * @exception IOException If the source is closed or an attempt is made to
      * read beyond {@link #offset()}.
      */
+    @Override
     public void getCharacters (char[] array, int offset, int start, int end) throws IOException
     {
         if (null == mString)
@@ -348,6 +363,7 @@ public class StringSource
      * @exception IOException If the source is closed or an attempt is made to
      * read beyond {@link #offset()}.
      */
+    @Override
     public String getString (int offset, int length) throws IOException
     {
         String ret;
@@ -374,6 +390,7 @@ public class StringSource
      * @exception IOException If the source is closed or an attempt is made to
      * read beyond {@link #offset()}.
      */
+    @Override
     public void getCharacters (StringBuffer buffer, int offset, int length) throws IOException
     {
         if (null == mString)
@@ -397,6 +414,7 @@ public class StringSource
      * Closing a previously-closed source, however, has no effect.
      * @exception IOException <em>Not thrown</em>
      */
+    @Override
     public void destroy () throws IOException
     {
         mString = null;
@@ -407,6 +425,7 @@ public class StringSource
      * @return The number of characters that have already been read, or
      * {@link #EOF EOF} if the source is closed.
      */
+    @Override
     public int offset ()
     {
         int ret;
@@ -424,6 +443,7 @@ public class StringSource
      * @return The number of characters that can be read or zero if the source
      * is closed.
      */
+    @Override
     public int available ()
     {
         int ret;

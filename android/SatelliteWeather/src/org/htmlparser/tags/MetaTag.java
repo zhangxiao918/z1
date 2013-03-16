@@ -27,7 +27,6 @@
 package org.htmlparser.tags;
 
 import org.htmlparser.Attribute;
-import org.htmlparser.lexer.Page;
 import org.htmlparser.nodes.TagNode;
 import org.htmlparser.util.ParserException;
 
@@ -54,6 +53,7 @@ public class MetaTag
      * Return the set of names handled by this tag.
      * @return The names to be matched that create tags of this type.
      */
+    @Override
     public String[] getIds ()
     {
         return (mIds);
@@ -136,6 +136,7 @@ public class MetaTag
      * Check for a charset directive, and if found, set the charset for the page.
      * @exception ParserException If setting the encoding fails.
      */
+    @Override
     public void doSemanticAction ()
         throws
             ParserException

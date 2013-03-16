@@ -26,11 +26,11 @@
 
 package org.htmlparser.sax;
 
-import java.util.Vector;
-
 import org.htmlparser.Attribute;
 import org.htmlparser.Tag;
 import org.xml.sax.helpers.NamespaceSupport;
+
+import java.util.Vector;
 
 /**
  * Provides access to the tag attributes.
@@ -87,6 +87,7 @@ public class Attributes
      * @see #getType(int)
      * @see #getValue(int)
      */
+    @Override
     public int getLength ()
     {
         return (mTag.getAttributesEx ().size () - 1);
@@ -102,6 +103,7 @@ public class Attributes
      *         range.
      * @see #getLength
      */
+    @Override
     public String getURI (int index)
     {
         mSupport.processName (getQName (index), mParts, true);
@@ -118,6 +120,7 @@ public class Attributes
      *         if the index is out of range.
      * @see #getLength
      */
+    @Override
     public String getLocalName (int index)
     {
         mSupport.processName (getQName (index), mParts, true);
@@ -134,6 +137,7 @@ public class Attributes
      *         is out of range.
      * @see #getLength
      */
+    @Override
     public String getQName (int index)
     {
         Attribute attribute;
@@ -168,6 +172,7 @@ public class Attributes
      *         index is out of range.
      * @see #getLength
      */
+    @Override
     public String getType (int index)
     {
         return ("CDATA");
@@ -187,6 +192,7 @@ public class Attributes
      *         index is out of range.
      * @see #getLength
      */
+    @Override
     public String getValue (int index)
     {
         Attribute attribute;
@@ -215,6 +221,7 @@ public class Attributes
      * @return The index of the attribute, or -1 if it does not
      *         appear in the list.
      */
+    @Override
     public int getIndex (String uri, String localName)
     {
         Vector attributes;
@@ -257,6 +264,7 @@ public class Attributes
      * @return The index of the attribute, or -1 if it does not
      *         appear in the list.
      */
+    @Override
     public int getIndex (String qName)
     {
         mSupport.processName (qName, mParts, true);
@@ -277,6 +285,7 @@ public class Attributes
      *         attribute is not in the list or if Namespace
      *         processing is not being performed.
      */
+    @Override
     public String getType (String uri, String localName)
     {
         return (null);
@@ -294,6 +303,7 @@ public class Attributes
      *         attribute is not in the list or if qualified names
      *         are not available.
      */
+    @Override
     public String getType (String qName)
     {
         return (null);
@@ -312,6 +322,7 @@ public class Attributes
      * @return The attribute value as a string, or null if the
      *         attribute is not in the list.
      */
+    @Override
     public String getValue (String uri, String localName)
     {
         return (mTag.getAttribute (localName));
@@ -329,6 +340,7 @@ public class Attributes
      *         attribute is not in the list or if qualified names
      *         are not available.
      */
+    @Override
     public String getValue (String qName)
     {
         mSupport.processName (qName, mParts, true);

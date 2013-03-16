@@ -26,6 +26,8 @@
 
 package org.htmlparser.http;
 
+import org.htmlparser.util.ParserException;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -41,8 +43,6 @@ import java.util.Hashtable;
 import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.Vector;
-
-import org.htmlparser.util.ParserException;
 
 /**
  * Handles proxies, password protected URLs and request properties

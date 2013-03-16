@@ -26,14 +26,14 @@
 
 package org.htmlparser.nodes;
 
-import java.io.Serializable;
-
 import org.htmlparser.Node;
 import org.htmlparser.NodeFilter;
 import org.htmlparser.lexer.Page;
 import org.htmlparser.util.NodeList;
 import org.htmlparser.util.ParserException;
 import org.htmlparser.visitors.NodeVisitor;
+
+import java.io.Serializable;
 
 /**
  * The concrete base class for all types of nodes (tags, text remarks).
@@ -91,6 +91,7 @@ public abstract class AbstractNode implements Node, Serializable
      * @exception CloneNotSupportedException This shouldn't be thrown since
      * the {@link Node} interface extends Cloneable.
      */
+    @Override
     public Object clone() throws CloneNotSupportedException
     {
         return (super.clone ());
@@ -113,6 +114,7 @@ public abstract class AbstractNode implements Node, Serializable
      * </pre>
      * @return The 'browser' content of this node.
      */
+    @Override
     public abstract String toPlainTextString ();
 
     /**
@@ -125,6 +127,7 @@ public abstract class AbstractNode implements Node, Serializable
      * @return The sequence of characters that would cause this node
      * to be returned by the parser or lexer.
      */
+    @Override
     public String toHtml ()
     {
         return (toHtml (false));
@@ -142,6 +145,7 @@ public abstract class AbstractNode implements Node, Serializable
      * @return The (exact) sequence of characters that would cause this node
      * to be returned by the parser or lexer.
      */
+    @Override
     public abstract String toHtml (boolean verbatim);
 
     /**
@@ -150,6 +154,7 @@ public abstract class AbstractNode implements Node, Serializable
      * <pre>System.out.println(node)</pre>
      * @return A textual representation of the node suitable for debugging
      */
+    @Override
     public abstract String toString ();
 
     /**
@@ -187,6 +192,7 @@ public abstract class AbstractNode implements Node, Serializable
      * @param list The node list to collect acceptable nodes into.
      * @param filter The filter to determine which nodes are retained.
      */
+    @Override
     public void collectInto (NodeList list, NodeFilter filter)
     {
         if (filter.accept (this))
@@ -197,6 +203,7 @@ public abstract class AbstractNode implements Node, Serializable
      * Get the page this node came from.
      * @return The page that supplied this node.
      */
+    @Override
     public Page getPage ()
     {
         return (mPage);
@@ -206,6 +213,7 @@ public abstract class AbstractNode implements Node, Serializable
      * Set the page this node came from.
      * @param page The page that supplied this node.
      */
+    @Override
     public void setPage (Page page)
     {
         mPage = page;
@@ -215,6 +223,7 @@ public abstract class AbstractNode implements Node, Serializable
      * Gets the starting position of the node.
      * @return The start position.
      */
+    @Override
     public int getStartPosition ()
     {
         return (nodeBegin);
@@ -224,6 +233,7 @@ public abstract class AbstractNode implements Node, Serializable
      * Sets the starting position of the node.
      * @param position The new start position.
      */
+    @Override
     public void setStartPosition (int position)
     {
         nodeBegin = position;
@@ -233,6 +243,7 @@ public abstract class AbstractNode implements Node, Serializable
      * Gets the ending position of the node.
      * @return The end position.
      */
+    @Override
     public int getEndPosition ()
     {
         return (nodeEnd);
@@ -242,6 +253,7 @@ public abstract class AbstractNode implements Node, Serializable
      * Sets the ending position of the node.
      * @param position The new end position.
      */
+    @Override
     public void setEndPosition (int position)
     {
         nodeEnd = position;
@@ -251,6 +263,7 @@ public abstract class AbstractNode implements Node, Serializable
      * Visit this node.
      * @param visitor The visitor that is visiting this node.
      */
+    @Override
     public abstract void accept (NodeVisitor visitor);
 
     /**
@@ -260,6 +273,7 @@ public abstract class AbstractNode implements Node, Serializable
      * The object returned from this method can be safely cast to a <code>CompositeTag</code>.
      * @return The parent of this node, if it's been set, <code>null</code> otherwise.
      */
+    @Override
     public Node getParent ()
     {
         return (parent);
@@ -269,6 +283,7 @@ public abstract class AbstractNode implements Node, Serializable
      * Sets the parent of this node.
      * @param node The node that contains this node. Must be a <code>CompositeTag</code>.
      */
+    @Override
     public void setParent (Node node)
     {
         parent = node;
@@ -278,6 +293,7 @@ public abstract class AbstractNode implements Node, Serializable
      * Get the children of this node.
      * @return The list of children contained by this node, if it's been set, <code>null</code> otherwise.
      */
+    @Override
     public NodeList getChildren ()
     {
         return (children);
@@ -287,6 +303,7 @@ public abstract class AbstractNode implements Node, Serializable
      * Set the children of this node.
      * @param children The new list of children this node contains.
      */
+    @Override
     public void setChildren (NodeList children)
     {
         this.children = children;
@@ -297,6 +314,7 @@ public abstract class AbstractNode implements Node, Serializable
      * @return The first child in the list of children contained by this node,
      * <code>null</code> otherwise.
      */
+    @Override
     public Node getFirstChild ()
     {
         if (children == null)
@@ -311,6 +329,7 @@ public abstract class AbstractNode implements Node, Serializable
      * @return The last child in the list of children contained by this node,
      * <code>null</code> otherwise.
      */
+    @Override
     public Node getLastChild ()
     {
         if (children == null)
@@ -326,6 +345,7 @@ public abstract class AbstractNode implements Node, Serializable
      * @return The previous sibling to this node if one exists,
      * <code>null</code> otherwise.
      */
+    @Override
     public Node getPreviousSibling ()
     {
         Node parentNode = this.getParent();
@@ -356,6 +376,7 @@ public abstract class AbstractNode implements Node, Serializable
      * @return The next sibling to this node if one exists,
      * <code>null</code> otherwise.
      */
+    @Override
     public Node getNextSibling ()
     {
         Node parentNode = this.getParent();
@@ -387,6 +408,7 @@ public abstract class AbstractNode implements Node, Serializable
      * Returns the text of the node.
      * @return The text of this node. The default is <code>null</code>.
      */
+    @Override
     public String getText ()
     {
         return null;
@@ -396,6 +418,7 @@ public abstract class AbstractNode implements Node, Serializable
      * Sets the string contents of the node.
      * @param text The new text for the node.
      */
+    @Override
     public void setText(String text)
     {
     }
@@ -406,6 +429,7 @@ public abstract class AbstractNode implements Node, Serializable
      * @exception ParserException <em>Not used.</em> Provides for subclasses
      * that may want to indicate an exceptional condition.
      */
+    @Override
     public void doSemanticAction ()
         throws
             ParserException

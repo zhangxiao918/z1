@@ -47,6 +47,7 @@ public class LabelTag extends CompositeTag
      * Return the set of names handled by this tag.
      * @return The names to be matched that create tags of this type.
      */
+    @Override
     public String[] getIds ()
     {
         return (mIds);
@@ -56,6 +57,7 @@ public class LabelTag extends CompositeTag
      * Return the set of tag names that cause this tag to finish.
      * @return The names of following tags that stop further scanning.
      */
+    @Override
     public String[] getEnders ()
     {
         return (mIds);
@@ -74,6 +76,7 @@ public class LabelTag extends CompositeTag
      * Returns a string representation of this label tag suitable for debugging.
      * @return A string representing this label.
      */
+    @Override
     public String toString()
     {
         return "LABEL: "+ getLabel();

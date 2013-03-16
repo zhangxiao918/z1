@@ -76,6 +76,7 @@ public class LinkStringFilter implements NodeFilter
      * @param node The node to check.
      * @return <code>true</code> if the node is a link with the pattern.
      */
+    @Override
     public boolean accept (Node node)
     {
         boolean ret;

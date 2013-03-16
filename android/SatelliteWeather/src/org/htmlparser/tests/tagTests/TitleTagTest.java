@@ -55,6 +55,7 @@ public class TitleTagTest extends ParserTestCase {
     public TitleTagTest(String name) {
         super(name);
     }
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         createParser(prefix + tag1 + tag2 + tag3 + tag4 + suffix);

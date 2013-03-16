@@ -361,6 +361,7 @@ public class TagTests extends ParserTestCase {
             mParser = Parser.createParser(testHtml, null);
         }
 
+        @Override
         public void run() {
             try {
                 mResult = false;

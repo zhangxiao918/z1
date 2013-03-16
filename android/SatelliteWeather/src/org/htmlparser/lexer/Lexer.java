@@ -26,21 +26,21 @@
 
 package org.htmlparser.lexer;
 
+import org.htmlparser.Node;
+import org.htmlparser.NodeFactory;
+import org.htmlparser.Remark;
+import org.htmlparser.Tag;
+import org.htmlparser.Text;
+import org.htmlparser.http.ConnectionManager;
+import org.htmlparser.nodes.RemarkNode;
+import org.htmlparser.nodes.TagNode;
+import org.htmlparser.nodes.TextNode;
+import org.htmlparser.util.ParserException;
+
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URLConnection;
 import java.util.Vector;
-
-import org.htmlparser.Node;
-import org.htmlparser.NodeFactory;
-import org.htmlparser.Remark;
-import org.htmlparser.Text;
-import org.htmlparser.Tag;
-import org.htmlparser.http.ConnectionManager;
-import org.htmlparser.nodes.RemarkNode;
-import org.htmlparser.nodes.TextNode;
-import org.htmlparser.nodes.TagNode;
-import org.htmlparser.util.ParserException;
 
 /**
  * This class parses the HTML stream into nodes.
@@ -627,6 +627,7 @@ public class Lexer
      * @param end The ending positiong of the string.
      * @return The created Text node.
      */
+    @Override
     public Text createStringNode (Page page,  int start, int end)
     {
         return (new TextNode (page, start, end));
@@ -639,6 +640,7 @@ public class Lexer
      * @param end The ending positiong of the remark.
      * @return The created Remark node.
      */
+    @Override
     public Remark createRemarkNode (Page page,  int start, int end)
     {
         return (new RemarkNode (page, start, end));
@@ -656,6 +658,7 @@ public class Lexer
      * @param attributes The attributes contained in this tag.
      * @return The created Tag node.
      */
+    @Override
     public Tag createTagNode (Page page, int start, int end, Vector attributes)
     {
         return (new TagNode (page, start, end, attributes));

@@ -26,17 +26,17 @@
 
 package org.htmlparser.tags;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Vector;
-
 import org.htmlparser.Attribute;
 import org.htmlparser.Node;
 import org.htmlparser.Tag;
-import org.htmlparser.nodes.TextNode;
 import org.htmlparser.nodes.TagNode;
+import org.htmlparser.nodes.TextNode;
 import org.htmlparser.util.NodeList;
 import org.htmlparser.util.SimpleNodeIterator;
+
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Vector;
 
 /**
  * ObjectTag represents an &lt;Object&gt; tag.
@@ -66,6 +66,7 @@ public class ObjectTag extends CompositeTag
      * Return the set of names handled by this tag.
      * @return The names to be matched that create tags of this type.
      */
+    @Override
     public String[] getIds ()
     {
         return (mIds);
@@ -75,6 +76,7 @@ public class ObjectTag extends CompositeTag
      * Return the set of end tag names that cause this tag to finish.
      * @return The names of following end tags that stop further scanning.
      */
+    @Override
     public String[] getEndTagEnders ()
     {
         return (mEndTagEnders);
@@ -356,6 +358,7 @@ public class ObjectTag extends CompositeTag
      * Output a string representing this object tag.
      * @return A string showing the contents of the object tag.
      */
+    @Override
     public String toString ()
     {
         Hashtable parameters;

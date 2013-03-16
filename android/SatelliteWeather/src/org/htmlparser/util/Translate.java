@@ -26,6 +26,8 @@
 
 package org.htmlparser.util;
 
+import org.htmlparser.util.sort.Sort;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -36,8 +38,6 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
-
-import org.htmlparser.util.sort.Sort;
 
 /**
  * Extended character entity reference.
@@ -85,6 +85,7 @@ class CharacterReferenceEx extends CharacterReference
      * Get this CharacterReference's kernel.
      * @return The kernel in the equivalent character entity reference.
      */
+    @Override
     public String getKernel ()
     {
         return (mKernel.substring (mStart, mEnd));
@@ -98,6 +99,7 @@ class CharacterReferenceEx extends CharacterReference
      * Compare one reference to another.
      * @see org.htmlparser.util.sort.Ordered
      */
+    @Override
     public int compare (Object that)
     {
         CharacterReference r;

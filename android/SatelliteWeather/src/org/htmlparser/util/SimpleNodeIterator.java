@@ -42,6 +42,7 @@ public interface SimpleNodeIterator extends NodeIterator
      * @return <code>true</code> if a call to <code>nextHTMLNode()</code> will
      * succeed.
      */
+    @Override
     public boolean hasMoreNodes();
 
     /**
@@ -49,5 +50,6 @@ public interface SimpleNodeIterator extends NodeIterator
      * @return The next node in the HTML stream, or null if there are no more
      * nodes.
      */
+    @Override
     public Node nextNode();
 }

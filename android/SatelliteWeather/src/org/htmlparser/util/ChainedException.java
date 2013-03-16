@@ -121,12 +121,14 @@ public class ChainedException
     return throwable;
   }
 
-  public void printStackTrace()
+  @Override
+public void printStackTrace()
   {
     printStackTrace(System.err);
   }
 
-  public void printStackTrace(PrintStream out)
+  @Override
+public void printStackTrace(PrintStream out)
   {
     synchronized (out)
     {
@@ -143,7 +145,8 @@ public class ChainedException
     }
   }
 
-  public void printStackTrace(PrintWriter out)
+  @Override
+public void printStackTrace(PrintWriter out)
   {
     synchronized (out)
     {

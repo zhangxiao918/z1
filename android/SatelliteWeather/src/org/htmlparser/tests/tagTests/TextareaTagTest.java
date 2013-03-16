@@ -60,6 +60,7 @@ public class TextareaTagTest extends ParserTestCase
         super(name);
     }
 
+    @Override
     public void setUp() throws Exception
     {
         super.setUp();

@@ -26,12 +26,12 @@
 
 package org.htmlparser.tags;
 
-import java.util.Locale;
-import java.util.Vector;
-
 import org.htmlparser.Attribute;
 import org.htmlparser.nodes.TagNode;
 import org.htmlparser.util.ParserUtils;
+
+import java.util.Locale;
+import java.util.Vector;
 
 /**
  * Identifies an image tag.
@@ -64,6 +64,7 @@ public class ImageTag
      * Return the set of names handled by this tag.
      * @return The names to be matched that create tags of this type.
      */
+    @Override
     public String[] getIds ()
     {
         return (mIds);

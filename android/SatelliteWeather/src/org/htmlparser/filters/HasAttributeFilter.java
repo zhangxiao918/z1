@@ -26,12 +26,12 @@
 
 package org.htmlparser.filters;
 
-import java.util.Locale;
-
 import org.htmlparser.Attribute;
 import org.htmlparser.Node;
 import org.htmlparser.NodeFilter;
 import org.htmlparser.Tag;
+
+import java.util.Locale;
 
 /**
  * This class accepts all tags that have a certain attribute,
@@ -126,6 +126,7 @@ public class HasAttributeFilter implements NodeFilter
      * @return <code>true</code> if the node has the attribute
      * (and value if that is being checked too), <code>false</code> otherwise.
      */
+    @Override
     public boolean accept (Node node)
     {
         Tag tag;

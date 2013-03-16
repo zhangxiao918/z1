@@ -26,10 +26,6 @@
 
 package org.htmlparser.tests.lexerTests;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.HashSet;
-
 import org.htmlparser.Node;
 import org.htmlparser.Parser;
 import org.htmlparser.Remark;
@@ -43,6 +39,10 @@ import org.htmlparser.util.EncodingChangeException;
 import org.htmlparser.util.NodeIterator;
 import org.htmlparser.util.NodeList;
 import org.htmlparser.util.ParserException;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.HashSet;
 
 public class LexerTests extends ParserTestCase
 {

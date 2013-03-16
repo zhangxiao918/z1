@@ -49,6 +49,7 @@ public class TagFindingVisitorTest extends ParserTestCase {
         super(name);
     }
 
+    @Override
     public void setUp() {
         createParser(html);
     }
