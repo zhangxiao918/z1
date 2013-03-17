@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
+import android.util.Log;
 
 import com.bluestome.android.utils.HttpClientUtils;
 
@@ -39,6 +40,8 @@ import java.util.List;
  * @author bluestome
  */
 public class SatelliteWeatherSimpleBiz {
+
+    private static final String TAG = SatelliteWeatherSimpleBiz.class.getSimpleName();
 
     Handler mHandler = null;
 
@@ -120,6 +123,7 @@ public class SatelliteWeatherSimpleBiz {
         InputStream in = null;
         File file = null;
         try {
+            Log.d(TAG, "下载逻辑:准备下载[" + url + "]图片");
             cURL = new URL(url);
             connection = (HttpURLConnection) cURL.openConnection();
             // 获取输出流
@@ -129,6 +133,7 @@ public class SatelliteWeatherSimpleBiz {
             int code = connection.getResponseCode();
             switch (code) {
                 case 200:
+                    Log.d(TAG, "下载逻辑:服务端应答成功");
                     String name = analysisURL(url);
                     String date = analysisURL2(name);
                     file = new File(Constants.SATELINE_CLOUD_IMAGE_PATH
@@ -137,8 +142,10 @@ public class SatelliteWeatherSimpleBiz {
                         file.getParentFile().mkdirs();
                     }
                     if (file.exists()) {
+                        Log.d(TAG, "下载逻辑:存在相同的图片[" + name + "]，返回。");
                         return name;
                     }
+                    Log.d(TAG, "下载逻辑:接收服务端数据");
                     in = connection.getInputStream();
                     byte[] buffer = new byte[2 * 1024];
                     OutputStream byteBuffer = new FileOutputStream(file, false);
@@ -148,15 +155,20 @@ public class SatelliteWeatherSimpleBiz {
                         byteBuffer.flush();
                     }
                     byteBuffer.close();
+                    Log.d(TAG, "下载逻辑:数据保存成功");
                     return name;
                 default:
+                    Log.d(TAG, "下载逻辑:服务端应答失败，错误码:" + code);
                     break;
             }
         } catch (IOException e) {
+            Log.d(TAG, "下载逻辑:IOException");
         } catch (Exception e) {
+            Log.d(TAG, "下载逻辑:Exception");
         } finally {
             if (null != connection) {
                 connection.disconnect();
+                Log.d(TAG, "下载逻辑:断开服务端连接");
             }
         }
         return null;

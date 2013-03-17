@@ -95,9 +95,9 @@ public class UpdateService extends Service {
             mSender = PendingIntent.getBroadcast(this, 0, new Intent(
                     Constants.ACTION_ALARM), 0);
             firstTime = SystemClock.elapsedRealtime();
-            firstTime += 5 * DateUtils.MINUTE_IN_MILLIS;
+            firstTime += 30 * DateUtils.MINUTE_IN_MILLIS;
             am.setRepeating(AlarmManager.ELAPSED_REALTIME, firstTime,
-                    5 * DateUtils.MINUTE_IN_MILLIS, mSender);
+                    30 * DateUtils.MINUTE_IN_MILLIS, mSender);
         }
         Log.d(TAG, "\tzhang:initAlarmRecevier");
     }
@@ -132,20 +132,26 @@ public class UpdateService extends Service {
             if (intent.getAction().equalsIgnoreCase(Constants.ACTION_ALARM)) {
                 // biz.catalog是一个耗时的任务，需要放到线程中去执行
                 new Thread(new Runnable() {
+                    boolean ok = false;
+
                     public void run() {
-                        try {
-                            if (null == biz) {
-                                biz = new SatelliteWeatherSimpleBiz(null);
+                        while (!ok) {
+                            try {
+                                if (null == biz) {
+                                    biz = new SatelliteWeatherSimpleBiz(null);
+                                }
+                                String lastModifyTime = HttpClientUtils
+                                        .getLastModifiedByUrl(Constants.SATELINE_CLOUD_URL);
+                                if (null != lastModifyTime
+                                        && !lastModifyTime.equals(MainApp.i()
+                                                .getLastModifyTime())) {
+                                    biz.catalog(lastModifyTime);
+                                }
+                                ok = true;
+                            } catch (Exception e) {
+                                ok = false;
+                                e.printStackTrace();
                             }
-                            String lastModifyTime = HttpClientUtils
-                                    .getLastModifiedByUrl(Constants.SATELINE_CLOUD_URL);
-                            if (null != lastModifyTime
-                                    && !lastModifyTime.equals(MainApp.i()
-                                            .getLastModifyTime())) {
-                                biz.catalog(lastModifyTime);
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
                         }
                     }
                 }).start();
