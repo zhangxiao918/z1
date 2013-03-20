@@ -454,7 +454,7 @@ public class HttpClientUtils {
      * @return
      */
     public static byte[] getBody(String url, String headerName,
-            String headerValue) {
+            String headerValue) throws Exception {
         byte[] value = null;
         URL cURL = null;
         URLConnection connection = null;
@@ -486,15 +486,9 @@ public class HttpClientUtils {
                 baos.close();
                 value = baos.toByteArray();
             }
-        } catch (Exception e) {
-            System.err.println("ERROR:" + e);
         } finally {
             if (null != is) {
-                try {
-                    is.close();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+                is.close();
             }
         }
         return value;

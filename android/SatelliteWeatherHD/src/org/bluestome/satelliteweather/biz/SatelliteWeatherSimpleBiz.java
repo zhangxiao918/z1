@@ -9,12 +9,11 @@ import android.content.Intent;
 import android.os.Handler;
 import android.util.Log;
 
-import com.bluestome.android.utils.HttpClientUtils;
-
 import org.bluestome.satelliteweather.MainActivity;
 import org.bluestome.satelliteweather.MainApp;
 import org.bluestome.satelliteweather.R;
 import org.bluestome.satelliteweather.common.Constants;
+import org.bluestome.satelliteweather.utils.HttpClientUtils;
 import org.htmlparser.NodeFilter;
 import org.htmlparser.Parser;
 import org.htmlparser.filters.HasAttributeFilter;
@@ -91,13 +90,13 @@ public class SatelliteWeatherSimpleBiz {
                             .replace(")", "").replace("'", "");
                     if (null != str && str.length() > 0) {
                         final String[] tmps = str.split(",");
-                        urlList.add(0, tmps[0]);
+                        urlList.add(tmps[1]);
                         MainApp.i().getExecutorService()
                                 .execute(new Runnable() {
                                     @Override
                                     public void run() {
-                                        downloadImage(Constants.PREFIX_SATELINE_CLOUD_IMG_URL
-                                                + tmps[0]);
+                                        downloadImage(Constants.PREFIX_SATELINE_CLOUD_IMG_URL +
+                                                tmps[1]);
                                     }
                                 });
                     }

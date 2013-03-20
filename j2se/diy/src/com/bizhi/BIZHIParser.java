@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.htmlparser.NodeFilter;
 import org.htmlparser.Parser;
+import org.htmlparser.PrototypicalNodeFactory;
 import org.htmlparser.filters.HasAttributeFilter;
 import org.htmlparser.filters.NodeClassFilter;
 import org.htmlparser.filters.OrFilter;
@@ -39,6 +40,7 @@ import com.chinamilitary.memcache.MemcacheClient;
 import com.chinamilitary.util.CommonUtil;
 import com.chinamilitary.util.HttpClientUtils;
 import com.common.Constants;
+import com.parser.tag.ULTag;
 
 public class BIZHIParser {
 
@@ -304,10 +306,14 @@ public class BIZHIParser {
 	public static void secondURL(LinkBean link, int webId) throws Exception {
 		Parser parser = new Parser();
 		parser.setURL(link.getLink());
-		parser.setEncoding("GB2312");
+		parser.setEncoding("UTF-8");
 
+		PrototypicalNodeFactory factory = new PrototypicalNodeFactory();
+		factory.registerTag(new ULTag());
+
+		parser.setNodeFactory(factory);
 		// 获取指定ID的TableTag内容
-		NodeFilter filter = new NodeClassFilter(CompositeTag.class);
+		NodeFilter filter = new NodeClassFilter(ULTag.class);
 		NodeList list = parser.extractAllNodesThatMatch(filter)
 				.extractAllNodesThatMatch(
 						new HasAttributeFilter("class", "uip uip_250"));
@@ -327,7 +333,7 @@ public class BIZHIParser {
 					NodeList tmpNode = span.getChildren();
 					if (null != tmpNode && tmpNode.size() > 0) {
 						LinkTag linkTag = (LinkTag) tmpNode.elementAt(0);
-						logger.debug(linkTag.getLinkText() + "|"
+						logger.info(linkTag.getLinkText() + "|"
 								+ linkTag.getLink());
 
 						if (!linkTag.getLink().startsWith("http://")) {
@@ -346,7 +352,7 @@ public class BIZHIParser {
 							if (null != tmpNode2 && tmpNode2.size() > 0) {
 								ImageTag imgTag = (ImageTag) tmpNode2
 										.elementAt(0);
-								logger.debug(imgTag.getAttribute("alt") + "|["
+								logger.info(imgTag.getAttribute("alt") + "|["
 										+ url + "]");
 								if (!imgTag.getImageURL().startsWith("http://")) {
 									article.setActicleXmlUrl(URL
@@ -733,16 +739,17 @@ public class BIZHIParser {
 				Iterator<String> it = result.getMap().keySet().iterator();
 				while (it.hasNext()) {
 					String key = it.next();
-					if (HttpClientUtils.validationURL(key)) {
-						LinkBean link = result.getMap().get(key);
-						try {
-							secondURL(link, bean.getId());
-						} catch (Exception e) {
-							continue;
-						}
-					} else {
+					// if (HttpClientUtils.validationURL(key)) {
+					LinkBean link = result.getMap().get(key);
+					try {
+						secondURL(link, bean.getId());
+					} catch (Exception e) {
+						e.printStackTrace();
 						continue;
 					}
+					// } else {
+					// continue;
+					// }
 				}
 
 			}

@@ -27,17 +27,11 @@ import android.widget.Toast;
 
 import com.bluestome.android.utils.DateUtils;
 import com.bluestome.android.utils.FileUtils;
-import com.bluestome.android.utils.HttpClientUtils;
 
+import org.bluestome.satelliteweather.biz.SatelliteWeatherSimpleBiz;
 import org.bluestome.satelliteweather.common.Constants;
 import org.bluestome.satelliteweather.services.UpdateService;
-import org.htmlparser.NodeFilter;
-import org.htmlparser.Parser;
-import org.htmlparser.filters.HasAttributeFilter;
-import org.htmlparser.filters.NodeClassFilter;
-import org.htmlparser.tags.CompositeTag;
-import org.htmlparser.tags.LinkTag;
-import org.htmlparser.util.NodeList;
+import org.bluestome.satelliteweather.utils.HttpClientUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -48,7 +42,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -71,6 +64,7 @@ public class MainActivity extends Activity implements OnClickListener {
     Spinner spinner = null;
     ArrayAdapter<String> adapter = null;
     String date = null;
+    SatelliteWeatherSimpleBiz biz = null;
 
     private final Handler mHandler = new Handler() {
         @Override
@@ -170,6 +164,9 @@ public class MainActivity extends Activity implements OnClickListener {
             setContentView(R.layout.main);
             initVUI();
             init();
+        }
+        if (null == biz) {
+            biz = new SatelliteWeatherSimpleBiz(null);
         }
         startService(new Intent(MainActivity.this, UpdateService.class));
     }
@@ -354,83 +351,6 @@ public class MainActivity extends Activity implements OnClickListener {
         }
     }
 
-    /**
-     * @throws Exception
-     */
-    synchronized List<String> catalog() throws Exception { // WebsiteBean bean
-        List<String> urlList = new ArrayList<String>();
-        byte[] body = HttpClientUtils.getBody(Constants.SATELINE_CLOUD_URL);
-        Message msg = new Message();
-        msg.what = 0x0102;
-        msg.obj = "正在获取网页页面内容";
-        mHandler.sendMessage(msg);
-        if (null == body || body.length == 0) {
-            msg = new Message();
-            msg.what = 0x0102;
-            msg.obj = "获取服务端返回的内容为空";
-            mHandler.sendMessage(msg);
-            return urlList;
-        }
-        Parser parser = new Parser();
-        String html = new String(body, "GB2312");
-        parser.setInputHTML(html);
-        parser.setEncoding("GB2312");
-        msg = new Message();
-        msg.what = 0x0102;
-        msg.obj = "正在解析页面内容";
-        mHandler.sendMessage(msg);
-        NodeFilter fileter = new NodeClassFilter(CompositeTag.class);
-        NodeList list = parser.extractAllNodesThatMatch(fileter)
-                .extractAllNodesThatMatch(
-                        new HasAttributeFilter("id", "mycarousel")); // id
-
-        if (null != list && list.size() > 0) {
-            CompositeTag div = (CompositeTag) list.elementAt(0);
-            parser = new Parser();
-            parser.setInputHTML(div.toHtml());
-            NodeFilter linkFilter = new NodeClassFilter(LinkTag.class);
-            NodeList linkList = parser.extractAllNodesThatMatch(linkFilter);
-            msg = new Message();
-            msg.what = 0x0102;
-            msg.obj = "正在解析页面子元素";
-            mHandler.sendMessage(msg);
-            if (linkList != null && linkList.size() > 0) {
-                for (int i = 0; i < linkList.size(); i++) {
-                    LinkTag link = (LinkTag) linkList.elementAt(i);
-                    String str = link.getLink().replace("view_text_img(", "")
-                            .replace(")", "").replace("'", "");
-                    if (null != str && str.length() > 0) {
-                        final String[] tmps = str.split(",");
-                        final String largeImgUrl = tmps[1];
-                        if (null != largeImgUrl && largeImgUrl.length() > 0
-                                && !largeImgUrl.equals("")) {
-                            urlList.add(0, largeImgUrl);
-                            if (!MainApp.i().getImageCache()
-                                    .containsKey(largeImgUrl)) {
-                                MainApp.i().getExecutorService()
-                                        .execute(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                loadImageFromUrl(Constants.PREFIX_SATELINE_CLOUD_IMG_URL
-                                                        + largeImgUrl);
-                                            }
-                                        });
-                            }
-                        }
-                    }
-
-                }
-            }
-        }
-        if (null != parser)
-            parser = null;
-        msg = new Message();
-        msg.what = 0x0102;
-        msg.obj = "解析页面结束";
-        mHandler.sendMessage(msg);
-        return urlList;
-    }
-
     Runnable rParserHtml = new Runnable() {
         @Override
         public void run() {
@@ -441,7 +361,7 @@ public class MainActivity extends Activity implements OnClickListener {
                 msg.what = 0x0102;
                 msg.obj = "正在比较本地和服务器版本号";
                 mHandler.sendMessage(msg);
-                String lastModifyTime = HttpClientUtils
+                final String lastModifyTime = HttpClientUtils
                         .getLastModifiedByUrl(Constants.SATELINE_CLOUD_URL);
                 if (null != lastModifyTime
                         && !lastModifyTime.equals(MainApp.i()
@@ -452,19 +372,25 @@ public class MainActivity extends Activity implements OnClickListener {
                     mHandler.sendMessage(msg);
                     long s1 = System.currentTimeMillis();
                     new Thread(new Runnable() {
+                        boolean ok = false;
+
                         @Override
                         public void run() {
-                            try {
-                                Message msg = new Message();
-                                msg.what = 0x0102;
-                                msg.obj = "执行下载请求";
-                                mHandler.sendMessage(msg);
-                                mList = catalog();
-                            } catch (Exception e) {
-                                Message msg = new Message();
-                                msg.what = 0x0102;
-                                msg.obj = e.getMessage();
-                                mHandler.sendMessage(msg);
+                            while (!ok) {
+                                try {
+                                    Message msg = new Message();
+                                    msg.what = 0x0102;
+                                    msg.obj = "执行下载请求";
+                                    mHandler.sendMessage(msg);
+                                    mList = biz.catalog(lastModifyTime);
+                                    ok = true;
+                                } catch (Exception e) {
+                                    Message msg = new Message();
+                                    msg.what = 0x0102;
+                                    msg.obj = e.getMessage();
+                                    mHandler.sendMessage(msg);
+                                    ok = false;
+                                }
                             }
                         }
                     }).start();
