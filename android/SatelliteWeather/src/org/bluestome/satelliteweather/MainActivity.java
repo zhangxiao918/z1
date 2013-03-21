@@ -506,19 +506,26 @@ public class MainActivity extends Activity implements OnClickListener {
                     mHandler.sendMessage(msg);
                     long s1 = System.currentTimeMillis();
                     new Thread(new Runnable() {
+                        boolean ok = false;
+                        int times = 0;
+
                         @Override
                         public void run() {
-                            try {
-                                Message msg = new Message();
-                                msg.what = 0x0102;
-                                msg.obj = "执行下载请求";
-                                mHandler.sendMessage(msg);
-                                mList = updateList();
-                            } catch (Exception e) {
-                                Message msg = new Message();
-                                msg.what = 0x0102;
-                                msg.obj = e.getMessage();
-                                mHandler.sendMessage(msg);
+                            while (!ok && times++ < 3) {
+                                try {
+                                    Message msg = new Message();
+                                    msg.what = 0x0102;
+                                    msg.obj = "执行下载请求";
+                                    mHandler.sendMessage(msg);
+                                    mList = updateList();
+                                    ok = true;
+                                } catch (Exception e) {
+                                    Message msg = new Message();
+                                    msg.what = 0x0102;
+                                    msg.obj = e.getMessage();
+                                    mHandler.sendMessage(msg);
+                                    ok = false;
+                                }
                             }
                         }
                     }).start();
