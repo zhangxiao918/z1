@@ -519,6 +519,12 @@ public class MainActivity extends Activity implements OnClickListener {
                                     mHandler.sendMessage(msg);
                                     mList = updateList();
                                     ok = true;
+                                    runOnUiThread(new Runnable() {
+
+                                        public void run() {
+                                            init();
+                                        }
+                                    });
                                 } catch (Exception e) {
                                     Message msg = new Message();
                                     msg.what = 0x0102;
