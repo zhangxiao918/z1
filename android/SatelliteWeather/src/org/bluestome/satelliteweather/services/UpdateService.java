@@ -52,21 +52,7 @@ public class UpdateService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG, "\tzhang:onStartCommand,flags[" + flags + "],startId["
                 + startId + "]");
-        if ((flags & START_FLAG_RETRY) == 0) {
-            // Toast.makeText(getApplicationContext(),
-            // "服务被重启，或者2次调用,register:" + isRegisterAlarm,
-            // Toast.LENGTH_SHORT).show();
-            // TODO 执行当前进程
-            uninitAlarmRecevier();
-        } else {
-            // TODO 其他替换逻辑
-            // Toast.makeText(getApplicationContext(),
-            // "其他服务启动状态:" + flags + ",registerAlarm:" + isRegisterAlarm,
-            // Toast.LENGTH_SHORT).show();
-        }
-        if (!isRegisterAlarm) {
-            initAlarmRecevier();
-        }
+        initAlarmRecevier();
         return Service.START_STICKY;
     }
 
@@ -110,9 +96,9 @@ public class UpdateService extends Service {
             mSender = PendingIntent.getBroadcast(this, 0, new Intent(
                     Constants.ACTION_ALARM), 0);
             firstTime = SystemClock.elapsedRealtime();
-            firstTime += 30 * DateUtils.MINUTE_IN_MILLIS;
+            firstTime += 1 * DateUtils.HOUR_IN_MILLIS;
             am.setRepeating(AlarmManager.ELAPSED_REALTIME, firstTime,
-                    30 * DateUtils.MINUTE_IN_MILLIS, mSender);
+                    1 * DateUtils.HOUR_IN_MILLIS, mSender);
         }
         isRegisterAlarm = true;
         Log.d(TAG, "\tzhang:initAlarmRecevier");
