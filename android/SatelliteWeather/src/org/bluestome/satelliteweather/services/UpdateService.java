@@ -1,6 +1,10 @@
 
 package org.bluestome.satelliteweather.services;
 
+import org.bluestome.satelliteweather.MainApp;
+import org.bluestome.satelliteweather.biz.SatelliteWeatherSimpleBiz;
+import org.bluestome.satelliteweather.common.Constants;
+
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -14,10 +18,6 @@ import android.text.format.DateUtils;
 import android.util.Log;
 
 import com.bluestome.android.utils.HttpClientUtils;
-
-import org.bluestome.satelliteweather.MainApp;
-import org.bluestome.satelliteweather.biz.SatelliteWeatherSimpleBiz;
-import org.bluestome.satelliteweather.common.Constants;
 
 /**
  * 后台定时更新列表
@@ -145,7 +145,7 @@ public class UpdateService extends Service {
             if (intent.getAction().equalsIgnoreCase(Constants.ACTION_ALARM)) {
                 boolean ok = false;
                 int times = 0;
-                while (!ok && times++ < 3) {
+                while (!ok && (times++ < 3)) {
                     try {
                         String lastModifyTime = HttpClientUtils
                                 .getLastModifiedByUrl(Constants.SATELINE_CLOUD_URL);

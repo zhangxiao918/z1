@@ -1,6 +1,26 @@
 
 package org.bluestome.satelliteweather;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.bluestome.satelliteweather.biz.SatelliteWeatherSimpleBiz;
+import org.bluestome.satelliteweather.common.Constants;
+import org.bluestome.satelliteweather.services.UpdateService;
+import org.bluestome.satelliteweather.utils.HttpClientUtils;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -27,24 +47,6 @@ import android.widget.Toast;
 
 import com.bluestome.android.utils.DateUtils;
 import com.bluestome.android.utils.FileUtils;
-
-import org.bluestome.satelliteweather.biz.SatelliteWeatherSimpleBiz;
-import org.bluestome.satelliteweather.common.Constants;
-import org.bluestome.satelliteweather.services.UpdateService;
-import org.bluestome.satelliteweather.utils.HttpClientUtils;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
 
 public class MainActivity extends Activity implements OnClickListener {
 
@@ -287,13 +289,22 @@ public class MainActivity extends Activity implements OnClickListener {
                         android.R.layout.simple_spinner_item);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 for (File f : path.listFiles()) {
-                    adapter.add(f.getName());
+                    // TODO 如果文件名不是日期格式，则跳过
+                    if (dataCheck(f.getName())) {
+                        adapter.add(f.getName());
+                    }
                 }
                 if (adapter.getCount() > 0) {
                     adapter.sort(new Comparator<String>() {
                         @Override
                         public int compare(String lhs, String rhs) {
-                            return lhs.compareTo(rhs);
+                            if (lhs.compareTo(rhs) > 0) {
+                                return -1;
+                            } else if (lhs.compareTo(rhs) < 0) {
+                                return 1;
+                            } else {
+                                return 0;
+                            }
                         }
                     });
                     spinner.setEnabled(true);
@@ -767,6 +778,14 @@ public class MainActivity extends Activity implements OnClickListener {
             e.printStackTrace();
         }
         return drawable;
+    }
+
+    private boolean dataCheck(String date) {
+        String eL = "^((\\d{2}(([02468][048])|([13579][26]))[\\-\\/\\s]?((((0?[13578])|(1[02]))[\\-\\/\\s]?((0?[1-9])|([1-2][0-9])|(3[01])))|(((0?[469])|(11))[\\-\\/\\s]?((0?[1-9])|([1-2][0-9])|(30)))|(0?2[\\-\\/\\s]?((0?[1-9])|([1-2][0-9])))))|(\\d{2}(([02468][1235679])|([13579][01345789]))[\\-\\/\\s]?((((0?[13578])|(1[02]))[\\-\\/\\s]?((0?[1-9])|([1-2][0-9])|(3[01])))|(((0?[469])|(11))[\\-\\/\\s]?((0?[1-9])|([1-2][0-9])|(30)))|(0?2[\\-\\/\\s]?((0?[1-9])|(1[0-9])|(2[0-8]))))))";
+        Pattern p = Pattern.compile(eL);
+        Matcher m = p.matcher(date);
+        boolean flag = m.matches();
+        return flag;
     }
 
 }
