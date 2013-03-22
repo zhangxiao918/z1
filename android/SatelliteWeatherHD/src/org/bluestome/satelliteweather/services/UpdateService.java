@@ -1,6 +1,10 @@
 
 package org.bluestome.satelliteweather.services;
 
+import org.bluestome.satelliteweather.MainApp;
+import org.bluestome.satelliteweather.biz.SatelliteWeatherSimpleBiz;
+import org.bluestome.satelliteweather.common.Constants;
+
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -15,10 +19,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.bluestome.android.utils.HttpClientUtils;
-
-import org.bluestome.satelliteweather.MainApp;
-import org.bluestome.satelliteweather.biz.SatelliteWeatherSimpleBiz;
-import org.bluestome.satelliteweather.common.Constants;
 
 /**
  * 后台定时更新列表
@@ -133,9 +133,10 @@ public class UpdateService extends Service {
                 // biz.catalog是一个耗时的任务，需要放到线程中去执行
                 new Thread(new Runnable() {
                     boolean ok = false;
+                    int times = 0;
 
                     public void run() {
-                        while (!ok) {
+                        while (!ok && (times++ < 3)) {
                             try {
                                 if (null == biz) {
                                     biz = new SatelliteWeatherSimpleBiz(null);
