@@ -1,6 +1,32 @@
 
 package org.bluestome.satelliteweather;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
+
+import org.bluestome.satelliteweather.common.Constants;
+import org.bluestome.satelliteweather.db.DaoFactory;
+import org.bluestome.satelliteweather.db.dao.FY2DAO;
+import org.bluestome.satelliteweather.services.UpdateService;
+import org.htmlparser.NodeFilter;
+import org.htmlparser.Parser;
+import org.htmlparser.filters.HasAttributeFilter;
+import org.htmlparser.filters.NodeClassFilter;
+import org.htmlparser.tags.CompositeTag;
+import org.htmlparser.tags.LinkTag;
+import org.htmlparser.util.NodeList;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -30,32 +56,6 @@ import android.widget.Toast;
 import com.bluestome.android.utils.DateUtils;
 import com.bluestome.android.utils.FileUtils;
 import com.bluestome.android.utils.HttpClientUtils;
-
-import org.bluestome.satelliteweather.common.Constants;
-import org.bluestome.satelliteweather.db.DaoFactory;
-import org.bluestome.satelliteweather.db.dao.FY2DAO;
-import org.bluestome.satelliteweather.services.UpdateService;
-import org.htmlparser.NodeFilter;
-import org.htmlparser.Parser;
-import org.htmlparser.filters.HasAttributeFilter;
-import org.htmlparser.filters.NodeClassFilter;
-import org.htmlparser.tags.CompositeTag;
-import org.htmlparser.tags.LinkTag;
-import org.htmlparser.util.NodeList;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
 
 public class MainActivity extends Activity implements OnClickListener {
 
@@ -325,7 +325,13 @@ public class MainActivity extends Activity implements OnClickListener {
                     adapter.sort(new Comparator<String>() {
                         @Override
                         public int compare(String lhs, String rhs) {
-                            return lhs.compareTo(rhs);
+                            if (lhs.compareTo(rhs) > 0) {
+                                return -1;
+                            } else if (lhs.compareTo(rhs) < 0) {
+                                return 1;
+                            } else {
+                                return 0;
+                            }
                         }
                     });
                     spinner.setEnabled(true);
