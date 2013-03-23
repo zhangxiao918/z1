@@ -131,7 +131,7 @@ public class UpdateService extends Service {
             if (intent.getAction().equalsIgnoreCase(Constants.ACTION_ALARM)) {
                 boolean ok = false;
                 int times = 0;
-                while (!ok && (times++ < 3)) {
+                while (!ok && (times++ < 3) && MainApp.i().isConnected()) {
                     try {
                         String lastModifyTime = HttpClientUtils
                                 .getLastModifiedByUrl(Constants.SATELINE_CLOUD_URL);
