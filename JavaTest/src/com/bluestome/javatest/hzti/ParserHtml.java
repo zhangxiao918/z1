@@ -39,10 +39,11 @@ public class ParserHtml {
             list = p.extractAllNodesThatMatch(fileter);
             if (null != list) {
                 int c = list.size();
-                int e = c - 1;
+                int e = c - 1; // 最后一列为提示内容,无关
+                // 获取最终数据
                 for (int i = 0; i < list.size(); i++) {
                     TableRow tr = (TableRow) list.elementAt(i);
-                    if (i == e || i < 2) {
+                    if (i == e || i < 2) { // 前2项为提示和标题，不需要
                         continue;
                     }
                     System.out.println(i + ":" + tr.toPlainTextString());
