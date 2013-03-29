@@ -9,9 +9,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
 import junit.framework.Assert;
@@ -42,6 +39,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.bluestome.hzti.qry.common.Constants;
+import com.bluestome.hzti.qry.net.ParserHtml;
 
 public class MainActivity extends Activity implements OnClickListener {
 
@@ -94,7 +92,6 @@ public class MainActivity extends Activity implements OnClickListener {
      * 初始化UI
      */
     private void initUI() {
-        System.out.println("initUI");
         // 获取spinner
         spinner = (Spinner) findViewById(R.id.spinner1);
         // 从资源中获取数组数据
@@ -179,13 +176,12 @@ public class MainActivity extends Activity implements OnClickListener {
                         if (null != sb && !sb.toString().equals("")) {
                             doQuery(sb.toString(), Constants.URL, carType,
                                     carNum, carId, checkCode);
-                            // doQuery(sb.toString(), Constants.URL, "小型汽车",
-                            // "浙A249NT", "005953", "gkwe");
                         }
                     }
                 }).start();
                 break;
             case R.id.checkCodeView:
+                loadImage2(AUTH_CODE_URL, R.id.checkCodeView);
                 break;
         }
     }
@@ -416,7 +412,11 @@ public class MainActivity extends Activity implements OnClickListener {
     public void doQuery(String cookie, String reffer, String carType,
             String carNum, String carId, String checkCode) {
         if (null == CONTENT_BODY) {
-            System.out.println("CONTENT_BODY is null");
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    Toast.makeText(getApplicationContext(), "未获取到数据", Toast.LENGTH_SHORT).show();
+                }
+            });
             return;
         }
         Log.d(TAG, "查询时请求时的SESSIONID:" + cookie);
@@ -509,8 +509,6 @@ public class MainActivity extends Activity implements OnClickListener {
             byte[] tmpBody = tmps.toByteArray();
             String body = new String(tmpBody);
 
-            System.out.println("\t 请求正文长度：" + body.length());
-            System.out.println("请求正文：" + body);
             url = new URL(Constants.URL);
             connection = (HttpURLConnection) url.openConnection();
             connection.setDoOutput(true);
@@ -552,7 +550,7 @@ public class MainActivity extends Activity implements OnClickListener {
                 case 200:
                     in = connection.getInputStream();
                     int length = connection.getContentLength();
-                    System.out.println("响应的长度为：" + length);
+                    Log.d(TAG, "响应的长度为：" + length);
                     byteArray = new ByteArrayOutputStream(length);
                     byte[] buffer = new byte[1024];
                     int ch;
@@ -561,28 +559,19 @@ public class MainActivity extends Activity implements OnClickListener {
                     }
                     byteArray.flush();
                     byteArray.close();
-                    Map<String, List<String>> responseHead = connection.getHeaderFields();
-                    Iterator<String> iterator = responseHead.keySet().iterator();
-                    while (iterator.hasNext()) {
-                        String key = iterator.next();
-                        List<String> values = responseHead.get(key);
-                        for (String v : values) {
-                            System.out.println("response:[" + key + ":" + v + "]");
-                        }
-                    }
                     String result = byteArray.toString("UTF-8");
-                    // int pos = result.indexOf("\r\n");
-                    // if (pos != -1) {
-                    // Log.d(TAG, result.substring(0, pos));
-                    // }
-                    // Log.d(TAG, result);
-                    System.out.println(result);
-                    // System.out.println(result.substring(0,
-                    // result.indexOf("\r\n")));
+                    int pos = result.indexOf("\r\n");
+                    if (length < 30 * 1024 && pos != -1) {
+                        if (pos != -1) {
+                            Log.d(TAG, result.substring(0, pos));
+                        }
+                    } else {
+                        ParserHtml.parser(result);
+                    }
                     loadImage2(AUTH_CODE_URL, R.id.checkCodeView);
                     break;
                 default:
-                    System.err.println(connection.getResponseCode() + ":"
+                    Log.e(TAG, connection.getResponseCode() + ":"
                             + connection.getResponseMessage());
                     break;
             }
@@ -598,21 +587,15 @@ public class MainActivity extends Activity implements OnClickListener {
                 try {
                     byteArray.close();
                 } catch (IOException e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
+                    Log.e(TAG, e.getMessage());
                 }
-            }
-
-            if (null != connection) {
-                connection.disconnect();
-                connection = null;
             }
 
             if (null != url) {
                 url = null;
             }
             sb = null;
-            e.printStackTrace();
+            Log.e(TAG, e.getMessage());
         }
     }
 
