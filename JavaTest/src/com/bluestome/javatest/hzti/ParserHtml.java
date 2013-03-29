@@ -46,7 +46,16 @@ public class ParserHtml {
                     if (i == e || i < 2) { // 前2项为提示和标题，不需要
                         continue;
                     }
-                    System.out.println(i + ":" + tr.toPlainTextString());
+                    // System.out.println(i + ":" + tr.toPlainTextString());
+                    String tmp = tr.toPlainTextString().trim();
+                    String[] ts = tmp.split("\r\n");
+                    System.out.println("号牌号码:" + ts[0].trim());
+                    System.out.println("号牌种类:" + ts[1].trim());
+                    System.out.println("违法时间:" + ts[2].trim());
+                    System.out.println("违法地点:" + ts[3].trim());
+                    System.out.println("违法行为:" + ts[4].trim());
+                    System.out.println("处理标记:" + ts[5].trim());
+                    System.out.println("缴款标记:" + ts[6].trim());
                 }
             } else {
                 System.err.println("No Sub Element Fond!");
