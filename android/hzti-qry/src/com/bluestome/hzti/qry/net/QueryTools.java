@@ -2,9 +2,9 @@
 package com.bluestome.hzti.qry.net;
 
 import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -208,45 +208,44 @@ public class QueryTools {
         HashMap<String, String> params = queryHTML(CONTENT_BODY);
         URL url = null;
         HttpURLConnection connection = null;
-        OutputStream out = null;
+        DataOutputStream out = null;
         InputStream in = null;
         ByteArrayOutputStream byteArray = null;
         StringBuffer sb = new StringBuffer(100 * 1024);
         try {
-
-            url = new URL(Constants.URL);
-            connection = (HttpURLConnection) url.openConnection();
-            connection.addRequestProperty("Accept-Charset",
-                    "GBK,utf-8;q=0.7,*;q=0.3");
-            connection.addRequestProperty("Accept-Encoding",
-                    "gzip,deflate,sdch");
-            connection.addRequestProperty("Accept-Language", "zh-CN,zh;q=0.8");
-            connection.addRequestProperty("Connection", "keep-alive");
-            connection.addRequestProperty("Origin", "http://www.hzti.com");
-            connection.addRequestProperty("X-MicrosoftAjax", "Delta=true");
-            connection.addRequestProperty("Referer", reffer);
-            connection.addRequestProperty("Cookie", cookie);
-            connection.addRequestProperty("Cache-Control", "no-cache");
-            connection
-                    .addRequestProperty(
-                            "User-Agent",
-                            "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.22 (KHTML, like Gecko) Chrome/25.0.1364.172 Safari/537.22");
-            connection.addRequestProperty("Content-Type",
-                    "application/x-www-form-urlencoded; charset=UTF-8");
-            connection.setReadTimeout(10 * 1000);
-            connection.setConnectTimeout(15 * 1000);
-            connection.setRequestMethod("POST");
-            connection.setDoOutput(true);
-            connection.setDoInput(true);
-            connection.connect();
-
-            out = connection.getOutputStream();
             // TODO 写提交的数据
             sb.append(URLEncoder.encode("ctl00$ScriptManager1", "UTF-8")
                     + "="
                     + URLEncoder
                             .encode("ctl00$ContentPlaceHolder1$UpdatePanel1|ctl00$ContentPlaceHolder1$Button1",
                                     "UTF-8"));
+            tmps.write(sb.toString().getBytes());
+
+            sb = null;
+            sb = new StringBuffer(200);
+            sb.append("&");
+            sb.append("__EVENTTARGET=");
+            tmps.write(sb.toString().getBytes());
+
+            sb = null;
+            sb = new StringBuffer(200);
+            sb.append("&");
+            sb.append("__EVENTARGUMENT=");
+            tmps.write(sb.toString().getBytes());
+
+            sb = null;
+            sb = new StringBuffer(1024 * 10);
+            sb.append("&");
+            String __VIEWSTATE = URLEncoder.encode(params.get("__VIEWSTATE"), "UTF-8");
+            sb.append("__VIEWSTATE=" + __VIEWSTATE);
+            tmps.write(sb.toString().getBytes());
+
+            sb = null;
+            sb = new StringBuffer(1024 * 10);
+            sb.append("&");
+            String __EVENTVALIDATION = URLEncoder.encode(
+                    params.get("__EVENTVALIDATION"), "UTF-8");
+            sb.append("__EVENTVALIDATION=" + __EVENTVALIDATION);
             tmps.write(sb.toString().getBytes());
 
             sb = null;
@@ -281,35 +280,6 @@ public class QueryTools {
             sb = null;
             sb = new StringBuffer(200);
             sb.append("&");
-            sb.append("__EVENTTARGET=");
-            tmps.write(sb.toString().getBytes());
-
-            sb = null;
-            sb = new StringBuffer(200);
-            sb.append("&");
-            sb.append("__EVENTARGUMENT=");
-            tmps.write(sb.toString().getBytes());
-
-            sb = null;
-            sb = new StringBuffer(1024 * 10);
-            sb.append("&");
-            String __VIEWSTATE = URLEncoder.encode(params.get("__VIEWSTATE"), "UTF-8");
-            System.out.println(params.get("__VIEWSTATE"));
-            System.out.println("__VIEWSTATE.length:" + params.get("__VIEWSTATE").length());
-            sb.append("__VIEWSTATE=" + __VIEWSTATE);
-            tmps.write(sb.toString().getBytes());
-
-            sb = null;
-            sb = new StringBuffer(1024 * 10);
-            sb.append("&");
-            String __EVENTVALIDATION = URLEncoder.encode(
-                    params.get("__EVENTVALIDATION"), "UTF-8");
-            sb.append("__EVENTVALIDATION=" + __EVENTVALIDATION);
-            tmps.write(sb.toString().getBytes());
-
-            sb = null;
-            sb = new StringBuffer(200);
-            sb.append("&");
             sb.append("__ASYNCPOST=true");
             tmps.write(sb.toString().getBytes());
 
@@ -321,10 +291,44 @@ public class QueryTools {
             tmps.write(sb.toString().getBytes());
             tmps.flush();
             tmps.close();
+            byte[] tmpBody = tmps.toByteArray();
+            // String body = new String(tmpBody);
 
-            byte[] body = tmps.toByteArray();
-            System.out.println("\t 请求正文长度：" + body.length);
-            out.write(body);
+            System.out.println("\t 请求正文长度：" + tmpBody.length);
+            System.out.println("请求正文：" + tmpBody);
+            url = new URL(Constants.URL);
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setDoOutput(true);
+            connection.setDoInput(true);
+            connection.setReadTimeout(10 * 1000);
+            connection.setConnectTimeout(15 * 1000);
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Host", "www.hzti.com");
+            connection.setRequestProperty("Connection", "keep-alive");
+            connection.setRequestProperty("Content-Length", String.valueOf(tmpBody.length));
+            connection.setRequestProperty("Cache-Control", "no-cache");
+            connection.setRequestProperty("Origin", "http://www.hzti.com");
+            connection.setRequestProperty("X-MicrosoftAjax", "Delta=true");
+            connection
+                    .setRequestProperty(
+                            "User-Agent",
+                            "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.22 (KHTML, like Gecko) Chrome/25.0.1364.172 Safari/537.22");
+            connection.setRequestProperty("Content-Type",
+                    "application/x-www-form-urlencoded; charset=UTF-8");
+            connection.setRequestProperty("Accept", "*/*");
+            connection.setRequestProperty("Referer", reffer);
+            connection.setRequestProperty("Accept-Encoding",
+                    "gzip,deflate,sdch");
+            connection.setRequestProperty("Accept-Language", "zh-CN,zh;q=0.8");
+            connection.setRequestProperty("Accept-Charset",
+                    "GBK,utf-8;q=0.7,*;q=0.3");
+            connection.setRequestProperty("Cookie",
+                    cookie);
+            connection.connect();
+
+            out = new DataOutputStream(connection.getOutputStream());
+
+            out.write(tmpBody);
             out.flush();
             out.close();
 
@@ -353,7 +357,7 @@ public class QueryTools {
                         }
                     }
                     String result = byteArray.toString("UTF-8");
-                    System.out.println("响应内容:" + "\r\n" + result);
+                    System.out.println(result);
                     break;
                 default:
                     System.err.println(connection.getResponseCode() + ":"
