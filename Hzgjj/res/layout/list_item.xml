@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="horizontal" 
+    android:clickable="false">
+
+    <TextView
+        android:id="@+id/item_index_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.1"
+        android:gravity="center_horizontal"
+        android:textColor="@android:color/black"
+        android:textSize="25sp" 
+        android:text="序号" />
+
+    <TextView
+        android:id="@+id/item_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.1"
+        android:textColor="@android:color/black"
+        android:gravity="center_horizontal"
+        android:textSize="25sp" 
+        android:text="业务年月" />
+
+    <TextView
+        android:id="@+id/item_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.1"
+        android:textColor="@android:color/black"
+        android:gravity="center_horizontal"
+        android:textSize="25sp" 
+        android:text="缴存类型" />
+
+    <TextView
+        android:id="@+id/item_company"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.1"
+        android:gravity="center_horizontal"
+        android:textColor="@android:color/black"
+        android:textSize="25sp" 
+        android:text="单位" />
+
+    <TextView
+        android:id="@+id/item_self"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.1"
+        android:gravity="center_horizontal"
+        android:textColor="@android:color/black"
+        android:textSize="25sp" 
+        android:text="个人" />
+
+    <TextView
+        android:id="@+id/item_total"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.1"
+        android:gravity="center_horizontal"
+        android:textColor="@android:color/black"
+        android:textSize="25sp" 
+        android:text="合计" />
+
+    <TextView
+        android:id="@+id/item_pay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.1"
+        android:gravity="center_horizontal"
+        android:textColor="@android:color/black"
+        android:textSize="25sp" 
+        android:text="补缴金额" />
+
+    <TextView
+        android:id="@+id/item_in"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.1"
+        android:textColor="@android:color/black"
+        android:gravity="center_horizontal"
+        android:textSize="25sp" 
+        android:text="是否入账" />
+
+</LinearLayout>
