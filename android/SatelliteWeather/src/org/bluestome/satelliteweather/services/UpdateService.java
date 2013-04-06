@@ -1,6 +1,8 @@
 
 package org.bluestome.satelliteweather.services;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 import org.bluestome.satelliteweather.MainApp;
 import org.bluestome.satelliteweather.biz.SatelliteWeatherSimpleBiz;
 import org.bluestome.satelliteweather.common.Constants;
@@ -16,6 +18,7 @@ import android.os.IBinder;
 import android.os.SystemClock;
 import android.text.format.DateUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.bluestome.android.utils.HttpClientUtils;
 
@@ -34,6 +37,9 @@ public class UpdateService extends Service {
     private AlarmRecevier mAlarmRecevier;
     private AlarmManager am;
     private boolean isRegisterAlarm;
+    // 最后一次请求时间
+    private AtomicLong lastRequestTime = new AtomicLong(System.currentTimeMillis());
+    final long IDIE_TIME = 5000L;
 
     public UpdateService() {
         Log.d(TAG, "\tzhang:无参数构造函数");
@@ -45,26 +51,24 @@ public class UpdateService extends Service {
         if (null == biz) {
             biz = new SatelliteWeatherSimpleBiz(null);
         }
-        Log.d(TAG, "\tzhang:onCreate");
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(TAG, "\tzhang:onStartCommand,flags[" + flags + "],startId["
-                + startId + "]");
-        initAlarmRecevier();
-        return Service.START_STICKY;
+        // 初始化监听器
+        if (!isRegisterAlarm) {
+            initAlarmRecevier();
+        }
+        return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
     public IBinder onBind(Intent arg0) {
-        Log.d(TAG, "\tzhang:onBind");
         return null;
     }
 
     @Override
     public void onLowMemory() {
-        Log.d(TAG, "\tzhang:onLowMemory");
         // TODO 低内存时处理
         super.onLowMemory();
     }
@@ -96,9 +100,9 @@ public class UpdateService extends Service {
             mSender = PendingIntent.getBroadcast(this, 0, new Intent(
                     Constants.ACTION_ALARM), 0);
             firstTime = SystemClock.elapsedRealtime();
-            firstTime += 1 * DateUtils.HOUR_IN_MILLIS;
+            firstTime += 30 * DateUtils.MINUTE_IN_MILLIS;
             am.setRepeating(AlarmManager.ELAPSED_REALTIME, firstTime,
-                    1 * DateUtils.HOUR_IN_MILLIS, mSender);
+                    30 * DateUtils.MINUTE_IN_MILLIS, mSender);
         }
         isRegisterAlarm = true;
         Log.d(TAG, "\tzhang:initAlarmRecevier");
@@ -129,9 +133,14 @@ public class UpdateService extends Service {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equalsIgnoreCase(Constants.ACTION_ALARM)) {
+                Toast.makeText(UpdateService.this, "[SatelliteWeather]启动定时更新任务",
+                        Toast.LENGTH_LONG)
+                        .show();
                 boolean ok = false;
                 int times = 0;
-                while (!ok && (times++ < 3) && MainApp.i().isConnected()) {
+                while (!ok && (times++ < 3) && MainApp.i().isConnected()
+                        && (System.currentTimeMillis() - lastRequestTime.get() < IDIE_TIME)) {
+                    lastRequestTime.set(System.currentTimeMillis());
                     try {
                         String lastModifyTime = HttpClientUtils
                                 .getLastModifiedByUrl(Constants.SATELINE_CLOUD_URL);
@@ -140,6 +149,7 @@ public class UpdateService extends Service {
                                         .getLastModifyTime())) {
                             biz.updateList(lastModifyTime);
                         }
+                        times = 0;
                         ok = true;
                     } catch (Exception e) {
                         ok = false;
