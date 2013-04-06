@@ -53,7 +53,7 @@ public class UpdateService extends Service {
         Log.d(TAG, "\tzhang:onStartCommand,flags[" + flags + "],startId["
                 + startId + "]");
         initAlarmRecevier();
-        return Service.START_STICKY;
+        return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
@@ -130,7 +130,6 @@ public class UpdateService extends Service {
                     .show();
             Log.d(TAG, "\tzhang:AlarmReceiver\t:" + intent.getAction());
             if (intent.getAction().equalsIgnoreCase(Constants.ACTION_ALARM)) {
-                // biz.catalog是一个耗时的任务，需要放到线程中去执行
                 new Thread(new Runnable() {
                     boolean ok = false;
                     int times = 0;
