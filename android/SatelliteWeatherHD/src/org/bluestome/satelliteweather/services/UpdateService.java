@@ -1,10 +1,6 @@
 
 package org.bluestome.satelliteweather.services;
 
-import org.bluestome.satelliteweather.MainApp;
-import org.bluestome.satelliteweather.biz.SatelliteWeatherSimpleBiz;
-import org.bluestome.satelliteweather.common.Constants;
-
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -20,6 +16,12 @@ import android.widget.Toast;
 
 import com.bluestome.android.utils.HttpClientUtils;
 
+import org.bluestome.satelliteweather.MainApp;
+import org.bluestome.satelliteweather.biz.SatelliteWeatherSimpleBiz;
+import org.bluestome.satelliteweather.common.Constants;
+
+import java.util.concurrent.atomic.AtomicLong;
+
 /**
  * 后台定时更新列表
  * 
@@ -27,9 +29,13 @@ import com.bluestome.android.utils.HttpClientUtils;
  */
 public class UpdateService extends Service {
 
-    private static String TAG = UpdateService.class.getSimpleName();
+    private static String TAG = UpdateService.class.getCanonicalName();
+
+    public final static String NET_NOTIFY = "org.bluestome.satelliteweather.services.NET_NOTIFY";
 
     SatelliteWeatherSimpleBiz biz = null;
+    BroadcastReceiver receiver = null;
+    AtomicLong lastRequest = new AtomicLong(0);
     // 发送统计日志
     private PendingIntent mSender;
     private AlarmRecevier mAlarmRecevier;
@@ -46,6 +52,46 @@ public class UpdateService extends Service {
         if (null == biz) {
             biz = new SatelliteWeatherSimpleBiz(null);
         }
+        initBroadcast();
+    }
+
+    /**
+     * 初始化网络广播
+     */
+    private void initBroadcast() {
+        if (null == receiver) {
+            receiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    if (intent.getAction().equals(NET_NOTIFY)
+                            && (System.currentTimeMillis() - lastRequest.get() > 30 * 60 * 1000L)) {
+                        boolean ok = false;
+                        int times = 0;
+                        while (!ok && (times++ < 3)) {
+                            try {
+                                if (null == biz) {
+                                    biz = new SatelliteWeatherSimpleBiz(null);
+                                }
+                                String lastModifyTime = HttpClientUtils
+                                        .getLastModifiedByUrl(Constants.SATELINE_CLOUD_URL);
+                                if (null != lastModifyTime
+                                        && !lastModifyTime.equals(MainApp.i()
+                                                .getLastModifyTime())) {
+                                    biz.catalog(lastModifyTime);
+                                    lastRequest.set(System.currentTimeMillis());
+                                }
+                                ok = true;
+                            } catch (Exception e) {
+                                ok = false;
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
+
+            };
+        }
+        registerReceiver(receiver, new IntentFilter(NET_NOTIFY));
     }
 
     @Override
@@ -53,6 +99,7 @@ public class UpdateService extends Service {
         Log.d(TAG, "\tzhang:onStartCommand,flags[" + flags + "],startId["
                 + startId + "]");
         initAlarmRecevier();
+        initBroadcast();
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -146,6 +193,7 @@ public class UpdateService extends Service {
                                         && !lastModifyTime.equals(MainApp.i()
                                                 .getLastModifyTime())) {
                                     biz.catalog(lastModifyTime);
+                                    lastRequest.set(System.currentTimeMillis());
                                 }
                                 ok = true;
                             } catch (Exception e) {

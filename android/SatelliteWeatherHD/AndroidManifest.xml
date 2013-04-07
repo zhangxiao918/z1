@@ -11,34 +11,41 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.INSTALL_PACKAGES" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    
+
     <application
         android:name=".MainApp"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
-        <service android:name=".services.UpdateService" />
+        android:theme="@style/AppTheme" >
+        <service android:name="org.bluestome.satelliteweather.services.UpdateService" />
+
         <activity
-            android:name=".MainActivity"
+            android:name="org.bluestome.satelliteweather.MainActivity"
             android:label="@string/title_activity_main"
-            android:screenOrientation="landscape"
-            android:configChanges="orientation">
+            android:screenOrientation="landscape" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <receiver android:name=".broadcast.DeviceBootReceiver" >
+
+        <receiver android:name="org.bluestome.satelliteweather.broadcast.DeviceBootReceiver" >
             <intent-filter android:priority="2147483647" >
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </receiver>
-        </application>
+        <receiver android:name="org.bluestome.satelliteweather.broadcast.NetChangedReceiver" >
+            <intent-filter android:priority="2147483647" >
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </receiver>
+    </application>
 
 </manifest>

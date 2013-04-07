@@ -1,26 +1,6 @@
 
 package org.bluestome.satelliteweather;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.bluestome.satelliteweather.biz.SatelliteWeatherSimpleBiz;
-import org.bluestome.satelliteweather.common.Constants;
-import org.bluestome.satelliteweather.services.UpdateService;
-import org.bluestome.satelliteweather.utils.HttpClientUtils;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -30,6 +10,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.os.StrictMode;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
@@ -47,6 +28,26 @@ import android.widget.Toast;
 
 import com.bluestome.android.utils.DateUtils;
 import com.bluestome.android.utils.FileUtils;
+
+import org.bluestome.satelliteweather.biz.SatelliteWeatherSimpleBiz;
+import org.bluestome.satelliteweather.common.Constants;
+import org.bluestome.satelliteweather.services.UpdateService;
+import org.bluestome.satelliteweather.utils.HttpClientUtils;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MainActivity extends Activity implements OnClickListener {
 
@@ -156,17 +157,11 @@ public class MainActivity extends Activity implements OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            // 当前为横屏， 在此处添加额外的处理代码
-            setContentView(R.layout.horizontal);
-            initHUI();
-            init();
-        } else if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            // 当前为竖屏， 在此处添加额外的处理代码
-            setContentView(R.layout.main);
-            initVUI();
-            init();
-        }
+        setContentView(R.layout.horizontal);
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        initHUI();
+        init();
         if (null == biz) {
             biz = new SatelliteWeatherSimpleBiz(null);
         }
@@ -177,55 +172,16 @@ public class MainActivity extends Activity implements OnClickListener {
     protected void onResume() {
         // TODO Auto-generated method stub
         super.onResume();
-        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            // 当前为横屏， 在此处添加额外的处理代码
-            setContentView(R.layout.horizontal);
-            initHUI();
-            init();
-        } else if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            // 当前为竖屏， 在此处添加额外的处理代码
-            setContentView(R.layout.main);
-            initVUI();
-            init();
-        }
+        // 当前为横屏， 在此处添加额外的处理代码
+        setContentView(R.layout.horizontal);
+        initHUI();
+        init();
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         // TODO 保存当前活动中的参数
         super.onSaveInstanceState(outState);
-    }
-
-    /**
-     * 竖屏初始化UI
-     */
-    private void initVUI() {
-        scrollView = (ScrollView) findViewById(R.id.scrollView);
-        scrollView.setVisibility(View.VISIBLE);
-
-        mLayout = (LinearLayout) findViewById(R.id.linearlayout);
-
-        mLayout2 = (LinearLayout) findViewById(R.id.linearlayout_image);
-        mLayout2.setVisibility(View.GONE);
-
-        showLog = (TextView) findViewById(R.id.text_show_log);
-        showLog.setText("");
-
-        btnStart = (Button) findViewById(R.id.btn_start);
-        btnStart.setOnClickListener(this);
-
-        btnPlay = (Button) findViewById(R.id.btn_play);
-        btnPlay.setOnClickListener(this);
-        // btnPlay.setEnabled(false);
-
-        btnClearConsole = (Button) findViewById(R.id.btn_clear_console);
-        btnClearConsole.setOnClickListener(this);
-        btnClearConsole.setEnabled(false);
-
-        imgView = (ImageView) findViewById(R.id.imageView1);
-
-        spinner = (Spinner) findViewById(R.id.spin_date);
-        spinner.setEnabled(false);
     }
 
     /**
@@ -334,32 +290,6 @@ public class MainActivity extends Activity implements OnClickListener {
             }
         }
 
-    }
-
-    /**
-     * @param newConfig , The new device configuration.
-     *            当设备配置信息有改动（比如屏幕方向的改变，实体键盘的推开或合上等）时，
-     *            并且如果此时有activity正在运行，系统会调用这个函数。
-     *            注意：onConfigurationChanged只会监测应用程序在AnroidMainifest.xml中通过
-     *            android:configChanges="xxxx"指定的配置类型的改动；
-     *            而对于其他配置的更改，则系统会onDestroy()当前Activity，然后重启一个新的Activity实例。
-     */
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        date = null;
-        // 检测屏幕的方向：纵向或横向
-        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            // 当前为横屏， 在此处添加额外的处理代码
-            setContentView(R.layout.horizontal);
-            initHUI();
-            init();
-        } else if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            // 当前为竖屏， 在此处添加额外的处理代码
-            setContentView(R.layout.main);
-            initVUI();
-            init();
-        }
     }
 
     Runnable rParserHtml = new Runnable() {
@@ -474,7 +404,7 @@ public class MainActivity extends Activity implements OnClickListener {
                     msg.what = 0x0105;
                     msg.obj = drawable;
                     mHandler.sendMessage(msg);
-                    SystemClock.sleep(500L);
+                    SystemClock.sleep(250L);
                 }
             }
         } else {
@@ -541,7 +471,8 @@ public class MainActivity extends Activity implements OnClickListener {
                     }
                     btnPlay.setEnabled(false);
                     showLog.setText("");
-                    new Thread(rParserHtml).start();
+                    // new Thread(rParserHtml).start();
+                    mHandler.post(rParserHtml);
                     break;
                 case R.id.btn_play:
                     if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
