@@ -189,17 +189,19 @@ public class MainActivity extends Activity implements OnClickListener {
         Log.d(TAG, "\tzhang: onCreate");
         super.onCreate(savedInstanceState);
         factory = DaoFactory.getInstance(getContext());
-        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            // 当前为横屏， 在此处添加额外的处理代码
-            setContentView(R.layout.horizontal);
-            initHUI();
-            init();
-        } else if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            // 当前为竖屏， 在此处添加额外的处理代码
-            setContentView(R.layout.main);
-            initVUI();
-            init();
-        }
+        // if (this.getResources().getConfiguration().orientation ==
+        // Configuration.ORIENTATION_LANDSCAPE) {
+        // // 当前为横屏， 在此处添加额外的处理代码
+        // setContentView(R.layout.horizontal);
+        // initHUI();
+        // init();
+        // } else if (this.getResources().getConfiguration().orientation ==
+        // Configuration.ORIENTATION_PORTRAIT) {
+        // 当前为竖屏， 在此处添加额外的处理代码
+        setContentView(R.layout.main);
+        initVUI();
+        init();
+        // }
         // 异步启动服务
         MainApp.i().getExecutorService().execute(new Runnable() {
             @Override
@@ -260,45 +262,45 @@ public class MainActivity extends Activity implements OnClickListener {
         spinner.setEnabled(false);
     }
 
-    /**
-     * 横屏初始化UI
-     */
-    private void initHUI() {
-        scrollView = (ScrollView) findViewById(R.id.scrollView);
-        scrollView.setVisibility(View.VISIBLE);
-
-        mLayout = (LinearLayout) findViewById(R.id.linearlayout);
-
-        mLayout3 = (LinearLayout) findViewById(R.id.linearlayout_v1);
-
-        showLog = (TextView) findViewById(R.id.text_show_log);
-        showLog.setText("");
-
-        btnStart = (Button) findViewById(R.id.btn_start);
-        btnStart.setOnClickListener(this);
-
-        btnPlay = (Button) findViewById(R.id.btn_play);
-        btnPlay.setOnClickListener(this);
-
-        btnStop = (Button) findViewById(R.id.btn_stop);
-        btnStop.setOnClickListener(this);
-        btnStop.setEnabled(false);
-
-        btnForward = (Button) findViewById(R.id.btn_forward);
-        btnForward.setOnClickListener(this);
-        btnForward.setEnabled(false);
-
-        btnClearConsole = (Button) findViewById(R.id.btn_clear_console);
-        btnClearConsole.setOnClickListener(this);
-        btnClearConsole.setEnabled(false);
-
-        imgView = (ImageView) findViewById(R.id.imageView1);
-        imgView.setVisibility(View.GONE);
-
-        spinner = (Spinner) findViewById(R.id.spin_date);
-        spinner.setVisibility(View.VISIBLE);
-
-    }
+    // /**
+    // * 横屏初始化UI
+    // */
+    // private void initHUI() {
+    // scrollView = (ScrollView) findViewById(R.id.scrollView);
+    // scrollView.setVisibility(View.VISIBLE);
+    //
+    // mLayout = (LinearLayout) findViewById(R.id.linearlayout);
+    //
+    // mLayout3 = (LinearLayout) findViewById(R.id.linearlayout_v1);
+    //
+    // showLog = (TextView) findViewById(R.id.text_show_log);
+    // showLog.setText("");
+    //
+    // btnStart = (Button) findViewById(R.id.btn_start);
+    // btnStart.setOnClickListener(this);
+    //
+    // btnPlay = (Button) findViewById(R.id.btn_play);
+    // btnPlay.setOnClickListener(this);
+    //
+    // btnStop = (Button) findViewById(R.id.btn_stop);
+    // btnStop.setOnClickListener(this);
+    // btnStop.setEnabled(false);
+    //
+    // btnForward = (Button) findViewById(R.id.btn_forward);
+    // btnForward.setOnClickListener(this);
+    // btnForward.setEnabled(false);
+    //
+    // btnClearConsole = (Button) findViewById(R.id.btn_clear_console);
+    // btnClearConsole.setOnClickListener(this);
+    // btnClearConsole.setEnabled(false);
+    //
+    // imgView = (ImageView) findViewById(R.id.imageView1);
+    // imgView.setVisibility(View.GONE);
+    //
+    // spinner = (Spinner) findViewById(R.id.spin_date);
+    // spinner.setVisibility(View.VISIBLE);
+    //
+    // }
 
     /**
      * 初始化文件目录
@@ -376,23 +378,25 @@ public class MainActivity extends Activity implements OnClickListener {
      *            android:configChanges="xxxx"指定的配置类型的改动；
      *            而对于其他配置的更改，则系统会onDestroy()当前Activity，然后重启一个新的Activity实例。
      */
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        date = null;
-        // 检测屏幕的方向：纵向或横向
-        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            // 当前为横屏， 在此处添加额外的处理代码
-            setContentView(R.layout.horizontal);
-            initHUI();
-            init();
-        } else if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            // 当前为竖屏， 在此处添加额外的处理代码
-            setContentView(R.layout.main);
-            initVUI();
-            init();
-        }
-    }
+    // @Override
+    // public void onConfigurationChanged(Configuration newConfig) {
+    // super.onConfigurationChanged(newConfig);
+    // date = null;
+    // // 检测屏幕的方向：纵向或横向
+    // if (this.getResources().getConfiguration().orientation ==
+    // Configuration.ORIENTATION_LANDSCAPE) {
+    // // 当前为横屏， 在此处添加额外的处理代码
+    // setContentView(R.layout.horizontal);
+    // initHUI();
+    // init();
+    // } else if (this.getResources().getConfiguration().orientation ==
+    // Configuration.ORIENTATION_PORTRAIT) {
+    // // 当前为竖屏， 在此处添加额外的处理代码
+    // setContentView(R.layout.main);
+    // initVUI();
+    // init();
+    // }
+    // }
 
     /**
      * @throws Exception
