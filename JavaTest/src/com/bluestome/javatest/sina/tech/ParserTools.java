@@ -127,7 +127,6 @@ public class ParserTools {
     /**
      * @param args
      */
-    @SuppressWarnings("unchecked")
     public static void main(String[] args) {
         ParserTools tools = new ParserTools();
         try {
@@ -147,7 +146,7 @@ public class ParserTools {
             };
             Collections.sort(list, comparator);
             for (LinkBean l : list) {
-                System.out.println(l.getUrl());
+                System.out.println(l.getTitle() + "," + l.getUrl());
             }
         } catch (ParserException e) {
             e.printStackTrace();

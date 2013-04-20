@@ -9,7 +9,7 @@ package com.bluestome.javatest.sina.tech;
  */
 public class LinkBean {
     private String url;
-    private String titl;
+    private String title;
 
     /**
      * @return the url
@@ -28,15 +28,15 @@ public class LinkBean {
     /**
      * @return the titl
      */
-    public String getTitl() {
-        return titl;
+    public String getTitle() {
+        return title;
     }
 
     /**
      * @param titl the titl to set
      */
-    public void setTitl(String titl) {
-        this.titl = titl;
+    public void setTitl(String title) {
+        this.title = title;
     }
 
 }
