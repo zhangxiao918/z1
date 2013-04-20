@@ -21,20 +21,30 @@ public class PlayerBaseInfoBTO implements ByteBean {
     @ByteField(index = 4, length = 3)
     private String nickName;
 
-    @ByteField(index = 5, bytes = 2)
+    @ByteField(index = 5, bytes = 1)
+    private int passwordLen;
+
+    @ByteField(index = 6, length = 5, description = "加密后的密码")
+    private String password;
+    
+    @ByteField(index = 7, bytes = 2)
     private int portraitId;
 
-    @ByteField(index = 6, bytes = 1)
+    @ByteField(index = 8, bytes = 1)
     private int sex;
 
-    @ByteField(index = 7, bytes = 1)
+    @ByteField(index = 9, bytes = 1)
     private int age;
 
-    @ByteField(index = 8, bytes = 4)
-    private long gold;//元宝
+    @ByteField(index = 10, bytes = 4)
+    private long gold;//金豆
 
-    @ByteField(index = 9, bytes = 4)
-    private long point;//积分
+    @ByteField(index = 11, bytes = 4)
+    private long yuanbao;//元宝
+    
+    @ByteField(index = 12, bytes = 1)
+    private int accountType;//用户类型：0:游客,1:平台注册账户,2:新浪,3:腾讯
+
 
     public long getSkyId() {
         return skyId;
@@ -111,11 +121,31 @@ public class PlayerBaseInfoBTO implements ByteBean {
     }
 
     public long getPoint() {
-        return point;
+        return yuanbao;
     }
 
     public void setPoint(long point) {
-        this.point = point;
+        this.yuanbao = point;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+        this.passwordLen = (null == this.password ? 0 : this.password.length() * 2);
+    }
+
+    public int getPasswordLen() {
+        return passwordLen;
+    }
+    
+    public void setAccountType(int accountType) {
+        this.accountType = accountType;
+    }
+
+    public int getAccountType() {
+        return accountType;
+    }
 }

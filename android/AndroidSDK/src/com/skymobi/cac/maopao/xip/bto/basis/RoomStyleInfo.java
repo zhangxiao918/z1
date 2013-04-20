@@ -1,10 +1,11 @@
-package com.skymobi.cac.maopao.xip.bto.basis;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
+package com.skymobi.cac.maopao.xip.bto.basis;
 
 import com.skymobi.bean.bytebean.ByteBean;
 import com.skymobi.cac.maopao.passport.android.bean.bytebean.annotation.ByteField;
+
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
 
 public class RoomStyleInfo implements ByteBean {
 
@@ -31,9 +32,12 @@ public class RoomStyleInfo implements ByteBean {
 
     @ByteField(index = 7, length = 6, description = "房间名称")
     private String roomName;
-    
+
     @ByteField(index = 8, bytes = 4, description = "在线人数")
     private int onlineNum;
+
+    @ByteField(index = 9, bytes = 4, description = "初始倍数")
+    private int initMagnification;
 
     public int getRoomNameLen() {
         return roomNameLen;
@@ -104,7 +108,7 @@ public class RoomStyleInfo implements ByteBean {
     public void setMaxJoinMoney(long maxJoinMoney) {
         this.maxJoinMoney = maxJoinMoney;
     }
-    
+
     public int getOnlineNum() {
         return onlineNum;
     }
@@ -112,4 +116,19 @@ public class RoomStyleInfo implements ByteBean {
     public void setOnlineNum(int onlineNum) {
         this.onlineNum = onlineNum;
     }
+
+    /**
+     * @return the initMagnification
+     */
+    public int getInitMagnification() {
+        return initMagnification;
+    }
+
+    /**
+     * @param initMagnification the initMagnification to set
+     */
+    public void setInitMagnification(int initMagnification) {
+        this.initMagnification = initMagnification;
+    }
+
 }

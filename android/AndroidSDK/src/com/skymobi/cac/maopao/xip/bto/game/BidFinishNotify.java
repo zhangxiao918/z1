@@ -20,6 +20,9 @@ public class BidFinishNotify extends XipBody {
 
     @ByteField(index = 3, length = 2)
     private byte[] cards;
+    
+    @ByteField(index = 4, bytes = 2, description = "底分")
+    private int baseMoney;
 
     public int getBidVal() {
         return bidVal;
@@ -55,5 +58,13 @@ public class BidFinishNotify extends XipBody {
 
     public int getNum() {
         return num;
+    }
+    
+    public int getBaseMoney() {
+        return baseMoney;
+    }
+
+    public void setBaseMoney(int baseMoney) {
+        this.baseMoney = baseMoney;
     }
 }
