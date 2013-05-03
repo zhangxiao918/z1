@@ -5,6 +5,7 @@ import com.chinamilitary.bean.ImageBean;
 import com.chinamilitary.dao.ImageDao;
 import com.chinamilitary.db.CommonDB;
 
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,6 +22,8 @@ public class ImageDaoImpl extends CommonDB implements ImageDao {
     private final static String UPDATE_SQL = "update tbl_image ";
 
     private final static String FIND_BY_ARTICLE_ID = "select * from tbl_image where d_article_id = ?";
+
+    private final static String DELETE_SQL = "DELETE FROM tbl_image";
 
     public ImageDaoImpl() throws Exception {
         super();
@@ -341,7 +344,7 @@ public class ImageDaoImpl extends CommonDB implements ImageDao {
         return bean;
     }
 
-    public int insert(ImageBean bean) throws Exception {
+    public synchronized int insert(ImageBean bean) throws Exception {
         int key = -1;
         if (bean.getHttpUrl() == null || bean.getHttpUrl().equalsIgnoreCase("")) {
             System.out.println("空");
@@ -485,7 +488,7 @@ public class ImageDaoImpl extends CommonDB implements ImageDao {
      * @return
      * @throws Exception
      */
-    public boolean update(ImageBean bean) throws Exception {
+    public synchronized boolean update(ImageBean bean) throws Exception {
         boolean b = false;
         StringBuffer sql = new StringBuffer();
         sql.append(UPDATE_SQL)
@@ -558,6 +561,31 @@ public class ImageDaoImpl extends CommonDB implements ImageDao {
         if (rs != null)
             rs.close();
         return list;
+    }
+
+    /**
+     * 根据ID删除记录
+     * 
+     * @param id
+     * @return
+     * @throws SQLException
+     */
+    public synchronized boolean delete(int id) throws SQLException {
+        try {
+            pstmt = conn.prepareStatement(DELETE_SQL + " WHERE d_id=?");
+            pstmt.setInt(1, id);
+            int r = pstmt.executeUpdate();
+            if (r > 0) {
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            if (pstmt != null)
+                pstmt.close();
+        }
+        return true;
     }
 
 }

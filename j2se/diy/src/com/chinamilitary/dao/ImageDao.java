@@ -4,6 +4,7 @@ package com.chinamilitary.dao;
 import com.chinamilitary.bean.ImageBean;
 import com.chinamilitary.db.ICommonDao;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -125,5 +126,14 @@ public interface ImageDao extends ICommonDao {
      */
     List<ImageBean> findImageByFilesizeEqualX(Integer x, Integer offset, Integer limit)
             throws Exception;
+
+    /**
+     * 根据ID删除记录
+     * 
+     * @param id
+     * @return
+     * @throws SQLException
+     */
+    boolean delete(int id) throws SQLException;
 
 }
