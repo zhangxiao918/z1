@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class DataProcess {
 
@@ -31,6 +32,8 @@ public class DataProcess {
     BlockingQueue<Integer> blockQueue = new LinkedBlockingQueue<Integer>(1000);
 
     BlockingQueue<Integer> backupQueue = new LinkedBlockingQueue<Integer>(1000);
+
+    private AtomicInteger id = new AtomicInteger(5112);
 
     private static DataProcess instance = null;
 
@@ -220,13 +223,13 @@ public class DataProcess {
         final ImageDao dao = DAOFactory.getInstance().getImageDao();
         final ArticleDao aDao = DAOFactory.getInstance().getArticleDao();
         new Thread(new Runnable() {
-            int id = 5051;
             ImageBean bean = null;
 
             public synchronized void run() {
                 while (true) {
                     try {
-                        bean = dao.findById(id++);
+                        int sid = id.getAndIncrement();
+                        bean = dao.findById(sid);
                         if (null != bean) {
                             if (bean.getStatus() != 1 && bean.getFileSize() == 0L) {
                                 String len = HttpClientUtils.getHttpConentLength(bean.getHttpUrl(),
