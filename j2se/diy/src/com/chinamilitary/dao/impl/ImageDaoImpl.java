@@ -588,4 +588,60 @@ public class ImageDaoImpl extends CommonDB implements ImageDao {
         return true;
     }
 
+    /**
+     * 获取此状态的最小值
+     * 
+     * @param status
+     * @return
+     */
+    public int getMin(int status) throws SQLException {
+        int id = 0;
+        String sql = "select min(d_id) from tbl_image where d_status = ?";
+        try {
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, status);
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                id = rs.getInt(1);
+                break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (pstmt != null)
+                pstmt.close();
+            if (rs != null)
+                rs.close();
+        }
+        return id;
+    }
+
+    /**
+     * 获取statu的最大值
+     * 
+     * @param status
+     * @return
+     */
+    public int getMax(int status) throws SQLException {
+        int id = 0;
+        String sql = "select max(d_id) from tbl_image where d_status = ?";
+        try {
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, status);
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                id = rs.getInt(1);
+                break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (pstmt != null)
+                pstmt.close();
+            if (rs != null)
+                rs.close();
+        }
+        return id;
+    }
+
 }

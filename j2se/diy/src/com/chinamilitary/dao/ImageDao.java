@@ -11,6 +11,22 @@ import java.util.List;
 public interface ImageDao extends ICommonDao {
 
     /**
+     * 获取此状态的最小值
+     * 
+     * @param status
+     * @return
+     */
+    int getMin(int status) throws SQLException;
+
+    /**
+     * 获取statu的最大值
+     * 
+     * @param status
+     * @return
+     */
+    int getMax(int status) throws SQLException;
+
+    /**
      * 添加记录
      * 
      * @param bean
