@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -33,7 +34,7 @@ public class DataProcess {
 
     BlockingQueue<Integer> backupQueue = new LinkedBlockingQueue<Integer>(1000);
 
-    private AtomicInteger id = new AtomicInteger(5112);
+    private AtomicInteger id = new AtomicInteger(23671);
 
     private static DataProcess instance = null;
 
@@ -164,15 +165,6 @@ public class DataProcess {
         return TAG + File.separator + "Article" + File.separator + key;
     }
 
-    private void testURL() {
-        String length = HttpClientUtils
-                .getHttpConentLength(
-                        "http://tuku.news.china.com/history/html/2010-01-05/135216.htm",
-                        null,
-                        "http://images2.china.com/news/zh_cn/historygallery/11127886/20121031/17502229_2012103109350296689800.jpg");
-        System.out.println(length);
-    }
-
     public void process() {
         final ArticleDao articleDao = DAOFactory.getInstance().getArticleDao();
         new Thread(new Runnable() {
@@ -222,6 +214,11 @@ public class DataProcess {
 
         final ImageDao dao = DAOFactory.getInstance().getImageDao();
         final ArticleDao aDao = DAOFactory.getInstance().getArticleDao();
+        try {
+            id.set(dao.getMin(-1));
+        } catch (SQLException e1) {
+        }
+        System.out.println("初始ID值为:" + id.get());
         new Thread(new Runnable() {
             ImageBean bean = null;
 
@@ -240,6 +237,8 @@ public class DataProcess {
                                     bean.setStatus(1);
                                     dao.update(bean);
                                 } else {
+                                    // TODO SOCKET TIMEOUT EXCEPTION时的处理逻辑
+
                                     // TODO 删除Article
                                     if (aDao.delete(bean.getArticleId())) {
                                         System.err.println("删除文章:" + bean.getArticleId());
