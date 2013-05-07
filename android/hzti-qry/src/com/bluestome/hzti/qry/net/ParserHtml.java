@@ -2,6 +2,8 @@
 package com.bluestome.hzti.qry.net;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.htmlparser.NodeFilter;
 import org.htmlparser.Parser;
@@ -13,6 +15,8 @@ import org.htmlparser.util.NodeList;
 import org.htmlparser.util.ParserException;
 
 import android.util.Log;
+
+import com.bluestome.hzti.qry.bean.TBean;
 
 /**
  * @ClassName: ParserHtml
@@ -61,7 +65,8 @@ public class ParserHtml {
         p = null;
     }
 
-    public static void parser(String content) throws IOException, ParserException {
+    public static List<TBean> parser(String content) throws IOException, ParserException {
+        List<TBean> rlist = new ArrayList<TBean>();
         Parser p = new Parser();
         p.setInputHTML(content);
 
@@ -79,6 +84,7 @@ public class ParserHtml {
                 int c = list.size();
                 int e = c - 1; // 最后一列为提示内容,无关
                 // 获取最终数据
+                TBean bean = null;
                 for (int i = 0; i < list.size(); i++) {
                     TableRow tr = (TableRow) list.elementAt(i);
                     if (i == e || i < 2) { // 前2项为提示和标题，不需要
@@ -86,6 +92,14 @@ public class ParserHtml {
                     }
                     String tmp = tr.toPlainTextString().trim();
                     String[] ts = tmp.split("\r\n");
+                    bean = new TBean();
+                    bean.setCarNum(ts[0].trim());
+                    bean.setCarType(ts[1].trim());
+                    bean.setContent(ts[4].trim());
+                    bean.setDate(ts[2].trim());
+                    bean.setDealResult(ts[5].trim());
+                    bean.setLoc(ts[3].trim());
+                    bean.setPayResult(ts[6].trim());
                     Log.d(TAG, "号牌号码:" + ts[0].trim());
                     Log.d(TAG, "号牌种类:" + ts[1].trim());
                     Log.d(TAG, "违法时间:" + ts[2].trim());
@@ -93,6 +107,7 @@ public class ParserHtml {
                     Log.d(TAG, "违法行为:" + ts[4].trim());
                     Log.d(TAG, "处理标记:" + ts[5].trim());
                     Log.d(TAG, "缴款标记:" + ts[6].trim());
+                    rlist.add(bean);
                 }
             } else {
                 Log.e(TAG, "No Sub Element Fond!");
@@ -101,6 +116,7 @@ public class ParserHtml {
             Log.e(TAG, "No Element Fond!");
         }
         p = null;
+        return rlist;
     }
 
     /**

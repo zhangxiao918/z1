@@ -4,16 +4,20 @@ package com.bluestome.hzti.qry;
 import java.util.concurrent.atomic.AtomicLong;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.StrictMode;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.bluestome.hzti.qry.common.Constants;
@@ -23,11 +27,13 @@ public class LoginActivity extends Activity {
 
     private MobileGo go = new MobileGo();
     private String cookie;
-    private EditText account;
-    private EditText pwd;
+    private Spinner spinner;
+    private String carType = "小型汽车";
+    private EditText carNum;
+    private EditText carId;
     private EditText authCode;
     private ImageView authCodeImg;
-    private ProgressBar progress;
+    private ProgressDialog dialog = null;
 
     AtomicLong lastRequestTimes = new AtomicLong();
 
@@ -40,15 +46,31 @@ public class LoginActivity extends Activity {
 
     };
 
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            if (null != dialog) {
+                dialog.dismiss();
+            }
+        }
+
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-        initNetwork();
+        dialog = ProgressDialog.show(this, "系统提示", "加载中，请稍后...");
+        dialog.setCancelable(true);
         initView();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                initNetwork();
+                loadImage2(Constants.AUTH_CODE_URL, R.id.checkCodeView);
+            }
+        }).start();
     }
 
     @Override
@@ -61,19 +83,37 @@ public class LoginActivity extends Activity {
         if ((lastRequestTimes.get() - System.currentTimeMillis()) > 30 * 1000L) {
             initNetwork();
         }
-        loadImage2(Constants.AUTH_CODE_URL, R.id.main_img_authcode_id);
+        loadImage2(Constants.AUTH_CODE_URL, R.id.checkCodeView);
     }
 
     void initView() {
-        account = (EditText) findViewById(R.id.main_txt_account_id);
-        account.setText("bluestome");
-        pwd = (EditText) findViewById(R.id.main_txt_pwd_id);
-        pwd.setText("zhangxiao1329");
-        authCode = (EditText) findViewById(R.id.main_txt_authcode_id);
-        authCode.setText("0000");
-        authCodeImg = (ImageView) findViewById(R.id.main_img_authcode_id);
-        progress = (ProgressBar) findViewById(R.id.main_progress_id);
-        loadImage2(Constants.AUTH_CODE_URL, R.id.main_img_authcode_id);
+        spinner = (Spinner) findViewById(R.id.spinner1);
+        // 从资源中获取数组数据
+        String[] array = getResources().getStringArray(R.array.select_car_type);
+        ArrayAdapter<String> array_adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, array);
+        array_adapter
+                .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(array_adapter);
+        spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view,
+                    int position, long id) {
+                carType = parent.getItemAtPosition(position).toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // TODO Auto-generated method stub
+            }
+        });
+        carNum = (EditText) findViewById(R.id.e_car_license_num);
+        carNum.setText("浙A249NT");
+        carId = (EditText) findViewById(R.id.e_car_id);
+        carId.setText("005953");
+        authCode = (EditText) findViewById(R.id.e_check_code);
+        authCode.setText("");
+        authCodeImg = (ImageView) findViewById(R.id.checkCodeView);
     }
 
     /**
@@ -82,6 +122,7 @@ public class LoginActivity extends Activity {
     void initNetwork() {
         go.request(Constants.URL);
         cookie = go.getCookie().toString();
+        mHandler.sendEmptyMessage(0);
     }
 
     /**
@@ -90,40 +131,47 @@ public class LoginActivity extends Activity {
      * @param view
      */
     public void submit(View view) {
-        String s1 = account.getText().toString();
+        final String s0 = "小型汽车";
+        final String s1 = carNum.getText().toString();
         if (null == s1 || s1.equals("")) {
-            Toast.makeText(getApplicationContext(), "请填写用户名", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "请填写车牌", Toast.LENGTH_SHORT).show();
             return;
         }
-        String s2 = pwd.getText().toString();
+        final String s2 = carId.getText().toString();
         if (null == s2 || s2.equals("")) {
-            Toast.makeText(getApplicationContext(), "请填写密码", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "请填写车辆识别码", Toast.LENGTH_SHORT).show();
             return;
         }
-        String s3 = authCode.getText().toString();
+        final String s3 = authCode.getText().toString();
         if (null == s3 || s3.equals("")) {
             Toast.makeText(getApplicationContext(), "请填写验证码", Toast.LENGTH_SHORT).show();
             return;
         }
-        // final String r = go.loginPost(MobileGo.HZGJJ_LOGIN_POST_URL, cookie,
-        // MobileGo.HZGJJ_LOGIN_URL, s1, s2, s3);
-        // lastRequestTimes.set(System.currentTimeMillis());
-        // handler2.post(new Runnable() {
-        // public void run() {
-        // if (r.length() > 2) {
-        // Intent i = new Intent(LoginActivity.this, ShowContentActivity.class);
-        // i.putExtra("content", r);
-        // i.putExtra("cookie", cookie);
-        // startActivity(i);
-        // finish();
-        // } else {
-        // Toast.makeText(getApplicationContext(),
-        // "服务端响应:[" + go.adapterResponseCode(r) + "]",
-        // Toast.LENGTH_LONG).show();
-        // loadImage2(MobileGo.HZGJJ_CHECKCODE_URL, R.id.main_img_authcode_id);
-        // }
-        // }
-        // });
+        dialog = ProgressDialog.show(this, "标题", "数据提交中，请稍后...");
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                lastRequestTimes.set(System.currentTimeMillis());
+                final String body = go.doQuery(cookie, Constants.URL, s0, s1, s2, s3);
+                mHandler.sendEmptyMessage(0);
+                if (null != body && body.length() > 2) {
+                    Intent i = new Intent(LoginActivity.this, GridShowActivity.class);
+                    i.putExtra("content", body);
+                    i.putExtra("cookie", cookie);
+                    startActivity(i);
+                    finish();
+                } else {
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(getApplicationContext(),
+                                    body,
+                                    Toast.LENGTH_LONG).show();
+                            loadImage2(Constants.AUTH_CODE_URL, R.id.checkCodeView);
+                        }
+                    });
+                }
+            }
+        }).start();
     }
 
     /**
@@ -132,13 +180,14 @@ public class LoginActivity extends Activity {
      * @param view
      */
     public void cancel(View view) {
-        account.setText("");
-        pwd.setText("");
         authCode.setText("");
+        super.onBackPressed();
+        finish();
     }
 
     public void changeAuthImg(View view) {
-        loadImage2(Constants.AUTH_CODE_URL, R.id.main_img_authcode_id);
+        dialog = ProgressDialog.show(this, "提示", "正在获取验证码，请等待...");
+        loadImage2(Constants.AUTH_CODE_URL, R.id.checkCodeView);
     }
 
     void loadImage2(final String site, final int id) {
@@ -152,10 +201,11 @@ public class LoginActivity extends Activity {
                             Bitmap bitMap = BitmapFactory.decodeByteArray(bit, 0,
                                     bit.length);
                             Message message = new Message();
-                            message.arg1 = R.id.main_img_authcode_id;
+                            message.arg1 = R.id.checkCodeView;
                             message.obj = bitMap;
                             handler2.sendMessage(message);
                         }
+                        mHandler.sendEmptyMessage(0);
                     }
                 }
             }

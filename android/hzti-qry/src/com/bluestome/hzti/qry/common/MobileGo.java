@@ -22,7 +22,6 @@ import org.htmlparser.util.NodeList;
 import android.util.Log;
 
 import com.bluestome.hzti.qry.R;
-import com.bluestome.hzti.qry.net.ParserHtml;
 
 public class MobileGo {
 
@@ -40,6 +39,7 @@ public class MobileGo {
         try {
             url = new URL(site);
             connection = (HttpURLConnection) url.openConnection();
+            connection.addRequestProperty("Host", "www.hzti.com");
             connection
                     .addRequestProperty(
                             "User-Agent",
@@ -59,6 +59,7 @@ public class MobileGo {
                     }
                     cookie.append(sessionId);
                 }
+                System.out.println("cookie:" + cookie.toString());
                 try {
                     InputStream is = connection.getInputStream();
                     byte[] buffer = new byte[2048];
@@ -69,6 +70,7 @@ public class MobileGo {
                         baos.flush();
                     }
                     baos.close();
+                    CONTENT_BODY = baos.toByteArray();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -226,11 +228,12 @@ public class MobileGo {
      * @param carId 车架编号后6位
      * @param checkCode 验证码
      */
-    public void doQuery(String cookie, String reffer, String carType,
+    public String doQuery(String cookie, String reffer, String carType,
             String carNum, String carId, String checkCode) {
+        String bodyString = null;
         if (null == CONTENT_BODY) {
             Log.e(TAG, "内容为空");
-            return;
+            return bodyString;
         }
         Log.d(TAG, "查询时请求时的SESSIONID:" + cookie);
         ByteArrayOutputStream tmps = new ByteArrayOutputStream(10 * 1024);
@@ -378,10 +381,9 @@ public class MobileGo {
                         if (pos != -1) {
                             Log.d(TAG, result.substring(0, pos));
                         }
-                    } else {
-                        ParserHtml.parser(result);
                     }
-                    loadImage2(Constants.AUTH_CODE_URL, R.id.main_img_authcode_id);
+                    loadImage2(Constants.AUTH_CODE_URL, R.id.checkCodeView);
+                    bodyString = result;
                     break;
                 default:
                     Log.e(TAG, connection.getResponseCode() + ":"
@@ -410,6 +412,7 @@ public class MobileGo {
             sb = null;
             Log.e(TAG, e.getMessage());
         }
+        return bodyString;
     }
 
     /**
