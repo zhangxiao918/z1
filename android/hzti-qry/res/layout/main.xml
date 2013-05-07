@@ -9,14 +9,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" >
-
+
         <TextView
             android:id="@+id/textView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/car_license_type"
             android:textAppearance="?android:attr/textAppearanceMedium" />
-
     </LinearLayout>
 
     <LinearLayout
@@ -24,15 +23,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" >
-        	        
-	    <Spinner
-	        android:id="@+id/spinner1"
-	        android:prompt="@+string/tip_spinner"
-	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content" >
-	    </Spinner>
 
-    </LinearLayout>
+        <Spinner
+            android:id="@+id/spinner1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:prompt="@+string/tip_spinner" >
+        </Spinner>
+    </LinearLayout>
+
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
@@ -42,12 +41,12 @@
 
     <EditText
         android:id="@+id/e_car_license_num"
-        android:inputType="text"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" 
-        android:hint="@string/notice_car_num" 
+        android:layout_height="wrap_content"
+        android:hint="@string/notice_car_num"
+        android:inputType="text"
         android:textColorHint="#238745" />
-
+
     <TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
@@ -57,61 +56,60 @@
 
     <EditText
         android:id="@+id/e_car_id"
-        android:inputType="number"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" 
+        android:layout_height="wrap_content"
         android:hint="@string/notice_car_id"
+        android:inputType="number"
         android:textColorHint="#238745" />
 
     <LinearLayout
         android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
-
+
         <TextView
             android:id="@+id/textView4"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:paddingTop="5dp"
             android:paddingBottom="5dp"
+            android:paddingTop="5dp"
             android:text="@string/check_code"
             android:textAppearance="?android:attr/textAppearanceMedium" />
-        
+
         <ImageView
             android:id="@+id/checkCodeView"
             android:layout_width="100dp"
             android:layout_height="match_parent"
-            android:paddingBottom="5dp"
-            android:contentDescription="@string/check_code"/>
-
-
+            android:contentDescription="@string/check_code"
+            android:paddingBottom="5dp" 
+            android:onClick="changeAuthImg"/>
     </LinearLayout>
 
     <EditText
         android:id="@+id/e_check_code"
-        android:inputType="text"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" 
+        android:layout_height="wrap_content"
         android:hint="@string/notice_check_code"
-        android:textColorHint="#238745"/>
+        android:inputType="text"
+        android:textColorHint="#238745" />
 
     <LinearLayout
         android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
-
+
         <Button
             android:id="@+id/btn_ok"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/btn_ok" />
-
+            android:text="@string/btn_ok" 
+            android:onClick="submit"/>
+
         <Button
             android:id="@+id/btn_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/btn_cancel" />
-
     </LinearLayout>
 
 </LinearLayout>
