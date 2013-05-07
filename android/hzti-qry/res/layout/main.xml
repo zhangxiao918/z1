@@ -81,8 +81,8 @@
             android:layout_width="100dp"
             android:layout_height="match_parent"
             android:contentDescription="@string/check_code"
-            android:paddingBottom="5dp" 
-            android:onClick="changeAuthImg"/>
+            android:onClick="changeAuthImg"
+            android:paddingBottom="5dp" />
     </LinearLayout>
 
     <EditText
@@ -102,13 +102,14 @@
             android:id="@+id/btn_ok"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/btn_ok" 
-            android:onClick="submit"/>
+            android:onClick="submit"
+            android:text="@string/btn_ok" />
 
         <Button
             android:id="@+id/btn_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="cancel"
             android:text="@string/btn_cancel" />
     </LinearLayout>
 
