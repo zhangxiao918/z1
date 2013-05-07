@@ -21,8 +21,6 @@ import org.htmlparser.util.NodeList;
 
 import android.util.Log;
 
-import com.bluestome.hzti.qry.R;
-
 public class MobileGo {
 
     private String TAG = MobileGo.class.getSimpleName();
@@ -382,7 +380,6 @@ public class MobileGo {
                             Log.d(TAG, result.substring(0, pos));
                         }
                     }
-                    loadImage2(Constants.AUTH_CODE_URL, R.id.checkCodeView);
                     bodyString = result;
                     break;
                 default:
@@ -410,26 +407,9 @@ public class MobileGo {
                 url = null;
             }
             sb = null;
-            Log.e(TAG, e.getMessage());
+            e.printStackTrace();
         }
         return bodyString;
-    }
-
-    /**
-     * 读取服务端的验证码
-     * 
-     * @param site
-     * @param id
-     */
-    void loadImage2(final String site, final int id) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                synchronized (this) {
-                    requestCheckCode(Constants.AUTH_CODE_URL);
-                }
-            }
-        }).start();
     }
 
     /**

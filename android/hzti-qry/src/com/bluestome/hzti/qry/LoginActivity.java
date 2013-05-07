@@ -49,7 +49,7 @@ public class LoginActivity extends Activity {
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            if (null != dialog) {
+            if (null != dialog && dialog.isShowing()) {
                 dialog.dismiss();
             }
         }
@@ -62,7 +62,6 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         dialog = ProgressDialog.show(this, "系统提示", "加载中，请稍后...");
-        dialog.setCancelable(true);
         initView();
         new Thread(new Runnable() {
             @Override
@@ -83,10 +82,9 @@ public class LoginActivity extends Activity {
         if ((lastRequestTimes.get() - System.currentTimeMillis()) > 30 * 1000L) {
             initNetwork();
         }
-        loadImage2(Constants.AUTH_CODE_URL, R.id.checkCodeView);
     }
 
-    void initView() {
+    protected void initView() {
         spinner = (Spinner) findViewById(R.id.spinner1);
         // 从资源中获取数组数据
         String[] array = getResources().getStringArray(R.array.select_car_type);
@@ -104,7 +102,6 @@ public class LoginActivity extends Activity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                // TODO Auto-generated method stub
             }
         });
         carNum = (EditText) findViewById(R.id.e_car_license_num);
@@ -119,7 +116,7 @@ public class LoginActivity extends Activity {
     /**
      * 初始化网络信息
      */
-    void initNetwork() {
+    private void initNetwork() {
         go.request(Constants.URL);
         cookie = go.getCookie().toString();
         mHandler.sendEmptyMessage(0);
@@ -147,7 +144,7 @@ public class LoginActivity extends Activity {
             Toast.makeText(getApplicationContext(), "请填写验证码", Toast.LENGTH_SHORT).show();
             return;
         }
-        dialog = ProgressDialog.show(this, "标题", "数据提交中，请稍后...");
+        dialog = ProgressDialog.show(this, "标题", "数据提交中，请稍后...", true, true);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -163,9 +160,6 @@ public class LoginActivity extends Activity {
                 } else {
                     runOnUiThread(new Runnable() {
                         public void run() {
-                            Toast.makeText(getApplicationContext(),
-                                    body,
-                                    Toast.LENGTH_LONG).show();
                             loadImage2(Constants.AUTH_CODE_URL, R.id.checkCodeView);
                         }
                     });
@@ -185,11 +179,22 @@ public class LoginActivity extends Activity {
         finish();
     }
 
+    /**
+     * 获取验证码图片
+     * 
+     * @param view
+     */
     public void changeAuthImg(View view) {
-        dialog = ProgressDialog.show(this, "提示", "正在获取验证码，请等待...");
+        dialog = ProgressDialog.show(this, "提示", "正在获取验证码，请等待...", true, true);
         loadImage2(Constants.AUTH_CODE_URL, R.id.checkCodeView);
     }
 
+    /**
+     * 载入图片
+     * 
+     * @param site
+     * @param id
+     */
     void loadImage2(final String site, final int id) {
         new Thread(new Runnable() {
             @Override

@@ -99,25 +99,29 @@ public class GridShowActivity extends Activity {
                 holder = new ItemHolderView();
                 convertView = LayoutInflater.from(mContext).inflate(
                         R.layout.list_item, null);
-                holder.index = (TextView) convertView.findViewById(R.id.item_index_id);
+                // holder.index = (TextView)
+                // convertView.findViewById(R.id.item_index_id);
                 holder.date = (TextView) convertView.findViewById(R.id.item_date);
-                holder.type = (TextView) convertView.findViewById(R.id.item_type);
-                holder.company = (TextView) convertView.findViewById(R.id.item_company);
+                // holder.type = (TextView)
+                // convertView.findViewById(R.id.item_type);
+                // holder.company = (TextView)
+                // convertView.findViewById(R.id.item_company);
                 holder.self = (TextView) convertView.findViewById(R.id.item_self);
                 holder.total = (TextView) convertView.findViewById(R.id.item_total);
-                holder.pay = (TextView) convertView.findViewById(R.id.item_pay);
+                // holder.pay = (TextView)
+                // convertView.findViewById(R.id.item_pay);
                 convertView.setTag(holder);
             } else {
                 holder = (ItemHolderView) convertView.getTag();
             }
             TBean t = datas.get(position);
             holder.date.setText(t.getDate());
-            holder.index.setText(t.getCarNum());
-            holder.type.setText(t.getCarType());
-            holder.company.setText(t.getContent());
+            // holder.index.setText(t.getCarNum());
+            // holder.type.setText(t.getCarType());
+            // holder.company.setText(t.getContent());
             holder.self.setText(t.getLoc());
             holder.total.setText(t.getDealResult());
-            holder.pay.setText(t.getPayResult());
+            // holder.pay.setText(t.getPayResult());
             if (signle) {
                 convertView.setBackgroundColor(Color.DKGRAY);
             }
