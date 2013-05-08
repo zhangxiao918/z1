@@ -4,6 +4,7 @@ package com.bluestome.hzti.qry;
 import java.util.concurrent.atomic.AtomicLong;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -33,24 +34,37 @@ public class LoginActivity extends Activity {
     private EditText carId;
     private EditText authCode;
     private ImageView authCodeImg;
-    private ProgressDialog dialog = null;
 
-    AtomicLong lastRequestTimes = new AtomicLong();
+    AtomicLong lastRequestTimes = new AtomicLong(0L);
 
     private Handler handler2 = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            ((ImageView) LoginActivity.this.findViewById(msg.arg1))
-                    .setImageBitmap((Bitmap) msg.obj);
-        }
-
-    };
-
-    private Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            if (null != dialog && dialog.isShowing()) {
-                dialog.dismiss();
+            if (null != msg) {
+                switch (msg.what) {
+                    case 0x1000:
+                        ((ImageView) LoginActivity.this.findViewById(msg.arg1))
+                                .setImageBitmap((Bitmap) msg.obj);
+                        break;
+                    case 0:
+                        showDialog(LOADING_CHECKCODE_IMG);
+                        break;
+                    case 1:
+                        removeDialog(LOADING_CHECKCODE_IMG);
+                        break;
+                    case 2:
+                        showDialog(LOADING);
+                        break;
+                    case 3:
+                        removeDialog(LOADING);
+                        break;
+                    case 4:
+                        showDialog(QUERYING);
+                        break;
+                    case 5:
+                        removeDialog(QUERYING);
+                        break;
+                }
             }
         }
 
@@ -61,15 +75,8 @@ public class LoginActivity extends Activity {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        dialog = ProgressDialog.show(this, "系统提示", "加载中，请稍后...");
+        // dialog = ProgressDialog.show(this, "系统提示", "加载中，请稍后...");
         initView();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                initNetwork();
-                loadImage2(Constants.AUTH_CODE_URL, R.id.checkCodeView);
-            }
-        }).start();
     }
 
     @Override
@@ -79,7 +86,7 @@ public class LoginActivity extends Activity {
         if (null == go) {
             go = new MobileGo();
         }
-        if ((lastRequestTimes.get() - System.currentTimeMillis()) > 30 * 1000L) {
+        if ((System.currentTimeMillis() - lastRequestTimes.get()) > 30 * 1000L) {
             initNetwork();
         }
     }
@@ -117,9 +124,16 @@ public class LoginActivity extends Activity {
      * 初始化网络信息
      */
     private void initNetwork() {
-        go.request(Constants.URL);
-        cookie = go.getCookie().toString();
-        mHandler.sendEmptyMessage(0);
+        handler2.sendEmptyMessage(2);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                go.request(Constants.URL);
+                cookie = go.getCookie().toString();
+                handler2.sendEmptyMessage(3);
+                loadImage2(Constants.AUTH_CODE_URL, R.id.checkCodeView);
+            }
+        }).start();
     }
 
     /**
@@ -144,22 +158,24 @@ public class LoginActivity extends Activity {
             Toast.makeText(getApplicationContext(), "请填写验证码", Toast.LENGTH_SHORT).show();
             return;
         }
-        dialog = ProgressDialog.show(this, "标题", "数据提交中，请稍后...", true, true);
+        // dialog = ProgressDialog.show(this, "标题", "数据提交中，请稍后...", true, true);
+        handler2.sendEmptyMessage(4);
         new Thread(new Runnable() {
             @Override
             public void run() {
                 lastRequestTimes.set(System.currentTimeMillis());
                 final String body = go.doQuery(cookie, Constants.URL, s0, s1, s2, s3);
-                mHandler.sendEmptyMessage(0);
                 if (null != body && body.length() > 2) {
                     Intent i = new Intent(LoginActivity.this, GridShowActivity.class);
                     i.putExtra("content", body);
                     i.putExtra("cookie", cookie);
+                    handler2.sendEmptyMessage(5);
                     startActivity(i);
                     finish();
                 } else {
                     runOnUiThread(new Runnable() {
                         public void run() {
+                            handler2.sendEmptyMessage(5);
                             loadImage2(Constants.AUTH_CODE_URL, R.id.checkCodeView);
                         }
                     });
@@ -174,7 +190,6 @@ public class LoginActivity extends Activity {
      * @param view
      */
     public void cancel(View view) {
-        authCode.setText("");
         super.onBackPressed();
         finish();
     }
@@ -185,7 +200,6 @@ public class LoginActivity extends Activity {
      * @param view
      */
     public void changeAuthImg(View view) {
-        dialog = ProgressDialog.show(this, "提示", "正在获取验证码，请等待...", true, true);
         loadImage2(Constants.AUTH_CODE_URL, R.id.checkCodeView);
     }
 
@@ -196,6 +210,7 @@ public class LoginActivity extends Activity {
      * @param id
      */
     void loadImage2(final String site, final int id) {
+        handler2.sendEmptyMessage(0);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -206,15 +221,43 @@ public class LoginActivity extends Activity {
                             Bitmap bitMap = BitmapFactory.decodeByteArray(bit, 0,
                                     bit.length);
                             Message message = new Message();
+                            message.what = 0x1000;
                             message.arg1 = R.id.checkCodeView;
                             message.obj = bitMap;
                             handler2.sendMessage(message);
                         }
-                        mHandler.sendEmptyMessage(0);
+                        handler2.sendEmptyMessage(1);
                     }
                 }
             }
         }).start();
+    }
+
+    public static final int LOADING = 1000;
+    public static final int QUERYING = 1001;
+    public static final int LOADING_CHECKCODE_IMG = 1002;
+
+    @Override
+    protected Dialog onCreateDialog(int id) {
+        ProgressDialog dialog = null;
+        switch (id) {
+            case LOADING:
+                dialog = new ProgressDialog(this);
+                dialog.setTitle(null);
+                dialog.setMessage("正在加载数据(onCreateDialog)...");
+                return dialog;
+            case QUERYING:
+                dialog = new ProgressDialog(this);
+                dialog.setTitle(null);
+                dialog.setMessage("正在提交数据(onCreateDialog)...");
+                return dialog;
+            case LOADING_CHECKCODE_IMG:
+                dialog = new ProgressDialog(this);
+                dialog.setTitle(null);
+                dialog.setMessage("正在获取验证码(onCreateDialog)...");
+                return dialog;
+        }
+        return super.onCreateDialog(id);
     }
 
 }
