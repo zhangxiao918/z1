@@ -16,18 +16,22 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
         <activity
-            android:name="com.bluestome.hzti.qry.GridShowActivity"
-            android:alwaysRetainTaskState="true"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name="com.bluestome.hzti.qry.LoginActivity"
-            android:label="@string/app_launcher" >
+            android:name="com.bluestome.hzti.qry.activity.LaunchActivity"
+            android:alwaysRetainTaskState="false"
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.bluestome.hzti.qry.GridShowActivity"
+            android:label="@string/app_name"
+            android:alwaysRetainTaskState="false"/>
+        <activity
+            android:name="com.bluestome.hzti.qry.LoginActivity"
+            android:label="@string/app_name" 
+            android:alwaysRetainTaskState="false"/>
     </application>
 
 </manifest>

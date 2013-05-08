@@ -3,7 +3,6 @@ package com.bluestome.hzti.qry;
 
 import java.util.concurrent.atomic.AtomicLong;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -12,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -21,13 +21,12 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.bluestome.hzti.qry.activity.BaseActivity;
 import com.bluestome.hzti.qry.common.Constants;
-import com.bluestome.hzti.qry.common.MobileGo;
 
-public class LoginActivity extends Activity {
+public class LoginActivity extends BaseActivity {
 
-    private MobileGo go = new MobileGo();
-    private String cookie;
+    private static final String TAG = LoginActivity.class.getCanonicalName();
     private Spinner spinner;
     private String carType = "小型汽车";
     private EditText carNum;
@@ -72,20 +71,33 @@ public class LoginActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        // dialog = ProgressDialog.show(this, "系统提示", "加载中，请稍后...");
         initView();
+        recvParams();
+    }
+
+    /**
+     * 获取参数，用于调整界面的展现
+     */
+    private void recvParams() {
+        if (null == cookie) {
+            Bundle bundle = new Bundle();
+            bundle = this.getIntent().getExtras();
+            if (null != bundle) {
+                cookie = bundle.getString("cookie");
+            }
+        }
+        if (null == cookie) {
+            initNetwork();
+        }
+        Log.d(TAG, "" + cookie);
     }
 
     @Override
     protected void onResume() {
         // TODO Auto-generated method stub
         super.onResume();
-        if (null == go) {
-            go = new MobileGo();
-        }
         if ((System.currentTimeMillis() - lastRequestTimes.get()) > 30 * 1000L) {
             initNetwork();
         }
@@ -244,17 +256,17 @@ public class LoginActivity extends Activity {
             case LOADING:
                 dialog = new ProgressDialog(this);
                 dialog.setTitle(null);
-                dialog.setMessage("正在加载数据(onCreateDialog)...");
+                dialog.setMessage("正在加载数据...");
                 return dialog;
             case QUERYING:
                 dialog = new ProgressDialog(this);
                 dialog.setTitle(null);
-                dialog.setMessage("正在提交数据(onCreateDialog)...");
+                dialog.setMessage("正在提交数据...");
                 return dialog;
             case LOADING_CHECKCODE_IMG:
                 dialog = new ProgressDialog(this);
                 dialog.setTitle(null);
-                dialog.setMessage("正在获取验证码(onCreateDialog)...");
+                dialog.setMessage("正在获取验证码...");
                 return dialog;
         }
         return super.onCreateDialog(id);

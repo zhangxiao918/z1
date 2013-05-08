@@ -1,38 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="@android:color/white"
     android:orientation="vertical" >
-
-    <RelativeLayout
-        android:id="@+id/relativeLayout1"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" 
-        android:background="@color/blue">
-
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="206dp"
-            android:text="@string/tip_lanucher"
-            android:textAppearance="?android:attr/textAppearanceLarge" 
-            android:textColor="@color/black"/>
 
-        <ProgressBar
-            android:id="@+id/progress_bar_id"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:paddingTop="5dp"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/textView1"
-            android:layout_centerHorizontal="true" 
-            android:visibility="gone"/>
+    <TextView
+        android:id="@+id/launcher_tip_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="提示"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/black"
+        android:visibility="invisible" />
 
-    </RelativeLayout>
-
-</LinearLayout>
+</RelativeLayout>

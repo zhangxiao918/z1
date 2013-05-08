@@ -29,6 +29,40 @@ public class MobileGo {
     HttpURLConnection connection = null;
     byte[] CONTENT_BODY = null;
 
+    public synchronized void request4Header(String site) {
+        URL url = null;
+        String cookieVal = null;
+        String sessionId = "";
+        String key = null;
+        try {
+            url = new URL(site);
+            connection = (HttpURLConnection) url.openConnection();
+            connection.addRequestProperty("Host", "www.hzti.com");
+            connection
+                    .addRequestProperty(
+                            "User-Agent",
+                            "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.89 Safari/537.1");
+            connection.setRequestMethod("GET");
+            connection.connect();
+            if (HttpURLConnection.HTTP_OK == connection.getResponseCode()) {
+                // 服务端响应成功
+                if (null == cookie) {
+                    cookie = new StringBuilder();
+                    for (int i = 1; (key = connection.getHeaderFieldKey(i)) != null; i++) {
+                        if (key.equalsIgnoreCase("set-cookie")) {
+                            cookieVal = connection.getHeaderField(i);
+                            cookieVal = cookieVal.substring(0, cookieVal.indexOf(";"));
+                            sessionId = sessionId + cookieVal + ";";
+                        }
+                    }
+                    cookie.append(sessionId);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public synchronized void request(String site) {
         URL url = null;
         String cookieVal = null;
