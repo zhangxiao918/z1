@@ -2,7 +2,11 @@
 package com.bluestome.hzti.qry.activity;
 
 import android.app.Activity;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.bluestome.hzti.qry.common.MobileGo;
 
@@ -14,15 +18,20 @@ import com.bluestome.hzti.qry.common.MobileGo;
  */
 public class BaseActivity extends Activity {
 
+    protected final static String TAG = BaseActivity.class.getCanonicalName();
+
     // 网络操作对象
     protected MobileGo go = null;
     // 客户端COOKIE
     protected String cookie = null;
 
+    protected NetworkInfo networkInfo;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         go = new MobileGo();
+        initNetworkStatus();
     }
 
     @Override
@@ -32,6 +41,17 @@ public class BaseActivity extends Activity {
         if (null == go) {
             go = new MobileGo();
         }
+    }
+
+    protected void initNetworkStatus() {
+        ConnectivityManager mgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        // 判断获取的网络数量并且判断是否有活动网络
+        if (null != (networkInfo = mgr.getActiveNetworkInfo())) {
+
+        } else {
+            Log.d(TAG, "当前没有可用网络");
+        }
+
     }
 
     /**
@@ -46,6 +66,20 @@ public class BaseActivity extends Activity {
      */
     public void setGo(MobileGo go) {
         this.go = go;
+    }
+
+    /**
+     * @return the networkInfo
+     */
+    public NetworkInfo getNetworkInfo() {
+        return networkInfo;
+    }
+
+    /**
+     * @param networkInfo the networkInfo to set
+     */
+    public void setNetworkInfo(NetworkInfo networkInfo) {
+        this.networkInfo = networkInfo;
     }
 
 }

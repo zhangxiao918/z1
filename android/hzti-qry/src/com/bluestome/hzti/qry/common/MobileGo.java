@@ -63,6 +63,59 @@ public class MobileGo {
         }
     }
 
+    public synchronized byte[] request(String oCookie, String site) {
+        byte[] body = null;
+        URL url = null;
+        String cookieVal = null;
+        String sessionId = "";
+        String key = null;
+        try {
+            url = new URL(site);
+            connection = (HttpURLConnection) url.openConnection();
+            connection.addRequestProperty("Host", "www.hzti.com");
+            connection
+                    .addRequestProperty(
+                            "User-Agent",
+                            "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.89 Safari/537.1");
+            connection.setRequestMethod("GET");
+            if (null != oCookie && !oCookie.equals("")) {
+                connection.setRequestProperty("Cookie", oCookie);
+            }
+            connection.connect();
+            if (HttpURLConnection.HTTP_OK == connection.getResponseCode()) {
+                cookie = null;
+                // 服务端响应成功
+                cookie = new StringBuilder();
+                for (int i = 1; (key = connection.getHeaderFieldKey(i)) != null; i++) {
+                    if (key.equalsIgnoreCase("set-cookie")) {
+                        cookieVal = connection.getHeaderField(i);
+                        cookieVal = cookieVal.substring(0, cookieVal.indexOf(";"));
+                        sessionId = sessionId + cookieVal + ";";
+                    }
+                }
+                cookie.append(sessionId);
+                try {
+                    InputStream is = connection.getInputStream();
+                    byte[] buffer = new byte[2048];
+                    int c;
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    while ((c = is.read(buffer)) != -1) {
+                        baos.write(buffer, 0, c);
+                        baos.flush();
+                    }
+                    CONTENT_BODY = baos.toByteArray();
+                    body = CONTENT_BODY;
+                    baos.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return body;
+    }
+
     public synchronized void request(String site) {
         URL url = null;
         String cookieVal = null;
@@ -112,7 +165,7 @@ public class MobileGo {
         }
     }
 
-    public synchronized byte[] requestCheckCode(String site) {
+    public synchronized byte[] requestCheckCode(String oCookie, String site) {
         URL url = null;
         String cookieVal = null;
         String sessionId = "";
@@ -125,24 +178,23 @@ public class MobileGo {
                     .addRequestProperty(
                             "User-Agent",
                             "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.89 Safari/537.1");
-            if (null != cookie && !cookie.toString().equals("")) {
-                connection.setRequestProperty("Cookie", cookie.toString());
+            if (null != oCookie && !oCookie.equals("")) {
+                connection.setRequestProperty("Cookie", oCookie);
             }
             connection.setRequestMethod("GET");
             connection.connect();
             if (HttpURLConnection.HTTP_OK == connection.getResponseCode()) {
                 // 服务端响应成功
-                if (null == cookie) {
-                    cookie = new StringBuilder();
-                    for (int i = 1; (key = connection.getHeaderFieldKey(i)) != null; i++) {
-                        if (key.equalsIgnoreCase("set-cookie")) {
-                            cookieVal = connection.getHeaderField(i);
-                            cookieVal = cookieVal.substring(0, cookieVal.indexOf(";"));
-                            sessionId = sessionId + cookieVal + ";";
-                        }
+                cookie = new StringBuilder();
+                for (int i = 1; (key = connection.getHeaderFieldKey(i)) != null; i++) {
+                    if (key.equalsIgnoreCase("set-cookie")) {
+                        cookieVal = connection.getHeaderField(i);
+                        cookieVal = cookieVal.substring(0, cookieVal.indexOf(";"));
+                        sessionId = sessionId + cookieVal + ";";
                     }
-                    cookie.append(sessionId);
                 }
+                cookie.append(sessionId);
+                System.out.println("传入的Cookie:" + oCookie);
                 System.out.println("验证码获取的服务端SESSIONID:" + cookie.toString());
                 try {
                     InputStream is = connection.getInputStream();
@@ -449,6 +501,219 @@ public class MobileGo {
     /**
      * 执行查询
      * 
+     * @param cookie COOKIE
+     * @param reffer 引用页
+     * @param carType 车辆类型
+     * @param carNum 车牌号码
+     * @param carId 车架编号后6位
+     * @param checkCode 验证码
+     */
+    public String doQuery(byte[] iBody, String oCookie, String reffer, String carType,
+            String carNum, String carId, String checkCode) {
+        String bodyString = null;
+        if (null == iBody) {
+            Log.e(TAG, "内容为空");
+            return bodyString;
+        }
+        Log.d(TAG, "查询时请求时的SESSIONID:" + oCookie);
+        ByteArrayOutputStream tmps = new ByteArrayOutputStream(10 * 1024);
+        HashMap<String, String> params = parserHTML(iBody);
+        URL url = null;
+        DataOutputStream out = null;
+        InputStream in = null;
+        ByteArrayOutputStream byteArray = null;
+        StringBuffer sb = new StringBuffer(100 * 1024);
+        try {
+            // TODO 写提交的数据
+            sb.append(URLEncoder.encode("ctl00$ScriptManager1", "UTF-8")
+                    + "="
+                    + URLEncoder
+                            .encode("ctl00$ContentPlaceHolder1$UpdatePanel1|ctl00$ContentPlaceHolder1$Button1",
+                                    "UTF-8"));
+            tmps.write(sb.toString().getBytes());
+
+            sb = null;
+            sb = new StringBuffer(200);
+            sb.append("&");
+            sb.append("__EVENTTARGET=");
+            tmps.write(sb.toString().getBytes());
+
+            sb = null;
+            sb = new StringBuffer(200);
+            sb.append("&");
+            sb.append("__EVENTARGUMENT=");
+            tmps.write(sb.toString().getBytes());
+
+            sb = null;
+            sb = new StringBuffer(1024 * 10);
+            sb.append("&");
+            String __VIEWSTATE = URLEncoder.encode(params.get("__VIEWSTATE"), "UTF-8");
+            sb.append("__VIEWSTATE=" + __VIEWSTATE);
+            tmps.write(sb.toString().getBytes());
+
+            sb = null;
+            sb = new StringBuffer(1024 * 10);
+            sb.append("&");
+            String __EVENTVALIDATION = URLEncoder.encode(
+                    params.get("__EVENTVALIDATION"), "UTF-8");
+            sb.append("__EVENTVALIDATION=" + __EVENTVALIDATION);
+            tmps.write(sb.toString().getBytes());
+
+            sb = null;
+            sb = new StringBuffer(200);
+            sb.append("&");
+            sb.append(URLEncoder.encode("ctl00$ContentPlaceHolder1$hpzl",
+                    "UTF-8") + "=" + URLEncoder.encode(carType, "UTF-8"));
+            tmps.write(sb.toString().getBytes());
+
+            sb = null;
+            sb = new StringBuffer(200);
+            sb.append("&");
+            sb.append(URLEncoder.encode("ctl00$ContentPlaceHolder1$steelno",
+                    "UTF-8") + "=" + URLEncoder.encode(carNum, "UTF-8"));
+            tmps.write(sb.toString().getBytes());
+
+            sb = null;
+            sb = new StringBuffer(200);
+            sb.append("&");
+            sb.append(URLEncoder.encode(
+                    "ctl00$ContentPlaceHolder1$identificationcode", "UTF-8")
+                    + "=" + carId);
+            tmps.write(sb.toString().getBytes());
+
+            sb = null;
+            sb = new StringBuffer(200);
+            sb.append("&");
+            sb.append(URLEncoder.encode("ctl00$ContentPlaceHolder1$checkcode",
+                    "UTF-8") + "=" + checkCode);
+            tmps.write(sb.toString().getBytes());
+
+            sb = null;
+            sb = new StringBuffer(200);
+            sb.append("&");
+            sb.append("__ASYNCPOST=true");
+            tmps.write(sb.toString().getBytes());
+
+            sb = null;
+            sb = new StringBuffer(200);
+            sb.append("&");
+            sb.append(URLEncoder.encode("ctl00$ContentPlaceHolder1$Button1",
+                    "UTF-8")).append("=").append(URLEncoder.encode("查询", "UTF-8"));
+            tmps.write(sb.toString().getBytes());
+            tmps.flush();
+            tmps.close();
+            byte[] tmpBody = tmps.toByteArray();
+            String body = new String(tmpBody);
+
+            url = new URL(Constants.URL);
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setDoOutput(true);
+            connection.setDoInput(true);
+            connection.setReadTimeout(10 * 1000);
+            connection.setConnectTimeout(15 * 1000);
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Host", "www.hzti.com");
+            connection.setRequestProperty("Connection", "keep-alive");
+            connection.setRequestProperty("Content-Length", String.valueOf(body.length()));
+            connection.setRequestProperty("Cache-Control", "no-cache");
+            connection.setRequestProperty("Origin", "http://www.hzti.com");
+            connection.setRequestProperty("X-MicrosoftAjax", "Delta=true");
+            connection
+                    .setRequestProperty(
+                            "User-Agent",
+                            "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.22 (KHTML, like Gecko) Chrome/25.0.1364.172 Safari/537.22");
+            connection.setRequestProperty("Content-Type",
+                    "application/x-www-form-urlencoded; charset=UTF-8");
+            connection.setRequestProperty("Accept", "*/*");
+            connection.setRequestProperty("Referer", reffer);
+            connection.setRequestProperty("Accept-Encoding",
+                    "gzip,deflate,sdch");
+            connection.setRequestProperty("Accept-Language", "zh-CN,zh;q=0.8");
+            connection.setRequestProperty("Accept-Charset",
+                    "GBK,utf-8;q=0.7,*;q=0.3");
+            if (null != oCookie && !oCookie.equals("")) {
+                connection.setRequestProperty("Cookie", oCookie);
+            }
+            connection.connect();
+
+            out = new DataOutputStream(connection.getOutputStream());
+
+            out.write(body.getBytes());
+            out.flush();
+            out.close();
+
+            int code = -1;
+            code = connection.getResponseCode();
+            switch (code) {
+                case 200:
+                    cookie = null;
+                    // 服务端响应成功
+                    cookie = new StringBuilder();
+                    String key = "";
+                    String cookieVal = "";
+                    String sessionId = "";
+                    for (int i = 1; (key = connection.getHeaderFieldKey(i)) != null; i++) {
+                        if (key.equalsIgnoreCase("set-cookie")) {
+                            cookieVal = connection.getHeaderField(i);
+                            cookieVal = cookieVal.substring(0, cookieVal.indexOf(";"));
+                            sessionId = sessionId + cookieVal + ";";
+                        }
+                    }
+                    cookie.append(sessionId);
+                    Log.d(TAG, "服务端下发的Cookie:" + cookie.toString());
+                    in = connection.getInputStream();
+                    int length = connection.getContentLength();
+                    Log.d(TAG, "响应的长度为：" + length);
+                    byteArray = new ByteArrayOutputStream(length);
+                    byte[] buffer = new byte[1024];
+                    int ch;
+                    while ((ch = in.read(buffer)) != -1) {
+                        byteArray.write(buffer, 0, ch);
+                    }
+                    byteArray.flush();
+                    byteArray.close();
+                    String result = byteArray.toString("UTF-8");
+                    int pos = result.indexOf("\r\n");
+                    if (length < 30 * 1024 && pos != -1) {
+                        if (pos != -1) {
+                            Log.d(TAG, result.substring(0, pos));
+                        }
+                    }
+                    bodyString = result;
+                    break;
+                default:
+                    Log.e(TAG, connection.getResponseCode() + ":"
+                            + connection.getResponseMessage());
+                    break;
+            }
+
+            if (null != out) {
+                out.close();
+            }
+            if (null != in) {
+                in.close();
+            }
+        } catch (Exception e) {
+            if (null != byteArray) {
+                try {
+                    byteArray.close();
+                } catch (IOException e1) {
+                    Log.e(TAG, e.getMessage());
+                }
+            }
+
+            if (null != url) {
+                url = null;
+            }
+            sb = null;
+            e.printStackTrace();
+        }
+        return bodyString;
+    }
+
+    /**
+     * 执行查询
+     * 
      * @param requestURL 请求地址
      * @param cookie COOKIE
      * @param reffer 引用页
@@ -620,8 +885,11 @@ public class MobileGo {
     // return rList;
     // }
 
-    public StringBuilder getCookie() {
-        return cookie;
+    public String getCookie() {
+        if (null != cookie) {
+            return cookie.toString();
+        }
+        return null;
     }
 
     public void setCookie(StringBuilder cookie) {
