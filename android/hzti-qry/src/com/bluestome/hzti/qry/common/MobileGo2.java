@@ -22,6 +22,9 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.htmlparser.NodeFilter;
 import org.htmlparser.Parser;
 import org.htmlparser.filters.HasAttributeFilter;
@@ -34,6 +37,14 @@ import android.util.Log;
 import com.bluestome.hzti.qry.utils.ByteUtils;
 import com.bluestome.hzti.qry.utils.StringUtils;
 
+/**
+ * HttpClient的包
+ * 
+ * @ClassName: MobileGo2
+ * @Description: TODO
+ * @author bluestome.zhang
+ * @date 2013-5-10 下午5:50:39
+ */
 public class MobileGo2 {
 
     private String TAG = MobileGo2.class.getSimpleName();
@@ -42,6 +53,11 @@ public class MobileGo2 {
     HttpClient client = null;
     HttpGet httpGet = null;
     HttpPost httpPost = null;
+    private HttpParams httpParameters;
+    // 连接超时
+    private int timeoutConnection = 10000;
+    // SOCKET超时
+    private int timeoutSocket = 10000;
 
     public MobileGo2() {
 
@@ -52,7 +68,10 @@ public class MobileGo2 {
         String cookieVal = null;
         String sessionId = "";
         try {
-            client = new DefaultHttpClient();
+            httpParameters = new BasicHttpParams();
+            HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
+            HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
+            client = new DefaultHttpClient(httpParameters);
             httpGet = new HttpGet(site);
             httpGet.addHeader("Host", "www.hzti.com");
             httpGet
@@ -88,7 +107,6 @@ public class MobileGo2 {
         String cookieVal = null;
         String sessionId = "";
         try {
-            client = new DefaultHttpClient();
             httpGet = new HttpGet(site);
             httpGet.addHeader("Host", "www.hzti.com");
             httpGet.addHeader(
@@ -97,6 +115,10 @@ public class MobileGo2 {
             if (!StringUtils.isBlank(oCookie)) {
                 httpGet.addHeader("Cookie", oCookie);
             }
+            httpParameters = new BasicHttpParams();
+            HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
+            HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
+            client = new DefaultHttpClient(httpParameters);
             HttpResponse response = client.execute(httpGet);
             if (HttpStatus.SC_OK == response.getStatusLine().getStatusCode()) {
                 // 服务端响应成功
@@ -140,7 +162,10 @@ public class MobileGo2 {
         String cookieVal = null;
         String sessionId = "";
         try {
-            client = new DefaultHttpClient();
+            httpParameters = new BasicHttpParams();
+            HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
+            HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
+            client = new DefaultHttpClient(httpParameters);
             httpGet = new HttpGet(site);
             httpGet.addHeader("Host", "www.hzti.com");
             httpGet.addHeader(
@@ -294,7 +319,10 @@ public class MobileGo2 {
         ByteArrayOutputStream byteArray = null;
         List<NameValuePair> paramList = new ArrayList<NameValuePair>();
         try {
-            client = new DefaultHttpClient();
+            httpParameters = new BasicHttpParams();
+            HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
+            HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
+            client = new DefaultHttpClient(httpParameters);
             httpPost = new HttpPost(Constants.URL);
 
             NameValuePair pair1 = new BasicNameValuePair("ctl00$ScriptManager1", "");
