@@ -12,7 +12,7 @@ public class B {
     private static String createTables(String tableName) {
         StringBuffer sb = new StringBuffer();
         sb.append("CREATE TABLE `").append(tableName).append("` (").append("\n");
-        sb.append("\t`d_id` INT(4) NOT NULL,").append("\n");
+        sb.append("\t`d_id` INT(4) NOT NULL AUTO_INCREMENT,").append("\n");
         sb.append("\t`d_article_id` INT(4) NOT NULL,").append("\n");
         sb.append("\t`d_title` VARCHAR(128) NULL DEFAULT NULL,").append("\n");
         sb.append("\t`d_name` VARCHAR(128) NULL DEFAULT NULL,").append("\n");
@@ -38,7 +38,7 @@ public class B {
 
     private static String dropTables(String tableName) {
         StringBuffer sb = new StringBuffer();
-        sb.append("drop table ").append(tableName).append(";");
+        sb.append("DROP TABLE IF EXISTS ").append(tableName).append(";").append("\n");
         return sb.toString();
     }
 
@@ -50,9 +50,12 @@ public class B {
         for (int i = 0; i < 8; i++) {
             String tableName = "tbl_image_" + i;
             sql.append(dropTables(tableName));
+            sql.append(createTables(tableName));
             sql.append("\r\n");
         }
         System.out.println(sql.toString());
-        System.out.println(3250 % 8);
+        for (int i = 172245; i < 172255; i++) {
+            System.out.println(i % 8);
+        }
     }
 }
