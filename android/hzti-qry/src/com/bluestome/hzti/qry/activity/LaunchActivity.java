@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.bluestome.hzti.qry.LoginActivity;
 import com.bluestome.hzti.qry.R;
 import com.bluestome.hzti.qry.common.Constants;
+import com.bluestome.hzti.qry.utils.StringUtils;
 
 /**
  * @ClassName: LaunchActivity
@@ -28,6 +29,8 @@ public class LaunchActivity extends BaseActivity implements BaseCompent {
     public final static int CHECK_CONNECT = 0x2002;
 
     private TextView textView;
+
+    private String rCookie = "";
 
     @Override
     protected Dialog onCreateDialog(int id) {
@@ -80,8 +83,8 @@ public class LaunchActivity extends BaseActivity implements BaseCompent {
         // TODO Auto-generated method stub
         Intent intent = new Intent(this, LoginActivity.class);
         Bundle bundle = new Bundle();
-        if (null != cookie && !cookie.equals("")) {
-            bundle.putString("cookie", cookie);
+        if (!StringUtils.isBlank(rCookie)) {
+            bundle.putString("cookie", rCookie);
         }
         intent.putExtras(bundle);
         startActivity(intent);
@@ -132,27 +135,30 @@ public class LaunchActivity extends BaseActivity implements BaseCompent {
                             break;
                     }
                     mHandler.sendEmptyMessage(CONNECTING);
-                    go.request4Header(Constants.URL);
-                    mHandler.postDelayed(new Runnable() {
-                        public void run() {
-                            mHandler.sendEmptyMessage(CONNECTING - 1);
-                            try {
-                                cookie = go.getCookie();
-                                nextActivity();
-                            } catch (NullPointerException e) {
-                                e.printStackTrace();
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        // TODO Auto-generated method stub
-                                        textView.setText("联网失败");
-                                        textView.setVisibility(View.VISIBLE);
-                                    }
-                                });
-                            }
+                    rCookie = go.request4Header(Constants.URL);
+                    if (StringUtils.isBlank(rCookie)) {
 
-                        }
-                    }, delay);
+                    } else {
+                        mHandler.post(new Runnable() {
+                            public void run() {
+                                mHandler.sendEmptyMessage(CONNECTING - 1);
+                                try {
+                                    nextActivity();
+                                } catch (NullPointerException e) {
+                                    e.printStackTrace();
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            // TODO Auto-generated method stub
+                                            textView.setText("联网失败");
+                                            textView.setVisibility(View.VISIBLE);
+                                        }
+                                    });
+                                }
+
+                            }
+                        });
+                    }
                 } else {
                     Log.d(TAG, "无可用网络");
                     mHandler.postDelayed(new Runnable() {

@@ -8,7 +8,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.bluestome.hzti.qry.common.MobileGo;
+import com.bluestome.hzti.qry.common.MobileGo2;
 
 /**
  * @ClassName: BaseActivity
@@ -21,16 +21,14 @@ public class BaseActivity extends Activity {
     protected final static String TAG = BaseActivity.class.getCanonicalName();
 
     // 网络操作对象
-    protected MobileGo go = null;
-    // 客户端COOKIE
-    protected String cookie = null;
+    protected MobileGo2 go = null;
 
     protected NetworkInfo networkInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        go = new MobileGo();
+        go = new MobileGo2();
         initNetworkStatus();
     }
 
@@ -39,7 +37,7 @@ public class BaseActivity extends Activity {
         // TODO Auto-generated method stub
         super.onResume();
         if (null == go) {
-            go = new MobileGo();
+            go = new MobileGo2();
         }
     }
 
@@ -57,14 +55,14 @@ public class BaseActivity extends Activity {
     /**
      * @return the go
      */
-    public MobileGo getGo() {
+    public MobileGo2 getGo() {
         return go;
     }
 
     /**
      * @param go the go to set
      */
-    public void setGo(MobileGo go) {
+    public void setGo(MobileGo2 go) {
         this.go = go;
     }
 

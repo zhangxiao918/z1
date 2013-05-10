@@ -23,6 +23,8 @@ import android.widget.Toast;
 
 import com.bluestome.hzti.qry.activity.BaseActivity;
 import com.bluestome.hzti.qry.common.Constants;
+import com.bluestome.hzti.qry.utils.ByteUtils;
+import com.bluestome.hzti.qry.utils.StringUtils;
 
 public class LoginActivity extends BaseActivity {
 
@@ -36,6 +38,7 @@ public class LoginActivity extends BaseActivity {
 
     private byte[] body = null;
     AtomicLong lastRequestTimes = new AtomicLong(0L);
+    String rCookie = null;
 
     private Handler handler2 = new Handler() {
         @Override
@@ -85,17 +88,17 @@ public class LoginActivity extends BaseActivity {
      * 获取参数，用于调整界面的展现
      */
     private void recvParams() {
-        if (null == cookie) {
+        if (StringUtils.isBlank(rCookie)) {
             Bundle bundle = new Bundle();
             bundle = this.getIntent().getExtras();
             if (null != bundle) {
-                cookie = bundle.getString("cookie");
+                rCookie = bundle.getString("cookie");
             }
         }
-        if (null == cookie || !cookie.equals("")) {
+        if (StringUtils.isBlank(rCookie)) {
             initNetwork();
         }
-        Log.d(TAG, "接收到的cookie:" + cookie);
+        Log.d(TAG, "意图中接收到的cookie:" + rCookie);
     }
 
     @Override
@@ -141,20 +144,22 @@ public class LoginActivity extends BaseActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Log.d(TAG, "请求的Cookie:" + cookie);
-                body = go.request(cookie, Constants.URL);
-                if (null != body && body.length > 0) {
-                    Log.d(TAG, "服务端返回的内容长度为:" + body.length);
-                    if (null != go.getCookie()) {
-                        cookie = go.getCookie();
-                        Log.d(TAG, "服务端返回的cookie:" + cookie);
+                body = go.request(rCookie, Constants.URL);
+                if (!ByteUtils.isBlank(body)) {
+                    if (!StringUtils.isBlank(go.getCookie())) {
+                        rCookie = go.getCookie();
                     }
                     handler2.sendEmptyMessage(LOADING - 1);
                     loadImage2(Constants.AUTH_CODE_URL, R.id.checkCodeView);
                 } else {
                     handler2.sendEmptyMessage(LOADING - 1);
-                    Toast.makeText(getApplicationContext(), "未获取服务端返回的内容,请重试..", Toast.LENGTH_SHORT)
-                            .show();
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), "未获取服务端返回的内容,请重试..",
+                                    Toast.LENGTH_SHORT)
+                                    .show();
+                        }
+                    });
                 }
             }
         }).start();
@@ -168,17 +173,17 @@ public class LoginActivity extends BaseActivity {
     public void submit(View view) {
         final String s0 = "小型汽车";
         final String s1 = carNum.getText().toString();
-        if (null == s1 || s1.equals("")) {
+        if (StringUtils.isBlank(s1)) {
             Toast.makeText(getApplicationContext(), "请填写车牌", Toast.LENGTH_SHORT).show();
             return;
         }
         final String s2 = carId.getText().toString();
-        if (null == s2 || s2.equals("")) {
+        if (StringUtils.isBlank(s2)) {
             Toast.makeText(getApplicationContext(), "请填写车辆识别码", Toast.LENGTH_SHORT).show();
             return;
         }
         final String s3 = authCode.getText().toString();
-        if (null == s3 || s3.equals("")) {
+        if (StringUtils.isBlank(s3)) {
             Toast.makeText(getApplicationContext(), "请填写验证码", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -186,16 +191,16 @@ public class LoginActivity extends BaseActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                if (null != body && body.length > 0) {
+                if (!ByteUtils.isBlank(body)) {
                     lastRequestTimes.set(System.currentTimeMillis());
-                    final String content = go.doQuery(body, cookie, Constants.URL, s0, s1, s2, s3);
-                    if (null != content && content.length() > 2) {
+                    final String content = go.doQuery(body, rCookie, Constants.URL, s0, s1, s2, s3);
+                    if (!StringUtils.isNull(content)) {
                         Intent i = new Intent(LoginActivity.this, GridShowActivity.class);
                         i.putExtra("content", content);
-                        if (null != cookie && !cookie.equals("")) {
-                            cookie = go.getCookie();
+                        if (!StringUtils.isNull(rCookie)) {
+                            rCookie = go.getCookie();
                         }
-                        i.putExtra("cookie", cookie);
+                        i.putExtra("cookie", rCookie);
                         handler2.sendEmptyMessage(QUERYING - 1);
                         startActivity(i);
                         finish();
@@ -203,6 +208,9 @@ public class LoginActivity extends BaseActivity {
                         runOnUiThread(new Runnable() {
                             public void run() {
                                 handler2.sendEmptyMessage(QUERYING - 1);
+                                Toast.makeText(getApplicationContext(), "未获取查询结果",
+                                        Toast.LENGTH_SHORT)
+                                        .show();
                                 loadImage2(Constants.AUTH_CODE_URL, R.id.checkCodeView);
                             }
                         });
@@ -211,6 +219,10 @@ public class LoginActivity extends BaseActivity {
                     runOnUiThread(new Runnable() {
                         public void run() {
                             handler2.sendEmptyMessage(QUERYING - 1);
+                            authCode.setText("");
+                            Toast.makeText(getApplicationContext(), "获取服务端正文为空",
+                                    Toast.LENGTH_SHORT)
+                                    .show();
                             loadImage2(Constants.AUTH_CODE_URL, R.id.checkCodeView);
                         }
                     });
@@ -251,11 +263,12 @@ public class LoginActivity extends BaseActivity {
             public void run() {
                 synchronized (this) {
                     if (null != go) {
-                        byte[] bit = go.requestCheckCode(cookie, Constants.AUTH_CODE_URL);
-                        if (null != go.getCookie()) {
-                            cookie = go.getCookie();
+                        Log.d(TAG, "传入的Cookie[loadImage2]:" + rCookie);
+                        byte[] bit = go.requestCheckCode(rCookie, Constants.AUTH_CODE_URL);
+                        if (!StringUtils.isBlank(go.getCookie())) {
+                            rCookie = go.getCookie();
                         }
-                        if (null != bit && bit.length > 0) {
+                        if (!ByteUtils.isBlank(bit)) {
                             Bitmap bitMap = BitmapFactory.decodeByteArray(bit, 0,
                                     bit.length);
                             Message message = new Message();
