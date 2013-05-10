@@ -15,7 +15,7 @@ public class ImageDaoImpl extends CommonDB implements ImageDao {
 
     private final static String INSERT_SQL = "insert into #tableName# (d_article_id,d_title,d_name,d_imgurl,d_httpurl,d_orderid,d_time,d_intro,d_commentsuburl,d_commentshowurl,d_filesize,d_status,d_link) values (?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
-    private final static String INSERT_SQL_ = "insert into #tableName# (d_id,d_article_id,d_title,d_name,d_imgurl,d_httpurl,d_orderid,d_time,d_intro,d_commentsuburl,d_commentshowurl,d_filesize,d_status,d_link) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    private final static String INSERT_SQL_ = "insert into #tableName# (d_article_id,d_title,d_name,d_imgurl,d_httpurl,d_orderid,d_time,d_intro,d_commentsuburl,d_commentshowurl,d_filesize,d_status,d_link) values (?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
     private final static String QUERY_SQL = "select * from #tableName# ";
 
@@ -360,7 +360,7 @@ public class ImageDaoImpl extends CommonDB implements ImageDao {
         String tb = computTableName(bean.getArticleId());
         int key = -1;
         String sql = "select count(d_id) from " + tb + " where d_id = ?";
-        if (getCount(sql, bean.getId()) > 0) {
+        if (null != bean.getId() && getCount(sql, bean.getId()) > 0) {
             return key;
         }
         sql = "select count(d_id) from " + tb + " where d_httpurl = ?";
@@ -369,27 +369,29 @@ public class ImageDaoImpl extends CommonDB implements ImageDao {
         }
         String tSQL = INSERT_SQL_.replace("#tableName#", tb);
         pstmt = conn.prepareStatement(tSQL, Statement.RETURN_GENERATED_KEYS);
-        pstmt.setInt(1, bean.getId());
-        pstmt.setInt(2, bean.getArticleId());
-        pstmt.setString(3, bean.getTitle());
-        pstmt.setString(4, bean.getName());
-        pstmt.setString(5, bean.getImgUrl());
-        pstmt.setString(6, bean.getHttpUrl());
-        pstmt.setInt(7, bean.getOrderId() == null ? -1 : bean.getOrderId());
-        pstmt.setString(8, bean.getTime());
-        pstmt.setString(9, bean.getIntro());
-        pstmt.setString(10, bean.getCommentsuburl());
-        pstmt.setString(11, bean.getCommentshowurl());
+        pstmt.setInt(1, bean.getArticleId());
+        pstmt.setString(2, bean.getTitle());
+        pstmt.setString(3, bean.getName());
+        pstmt.setString(4, bean.getImgUrl());
+        pstmt.setString(5, bean.getHttpUrl());
+        pstmt.setInt(6, bean.getOrderId() == null ? -1 : bean.getOrderId());
+        pstmt.setString(7, bean.getTime());
+        pstmt.setString(8, bean.getIntro());
+        pstmt.setString(9, bean.getCommentsuburl());
+        pstmt.setString(10, bean.getCommentshowurl());
         if (null == bean.getFileSize()) {
             bean.setFileSize(0l);
         }
-        pstmt.setLong(12, bean.getFileSize());
+        pstmt.setLong(11, bean.getFileSize());
         if (null == bean.getStatus())
             bean.setStatus(-1);
-        pstmt.setInt(13, bean.getStatus());
-        pstmt.setString(14, bean.getLink());
+        pstmt.setInt(12, bean.getStatus());
+        pstmt.setString(13, bean.getLink());
         if (pstmt.executeUpdate() == 1) {
-            key = bean.getId();
+            rs = pstmt.getGeneratedKeys();
+            while (rs.next()) {
+                key = rs.getInt(1);
+            }
         }
         if (pstmt != null)
             pstmt.close();

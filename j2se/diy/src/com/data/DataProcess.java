@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.net.UnknownHostException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
@@ -34,7 +35,9 @@ public class DataProcess {
 
     BlockingQueue<Integer> backupQueue = new LinkedBlockingQueue<Integer>(1000);
 
-    private AtomicInteger id = new AtomicInteger(23671);
+    private AtomicInteger id = new AtomicInteger(0);
+    private AtomicInteger insertCount = new AtomicInteger(1);
+    private AtomicInteger deleteCount = new AtomicInteger(1);
 
     private static DataProcess instance = null;
 
@@ -226,40 +229,250 @@ public class DataProcess {
                 while (true) {
                     try {
                         int sid = id.getAndIncrement();
+                        if (sid <= 0) {
+                            continue;
+                        }
                         bean = dao.findById(sid);
                         if (null != bean) {
                             if (bean.getStatus() != 1 && bean.getFileSize() == 0L) {
-                                String len = HttpClientUtils.getHttpConentLength(bean.getHttpUrl(),
-                                        bean.getHttpUrl(), bean.getHttpUrl());
-                                if (null != len && Integer.valueOf(len) > 0) {
-                                    System.out.println("文件[" + bean.getHttpUrl() + "]长度为：" + len);
-                                    bean.setFileSize(Long.valueOf(len));
-                                    bean.setStatus(1);
-                                    dao.update(bean);
-                                } else {
-                                    // TODO SOCKET TIMEOUT EXCEPTION时的处理逻辑
+                                try {
+                                    String len = HttpClientUtils.getHttpConentLength(
+                                            bean.getHttpUrl(),
+                                            bean.getHttpUrl(), bean.getHttpUrl());
+                                    if (null != len && Integer.valueOf(len) > 0) {
+                                        bean.setFileSize(Long.valueOf(len));
+                                        bean.setStatus(1);
+                                        bean.setLink("FD");
+                                        dao.update(bean);
+                                    } else {
+                                        // TODO SOCKET TIMEOUT EXCEPTION时的处理逻辑
 
-                                    // TODO 删除Article
-                                    if (aDao.delete(bean.getArticleId())) {
-                                        System.err.println("删除文章:" + bean.getArticleId());
+                                        // TODO 删除Article
+                                        if (aDao.delete(bean.getArticleId())) {
+                                            System.err.println("删除文章:" +
+                                                    bean.getArticleId());
+                                        }
+                                        // TODO 删除Image
+                                        if (dao.delete(bean.getId())) {
+                                            System.err.println("删除图片:" +
+                                                    bean.getId());
+                                        }
                                     }
-
-                                    // TODO 删除Image
-                                    if (dao.delete(bean.getId())) {
-                                        System.err.println("删除图片:" + bean.getId());
+                                    System.out.println("文件[" + bean.getHttpUrl() + "]\t长度为：" + len
+                                            + ",状态:"
+                                            + bean.getStatus());
+                                } catch (Exception e) {
+                                    if (e instanceof UnknownHostException) {
+                                        // TODO 删除Article
+                                        if (aDao.delete(bean.getArticleId())) {
+                                            System.err.println("删除文章:" +
+                                                    bean.getArticleId());
+                                        }
+                                        // TODO 删除Image
+                                        if (dao.delete(bean.getId())) {
+                                            System.err.println("删除图片:" +
+                                                    bean.getId());
+                                        }
                                     }
                                 }
-                                System.out.println(bean.getArticleId() + "" + bean.getTitle() + "|"
-                                        + bean.getHttpUrl() + "|"
-                                        + bean.getStatus());
-
                             } else if (bean.getStatus() != 1 && bean.getFileSize() > 200L) {
                                 // TODO 更新文件大小
                                 bean.setStatus(1);
+                                bean.setLink("FD");
                                 if (dao.update(bean)) {
                                     System.out.println("更新记录[" + bean.getId() + "]为状态1");
                                 }
                             }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        if (null != bean && e instanceof UnknownHostException) {
+                            try {
+                                // TODO 删除Article
+                                if (aDao.delete(bean.getArticleId())) {
+                                    System.err.println("删除文章:" +
+                                            bean.getArticleId());
+                                }
+                                // TODO 删除Image
+                                if (dao.delete(bean.getId())) {
+                                    System.err.println("删除图片:" +
+                                            bean.getId());
+                                }
+                            } catch (SQLException e1) {
+                                System.err.println(e1);
+                            }
+                        }
+                    } finally {
+                        if (null != bean) {
+                            bean = null;
+                        }
+                    }
+                }
+            }
+        }).start();
+    }
+
+    private void processImageUrl() {
+
+        final ImageDao dao = DAOFactory.getInstance().getImageDao();
+        long s = System.currentTimeMillis();
+        try {
+            id.set(dao.getMin(-3));
+        } catch (SQLException e1) {
+            e1.printStackTrace();
+        } finally {
+            System.out.println("获取最小值耗时:" + (System.currentTimeMillis() - s) + " ms");
+        }
+        System.out.println("初始ID值为:" + id.get());
+        new Thread(new Runnable() {
+            ImageBean bean = null;
+
+            public synchronized void run() {
+                while (true) {
+                    int sid = id.getAndIncrement();
+                    try {
+                        bean = dao.findById(sid);
+                        if (null != bean) {
+
+                            // http://tuku.military.china.com
+                            if (bean.getImgUrl().startsWith("http://tuku.military.china.com")) {
+                                String url = bean.getImgUrl();
+                                url = url.replace("http://tuku.military.china.com",
+                                        "http://image.tuku.china.com/tuku.military.china.com");
+                                bean.setImgUrl(url);
+                            }
+                            if (bean.getHttpUrl().startsWith("http://tuku.military.china.com")) {
+                                String url = bean.getHttpUrl();
+                                url = url.replace("http://tuku.military.china.com",
+                                        "http://image.tuku.china.com/tuku.military.china.com");
+                                bean.setHttpUrl(url);
+                            }
+
+                            // http://pic.news.china.com/
+                            if (bean.getImgUrl().startsWith("http://pic.news.china.com/")) {
+                                String url = bean.getImgUrl();
+                                url = url.replace("http://pic.news.china.com",
+                                        "http://image.tuku.china.com/pic.news.china.com");
+                                bean.setImgUrl(url);
+                            }
+                            if (bean.getHttpUrl().startsWith("http://pic.news.china.com/")) {
+                                String url = bean.getHttpUrl();
+                                url = url.replace("http://pic.news.china.com",
+                                        "http://image.tuku.china.com/pic.news.china.com");
+                                bean.setHttpUrl(url);
+                            }
+
+                            // http://tuku.fun.china.com/
+                            if (bean.getImgUrl().startsWith("http://tuku.fun.china.com/")) {
+                                String url = bean.getImgUrl();
+                                url = url.replace("http://tuku.fun.china.com",
+                                        "http://image.tuku.china.com/tuku.fun.china.com");
+                                bean.setImgUrl(url);
+                            }
+                            if (bean.getHttpUrl().startsWith("http://tuku.fun.china.com/")) {
+                                String url = bean.getHttpUrl();
+                                url = url.replace("http://tuku.fun.china.com",
+                                        "http://image.tuku.china.com/tuku.fun.china.com");
+                                bean.setHttpUrl(url);
+                            }
+
+                            // http://tuku.news.china.com/
+                            if (bean.getImgUrl().startsWith("http://tuku.news.china.com/")) {
+                                String url = bean.getImgUrl();
+                                url = url.replace("http://tuku.news.china.com",
+                                        "http://image.tuku.china.com/tuku.news.china.com");
+                                bean.setImgUrl(url);
+                            }
+                            if (bean.getHttpUrl().startsWith("http://tuku.news.china.com/")) {
+                                String url = bean.getHttpUrl();
+                                url = url.replace("http://tuku.news.china.com",
+                                        "http://image.tuku.china.com/tuku.news.china.com");
+                                bean.setHttpUrl(url);
+                            }
+
+                            if (bean.getStatus() != 1 || bean.getFileSize() < 0L) {
+                                String len = HttpClientUtils.getHttpConentLength(bean.getHttpUrl(),
+                                        bean.getHttpUrl(), bean.getHttpUrl());
+                                if (null != len && Integer.valueOf(len) > 0) {
+                                    bean.setFileSize(Long.valueOf(len));
+                                    bean.setStatus(1);
+                                    bean.setLink("FD");
+                                    dao.update(bean);
+                                }
+                                System.out.println("文件[" + bean.getHttpUrl() + "]\t缩略图:["
+                                        + bean.getImgUrl() + "]\t长度为：" + len
+                                        + ",状态:"
+                                        + bean.getStatus());
+                            } else if (bean.getStatus() != 1 && bean.getFileSize() > 200L) {
+                                // TODO 更新文件大小
+                                bean.setStatus(1);
+                                bean.setLink("FD");
+                                if (dao.update(bean)) {
+                                    System.out.println("更新记录[" + bean.getId() + "]为状态1");
+                                }
+                            }
+                        } else {
+                            System.out.println("bean is null " + sid);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        // if (sid > 0) {
+                        // try {
+                        // dao.delete(sid);
+                        // System.out.println("删除记录成功");
+                        // } catch (SQLException e1) {
+                        // e1.printStackTrace();
+                        // }
+                        // }
+                    } finally {
+                        if (null != bean) {
+                            bean = null;
+                        }
+                    }
+                }
+            }
+        }).start();
+    }
+
+    private void processSeparateTable() {
+
+        final ImageDao dao = DAOFactory.getInstance().getImageDao();
+        final ArticleDao aDao = DAOFactory.getInstance().getArticleDao();
+        id.set(211);
+        System.out.println("初始ID值为:" + id.get());
+        new Thread(new Runnable() {
+            Article bean = null;
+
+            public synchronized void run() {
+                while (true) {
+                    int sid = id.getAndIncrement();
+                    try {
+                        bean = aDao.findById(sid);
+                        if (null != bean) {
+                            List<ImageBean> list = dao.findImageByArticleId(sid);
+                            if (null != list && list.size() > 0) {
+                                for (ImageBean ib : list) {
+                                    int iid = dao.insert(ib);
+                                    if (iid > 0) {
+                                        int c = insertCount.getAndIncrement();
+                                        if (c % 1000 == 0) {
+                                            System.out.println("添加了" + c + "条记录");
+                                        }
+                                        if (!dao.delete(ib.getId())) {
+                                            System.err.println("删除图片【" + ib.getId() + "】失败");
+                                        } else {
+                                            int d = deleteCount.getAndIncrement();
+                                            if (d % 1000 == 0) {
+                                                System.out.println("删除了" + c + "条记录");
+                                            }
+                                        }
+                                    }
+                                }
+                            } else {
+                                System.out.println(sid + "|" + bean.getTitle() + "|没有数据");
+                            }
+                        } else {
+                            System.out.println("bean is null " + sid);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -275,7 +488,8 @@ public class DataProcess {
 
     public static void main(String[] args) {
         DataProcess dp = new DataProcess();
-        dp.processImageStatus();
+        // dp.processImageStatus();
+        // dp.processImageUrl();
+        dp.processSeparateTable();
     }
-
 }
