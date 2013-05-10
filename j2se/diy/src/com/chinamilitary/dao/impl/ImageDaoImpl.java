@@ -13,17 +13,23 @@ import java.util.List;
 
 public class ImageDaoImpl extends CommonDB implements ImageDao {
 
-    private final static String INSERT_SQL = "insert into tbl_image (d_article_id,d_title,d_name,d_imgurl,d_httpurl,d_orderid,d_time,d_intro,d_commentsuburl,d_commentshowurl,d_filesize,d_status,d_link) values (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    private final static String INSERT_SQL = "insert into #tableName# (d_article_id,d_title,d_name,d_imgurl,d_httpurl,d_orderid,d_time,d_intro,d_commentsuburl,d_commentshowurl,d_filesize,d_status,d_link) values (?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
-    private final static String QUERY_SQL = "select * from tbl_image ";
+    private final static String INSERT_SQL_ = "insert into #tableName# (d_id,d_article_id,d_title,d_name,d_imgurl,d_httpurl,d_orderid,d_time,d_intro,d_commentsuburl,d_commentshowurl,d_filesize,d_status,d_link) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
-    private final static String COUNT_SQL = "select count(*) from tbl_image ";
+    private final static String QUERY_SQL = "select * from #tableName# ";
 
-    private final static String UPDATE_SQL = "update tbl_image ";
+    private final static String COUNT_SQL = "select count(*) from #tableName# ";
 
-    private final static String FIND_BY_ARTICLE_ID = "select * from tbl_image where d_article_id = ?";
+    private final static String UPDATE_SQL = "update #tableName# ";
 
-    private final static String DELETE_SQL = "DELETE FROM tbl_image";
+    private final static String FIND_BY_ARTICLE_ID = "select * from #tableName# where d_article_id = ?";
+
+    private final static String DELETE_SQL = "DELETE FROM #tableName#";
+
+    String tableName = "tbl_image";
+
+    static int RATE = 8;
 
     public ImageDaoImpl() throws Exception {
         super();
@@ -37,9 +43,11 @@ public class ImageDaoImpl extends CommonDB implements ImageDao {
      * @throws Exception
      */
     public List<HashMap<String, String>> findImageByArticle(Integer articleId) throws Exception {
+        String tb = computTableName(-1);
         List<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
         HashMap<String, String> map = null;
-        pstmt = conn.prepareStatement(FIND_BY_ARTICLE_ID);
+        String tSQL = FIND_BY_ARTICLE_ID.replace("#tableName#", tb);
+        pstmt = conn.prepareStatement(tSQL);
         pstmt.setInt(1, articleId);
         rs = pstmt.executeQuery();
         while (rs.next()) {
@@ -62,10 +70,12 @@ public class ImageDaoImpl extends CommonDB implements ImageDao {
      * @return
      * @throws Exception
      */
-    public List<ImageBean> findImage(Integer articleId) throws Exception {
+    public List<ImageBean> findImageByArticleId(Integer articleId) throws Exception {
+        String tb = computTableName(-1);
         List<ImageBean> list = new ArrayList<ImageBean>();
         ImageBean bean = null;
-        pstmt = conn.prepareStatement(FIND_BY_ARTICLE_ID + " order by d_id ");
+        String tSQL = FIND_BY_ARTICLE_ID.replace("#tableName#", tb);
+        pstmt = conn.prepareStatement(tSQL + " order by d_id ");
         pstmt.setInt(1, articleId);
         rs = pstmt.executeQuery();
         while (rs.next()) {
@@ -103,9 +113,11 @@ public class ImageDaoImpl extends CommonDB implements ImageDao {
      * @throws Exception
      */
     public List<ImageBean> findImage(Integer articleId, String text) throws Exception {
+        String tb = computTableName(-1);
         List<ImageBean> list = new ArrayList<ImageBean>();
         ImageBean bean = null;
-        pstmt = conn.prepareStatement(FIND_BY_ARTICLE_ID + " and d_link = ? order by d_id ");
+        String tSQL = FIND_BY_ARTICLE_ID.replace("#tableName#", tb);
+        pstmt = conn.prepareStatement(tSQL + " and d_link = ? order by d_id ");
         pstmt.setInt(1, articleId);
         pstmt.setString(2, text);
         rs = pstmt.executeQuery();
@@ -345,38 +357,39 @@ public class ImageDaoImpl extends CommonDB implements ImageDao {
     }
 
     public synchronized int insert(ImageBean bean) throws Exception {
+        String tb = computTableName(bean.getArticleId());
         int key = -1;
-        if (bean.getHttpUrl() == null || bean.getHttpUrl().equalsIgnoreCase("")) {
-            System.out.println("空");
+        String sql = "select count(d_id) from " + tb + " where d_id = ?";
+        if (getCount(sql, bean.getId()) > 0) {
+            return key;
         }
-        String sql = "select count(*) from tbl_image where d_httpurl = ?";
+        sql = "select count(d_id) from " + tb + " where d_httpurl = ?";
         if (getCount(sql, bean.getHttpUrl()) > 0) {
-            return -1;
+            return key;
         }
-        pstmt = conn.prepareStatement(INSERT_SQL, Statement.RETURN_GENERATED_KEYS);
-        pstmt.setInt(1, bean.getArticleId());
-        pstmt.setString(2, bean.getTitle());
-        pstmt.setString(3, bean.getName());
-        pstmt.setString(4, bean.getImgUrl());
-        pstmt.setString(5, bean.getHttpUrl());
-        pstmt.setInt(6, bean.getOrderId() == null ? -1 : bean.getOrderId());
-        pstmt.setString(7, bean.getTime());
-        pstmt.setString(8, bean.getIntro());
-        pstmt.setString(9, bean.getCommentsuburl());
-        pstmt.setString(10, bean.getCommentshowurl());
+        String tSQL = INSERT_SQL_.replace("#tableName#", tb);
+        pstmt = conn.prepareStatement(tSQL, Statement.RETURN_GENERATED_KEYS);
+        pstmt.setInt(1, bean.getId());
+        pstmt.setInt(2, bean.getArticleId());
+        pstmt.setString(3, bean.getTitle());
+        pstmt.setString(4, bean.getName());
+        pstmt.setString(5, bean.getImgUrl());
+        pstmt.setString(6, bean.getHttpUrl());
+        pstmt.setInt(7, bean.getOrderId() == null ? -1 : bean.getOrderId());
+        pstmt.setString(8, bean.getTime());
+        pstmt.setString(9, bean.getIntro());
+        pstmt.setString(10, bean.getCommentsuburl());
+        pstmt.setString(11, bean.getCommentshowurl());
         if (null == bean.getFileSize()) {
             bean.setFileSize(0l);
         }
-        pstmt.setLong(11, bean.getFileSize());
+        pstmt.setLong(12, bean.getFileSize());
         if (null == bean.getStatus())
             bean.setStatus(-1);
-        pstmt.setInt(12, bean.getStatus());
-        pstmt.setString(13, bean.getLink());
+        pstmt.setInt(13, bean.getStatus());
+        pstmt.setString(14, bean.getLink());
         if (pstmt.executeUpdate() == 1) {
-            rs = pstmt.getGeneratedKeys();
-            while (rs.next()) {
-                key = rs.getInt(1);
-            }
+            key = bean.getId();
         }
         if (pstmt != null)
             pstmt.close();
@@ -394,7 +407,7 @@ public class ImageDaoImpl extends CommonDB implements ImageDao {
      */
     public ImageBean findById(int id) throws Exception {
         ImageBean bean = null;
-        pstmt = conn.prepareStatement(QUERY_SQL + " where d_id = ? ");
+        pstmt = conn.prepareStatement(QUERY_SQL + " where d_id = ? order by d_id asc");
         pstmt.setInt(1, id);
         rs = pstmt.executeQuery();
         while (rs.next()) {
@@ -466,6 +479,29 @@ public class ImageDaoImpl extends CommonDB implements ImageDao {
     }
 
     /**
+     * 根据文章ID查找是否存在该文章的图片
+     * 
+     * @param sql
+     * @param articleId
+     * @return
+     * @throws Exception
+     */
+    private int getCount(String sql, int id) throws Exception {
+        int count = 0;
+        pstmt = conn.prepareStatement(sql);
+        pstmt.setInt(1, id);
+        rs = pstmt.executeQuery();
+        while (rs.next()) {
+            count = rs.getInt(1);
+        }
+        if (pstmt != null)
+            pstmt.close();
+        if (rs != null)
+            rs.close();
+        return count;
+    }
+
+    /**
      * @param id
      * @return
      * @throws Exception
@@ -489,9 +525,11 @@ public class ImageDaoImpl extends CommonDB implements ImageDao {
      * @throws Exception
      */
     public synchronized boolean update(ImageBean bean) throws Exception {
+        String tb = computTableName(bean.getArticleId());
         boolean b = false;
         StringBuffer sql = new StringBuffer();
-        sql.append(UPDATE_SQL)
+        String tSQL = UPDATE_SQL.replace("#tableName#", tb);
+        sql.append(tSQL)
                 .append(" SET d_article_id=?,d_title=?,d_name=?,d_imgurl=?,d_httpurl=?,d_orderid=?,d_time=?,d_intro=?,");
         sql.append("d_commentsuburl=?,d_commentshowurl=?,d_link=?,d_status=?,d_filesize=? where d_id=?");
         pstmt = conn.prepareStatement(sql.toString());
@@ -572,7 +610,8 @@ public class ImageDaoImpl extends CommonDB implements ImageDao {
      */
     public synchronized boolean delete(int id) throws SQLException {
         try {
-            pstmt = conn.prepareStatement(DELETE_SQL + " WHERE d_id=?");
+            String sql = DELETE_SQL.replace("#tableName#", tableName);
+            pstmt = conn.prepareStatement(sql + " WHERE d_id=? ");
             pstmt.setInt(1, id);
             int r = pstmt.executeUpdate();
             if (r > 0) {
@@ -644,4 +683,17 @@ public class ImageDaoImpl extends CommonDB implements ImageDao {
         return id;
     }
 
+    /**
+     * 根据文章ID来分表
+     * 
+     * @param articleId
+     */
+    private String computTableName(int articleId) {
+        String tb = tableName;
+        if (articleId > 0) {
+            int r = articleId % RATE;
+            tb += "_" + r;
+        }
+        return tb;
+    }
 }
