@@ -1,5 +1,5 @@
 
-package com.bluestome.hzti.qry;
+package com.bluestome.hzti.qry.activity;
 
 import java.io.IOException;
 import java.util.List;
@@ -18,6 +18,9 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.bluestome.hzti.qry.R;
+import com.bluestome.hzti.qry.R.id;
+import com.bluestome.hzti.qry.R.layout;
 import com.bluestome.hzti.qry.bean.TBean;
 import com.bluestome.hzti.qry.net.ParserHtml;
 

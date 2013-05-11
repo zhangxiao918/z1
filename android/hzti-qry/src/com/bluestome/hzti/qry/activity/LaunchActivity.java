@@ -12,7 +12,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.bluestome.hzti.qry.LoginActivity;
 import com.bluestome.hzti.qry.R;
 import com.bluestome.hzti.qry.common.Constants;
 import com.bluestome.hzti.qry.utils.StringUtils;

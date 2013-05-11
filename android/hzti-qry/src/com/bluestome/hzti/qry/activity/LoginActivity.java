@@ -1,5 +1,5 @@
 
-package com.bluestome.hzti.qry;
+package com.bluestome.hzti.qry.activity;
 
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -21,7 +21,10 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.bluestome.hzti.qry.activity.BaseActivity;
+import com.bluestome.hzti.qry.R;
+import com.bluestome.hzti.qry.R.array;
+import com.bluestome.hzti.qry.R.id;
+import com.bluestome.hzti.qry.R.layout;
 import com.bluestome.hzti.qry.common.Constants;
 import com.bluestome.hzti.qry.utils.ByteUtils;
 import com.bluestome.hzti.qry.utils.StringUtils;
