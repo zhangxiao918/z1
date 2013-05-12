@@ -438,7 +438,7 @@ public class DataProcess {
 
         final ImageDao dao = DAOFactory.getInstance().getImageDao();
         final ArticleDao aDao = DAOFactory.getInstance().getArticleDao();
-        id.set(211);
+        id.set(1);
         System.out.println("初始ID值为:" + id.get());
         new Thread(new Runnable() {
             Article bean = null;
@@ -451,23 +451,56 @@ public class DataProcess {
                         if (null != bean) {
                             List<ImageBean> list = dao.findImageByArticleId(sid);
                             if (null != list && list.size() > 0) {
-                                for (ImageBean ib : list) {
-                                    int iid = dao.insert(ib);
-                                    if (iid > 0) {
-                                        int c = insertCount.getAndIncrement();
-                                        if (c % 1000 == 0) {
-                                            System.out.println("添加了" + c + "条记录");
-                                        }
-                                        if (!dao.delete(ib.getId())) {
-                                            System.err.println("删除图片【" + ib.getId() + "】失败");
-                                        } else {
-                                            int d = deleteCount.getAndIncrement();
-                                            if (d % 1000 == 0) {
-                                                System.out.println("删除了" + c + "条记录");
-                                            }
-                                        }
+                                int[] ids = dao.insertBatch(bean.getId(), list);
+                                int c = 0;
+                                for (int id : ids) {
+                                    if (id > 0) {
+                                        insertCount.getAndIncrement();
+                                        c++;
                                     }
                                 }
+                                System.out.println("文章ID" + bean.getId() + ":图片数量:" + list.size()
+                                        + ",添加了" + c + "条记录");
+                                // TODO 删除图片表原始图片
+                                if (c == list.size()) {
+                                    if (dao.deleteBatch(list)) {
+                                        final int size = list.size();
+                                        new Thread(new Runnable() {
+                                            public void run() {
+                                                for (int i = 0; i < size; i++) {
+                                                    deleteCount.getAndIncrement();
+                                                }
+                                                int d = deleteCount.get();
+                                                if (d % 1000 == 0) {
+                                                    System.out.println("删除了" + d + "条记录");
+                                                }
+                                            }
+                                        }).start();
+                                    }
+                                }
+                                c = insertCount.getAndIncrement();
+                                if (c % 1000 == 0) {
+                                    System.out.println("添加了" + c + "条记录");
+                                }
+                                // TODO
+                                // for (ImageBean ib : list) {
+                                // int iid = dao.insert(ib);
+                                // if (iid > 0) {
+                                // int c = insertCount.getAndIncrement();
+                                // if (c % 1000 == 0) {
+                                // System.out.println("添加了" + c + "条记录");
+                                // }
+                                // if (!dao.delete(ib.getId())) {
+                                // System.err.println("删除图片【" + ib.getId() +
+                                // "】失败");
+                                // } else {
+                                // int d = deleteCount.getAndIncrement();
+                                // if (d % 1000 == 0) {
+                                // System.out.println("删除了" + d + "条记录");
+                                // }
+                                // }
+                                // }
+                                // }
                             } else {
                                 System.out.println(sid + "|" + bean.getTitle() + "|没有数据");
                             }
