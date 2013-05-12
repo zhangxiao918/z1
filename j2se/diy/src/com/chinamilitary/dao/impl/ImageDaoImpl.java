@@ -5,6 +5,7 @@ import com.chinamilitary.bean.ImageBean;
 import com.chinamilitary.dao.ImageDao;
 import com.chinamilitary.db.CommonDB;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -356,6 +357,48 @@ public class ImageDaoImpl extends CommonDB implements ImageDao {
         return bean;
     }
 
+    /**
+     * 批量添加记录
+     * 
+     * @param lists
+     * @return
+     * @throws Exception
+     */
+    public synchronized int[] insertBatch(int articleId, List<ImageBean> lists) throws Exception {
+        long s = System.currentTimeMillis();
+        int[] ids = null;
+        String tb = computTableName(articleId);
+        String tSQL = INSERT_SQL_.replace("#tableName#", tb);
+        pstmt = conn.prepareStatement(tSQL, ResultSet.TYPE_SCROLL_SENSITIVE,
+                ResultSet.CONCUR_READ_ONLY);
+        for (ImageBean bean : lists) {
+            pstmt.setInt(1, bean.getArticleId());
+            pstmt.setString(2, bean.getTitle());
+            pstmt.setString(3, bean.getName());
+            pstmt.setString(4, bean.getImgUrl());
+            pstmt.setString(5, bean.getHttpUrl());
+            pstmt.setInt(6, bean.getOrderId() == null ? -1 : bean.getOrderId());
+            pstmt.setString(7, bean.getTime());
+            pstmt.setString(8, bean.getIntro());
+            pstmt.setString(9, bean.getCommentsuburl());
+            pstmt.setString(10, bean.getCommentshowurl());
+            if (null == bean.getFileSize()) {
+                bean.setFileSize(0l);
+            }
+            pstmt.setLong(11, bean.getFileSize());
+            if (null == bean.getStatus())
+                bean.setStatus(-1);
+            pstmt.setInt(12, bean.getStatus());
+            pstmt.setString(13, bean.getLink());
+            pstmt.addBatch();
+        }
+        ids = pstmt.executeBatch();
+        if (pstmt != null)
+            pstmt.close();
+        System.out.println("耗时：" + (System.currentTimeMillis() - s));
+        return ids;
+    }
+
     public synchronized int insert(ImageBean bean) throws Exception {
         String tb = computTableName(bean.getArticleId());
         int key = -1;
@@ -601,6 +644,29 @@ public class ImageDaoImpl extends CommonDB implements ImageDao {
         if (rs != null)
             rs.close();
         return list;
+    }
+
+    public synchronized boolean deleteBatch(List<ImageBean> list) throws SQLException {
+        try {
+            String sql = DELETE_SQL.replace("#tableName#", tableName);
+            pstmt = conn.prepareStatement(sql + " WHERE d_id=? ", ResultSet.TYPE_SCROLL_SENSITIVE,
+                    ResultSet.CONCUR_READ_ONLY);
+            for (ImageBean b : list) {
+                pstmt.setInt(1, b.getId());
+                pstmt.addBatch();
+            }
+            int[] rs = pstmt.executeBatch();
+            if (null != rs && rs.length == list.size()) {
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            if (pstmt != null)
+                pstmt.close();
+        }
+        return true;
     }
 
     /**

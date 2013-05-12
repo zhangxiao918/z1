@@ -33,6 +33,15 @@ public interface ImageDao extends ICommonDao {
      * @return
      * @throws Exception
      */
+    int[] insertBatch(int articleId, List<ImageBean> lists) throws Exception;
+
+    /**
+     * 添加记录
+     * 
+     * @param bean
+     * @return
+     * @throws Exception
+     */
     int insert(ImageBean bean) throws Exception;
 
     /**
@@ -142,6 +151,15 @@ public interface ImageDao extends ICommonDao {
      */
     List<ImageBean> findImageByFilesizeEqualX(Integer x, Integer offset, Integer limit)
             throws Exception;
+
+    /**
+     * 批量删除记录
+     * 
+     * @param list
+     * @return
+     * @throws SQLException
+     */
+    boolean deleteBatch(List<ImageBean> list) throws SQLException;
 
     /**
      * 根据ID删除记录
