@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<project name="diy" default="complie" basedir=".">
+	<property name="classes" value="build"/>
+	<property name="lib.dir" value="lib"/>
+	<property name="charset" value="UTF-8"/>
+
+	<!-- 第三方jar包的路径 -->
+    <path id="lib-classpath">
+        <fileset dir="${lib.dir}">
+            <include name="**/*.jar"/>
+        </fileset>
+    </path>
+
+	<target name="clean">
+		<delete dir="${classes}" />
+	</target>
+
+	<target name="complie" depends="clean">
+		<mkdir dir="${classes}"/>
+		<javac srcdir="src" destdir="${classes}" includeantruntime="true">
+			<compilerarg line="-encoding ${charset}"/>
+			<classpath refid="lib-classpath"/>
+		</javac>
+	</target>
+</project>
