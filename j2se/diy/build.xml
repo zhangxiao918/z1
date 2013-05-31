@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
-<project name="diy" default="complie" basedir=".">
+<project name="diy" default="run" basedir=".">
+	<property name="projectName" value="diy"/>
 	<property name="classes" value="build"/>
 	<property name="lib.dir" value="lib"/>
 	<property name="charset" value="UTF-8"/>
@@ -17,9 +18,29 @@
 
 	<target name="complie" depends="clean">
 		<mkdir dir="${classes}"/>
+		<copy todir="${classes}">
+            <fileset dir="${basedir}/res" includes="**"/>
+        </copy>
 		<javac srcdir="src" destdir="${classes}" includeantruntime="true">
 			<compilerarg line="-encoding ${charset}"/>
 			<classpath refid="lib-classpath"/>
 		</javac>
+	</target>
+
+	<!-- 打包成jar文件-->
+	<target name="jar" depends="complie">
+		<jar destfile="${projectName}.jar" basedir="${classes}">
+			<manifest>
+				  <attribute name="Main-class" value="com.B"/>
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="run" depends="complie">
+		<java classname="com.autohome.C">
+			 <classpath>
+				<pathelement path="${classes}"/>
+			</classpath>
+		</java>
 	</target>
 </project>
