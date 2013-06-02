@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <project name="diy" default="run" basedir=".">
-	<property name="projectName" value="diy"/>
+	<property name="name" value="diy_2013-06-02"/>
 	<property name="classes" value="build"/>
 	<property name="lib.dir" value="lib"/>
 	<property name="charset" value="UTF-8"/>
@@ -12,11 +12,23 @@
         </fileset>
     </path>
 
+	 <!-- 清除指定目录-->
 	<target name="clean">
 		<delete dir="${classes}" />
+		<delete dir="${classes}/lib"/>
 	</target>
 
-	<target name="complie" depends="clean">
+	<!-- 1. 初始化工作，如创建目录等 -->
+    <target name="init" depends="clean">
+        <mkdir dir="${classes}"/>
+		<mkdir dir="${classes}/lib"/>
+		<copy todir="${classes}/lib">
+			<fileset dir="${lib.dir}"/>
+		</copy>
+    </target>
+
+
+	<target name="complie" depends="init">
 		<mkdir dir="${classes}"/>
 		<copy todir="${classes}">
             <fileset dir="${basedir}/res" includes="**"/>
@@ -29,18 +41,38 @@
 
 	<!-- 打包成jar文件-->
 	<target name="jar" depends="complie">
-		<jar destfile="${projectName}.jar" basedir="${classes}">
+		<!--创建mainfest中的依赖第三方lib的内容-->
+		<pathconvert property="mf.classpath" pathsep=" ">
+			<mapper>
+				<chainedmapper>
+					<!-- jar包文件只留文件名，去掉目录信息 -->
+					<flattenmapper/>
+					<!-- add lib/ prefix -->
+					<globmapper from="*" to="lib/*"/>
+				</chainedmapper>
+			</mapper>
+			<path refid="lib-classpath"/>
+		 </pathconvert>
+	    <echo message=" Class-Path 路径为: ${mf.classpath}"/>
+		<jar destfile="${name}.jar" basedir="${classes}">
 			<manifest>
-				  <attribute name="Main-class" value="com.B"/>
+				  <attribute name="Main-class" value="com.chinamilitary.htmlparser.ChinaTUKUParser"/>
+				  <attribute name="Class-Path" value="${mf.classpath}"/>
 			</manifest>
 		</jar>
 	</target>
 
-	<target name="run" depends="complie">
+	<target name="run" depends="jar">
+		<!--
 		<java classname="com.autohome.C">
 			 <classpath>
 				<pathelement path="${classes}"/>
 			</classpath>
 		</java>
+		-->
+		<exec executable="java" failonerror="true">
+			<arg value="-jar" />
+			<arg value="${name}.jar" />
+		</exec>
 	</target>
 </project>
