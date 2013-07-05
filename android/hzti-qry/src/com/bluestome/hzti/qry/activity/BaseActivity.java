@@ -6,6 +6,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.util.Log;
 
 import com.bluestome.hzti.qry.common.MobileGo2;
@@ -42,6 +43,8 @@ public class BaseActivity extends Activity {
     }
 
     protected void initNetworkStatus() {
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
         ConnectivityManager mgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         // 判断获取的网络数量并且判断是否有活动网络
         if (null != (networkInfo = mgr.getActiveNetworkInfo())) {

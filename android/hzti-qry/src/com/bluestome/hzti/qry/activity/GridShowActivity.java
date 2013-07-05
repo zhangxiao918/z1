@@ -10,22 +10,25 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bluestome.hzti.qry.R;
-import com.bluestome.hzti.qry.R.id;
-import com.bluestome.hzti.qry.R.layout;
 import com.bluestome.hzti.qry.bean.TBean;
 import com.bluestome.hzti.qry.net.ParserHtml;
 
 public class GridShowActivity extends Activity {
 
+    private static final String TAG = GridShowActivity.class.getCanonicalName();
     private String content;
     private String cookie;
     private ListView listView;
@@ -46,15 +49,26 @@ public class GridShowActivity extends Activity {
     void initView() {
         l2 = (LinearLayout) findViewById(R.id.linearlayout3);
         listView = (ListView) findViewById(R.id.listView);
+        listView.setOnItemClickListener(new OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+                TBean t = (TBean) arg0.getItemAtPosition(position);
+                if (null != t) {
+                    Toast.makeText(GridShowActivity.this,
+                            "选择时间为:" + t.getDate() + "的记录",
+                            Toast.LENGTH_SHORT)
+                            .show();
+                }
+            }
+        });
         List<TBean> list = null;
         try {
             list = ParserHtml.parser(content);
         } catch (ParserException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            Log.e(TAG, e.getMessage());
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            Log.e(TAG, e.getMessage());
         }
         if (null != list && list.size() > 0) {
             adapter = new ItemAdapter(this, list);
@@ -102,29 +116,34 @@ public class GridShowActivity extends Activity {
                 holder = new ItemHolderView();
                 convertView = LayoutInflater.from(mContext).inflate(
                         R.layout.list_item, null);
-                // holder.index = (TextView)
-                // convertView.findViewById(R.id.item_index_id);
+                holder.index = (TextView)
+                        convertView.findViewById(R.id.item_index_id);
                 holder.date = (TextView) convertView.findViewById(R.id.item_date);
                 // holder.type = (TextView)
                 // convertView.findViewById(R.id.item_type);
                 // holder.company = (TextView)
                 // convertView.findViewById(R.id.item_company);
-                holder.self = (TextView) convertView.findViewById(R.id.item_self);
-                holder.total = (TextView) convertView.findViewById(R.id.item_total);
-                // holder.pay = (TextView)
-                // convertView.findViewById(R.id.item_pay);
+                // holder.self = (TextView)
+                // convertView.findViewById(R.id.item_self);
+                holder.total = (TextView)
+                        convertView.findViewById(R.id.item_total);
+                holder.pay = (TextView)
+                        convertView.findViewById(R.id.item_pay);
                 convertView.setTag(holder);
             } else {
                 holder = (ItemHolderView) convertView.getTag();
             }
             TBean t = datas.get(position);
             holder.date.setText(t.getDate());
-            // holder.index.setText(t.getCarNum());
+            holder.index.setText(t.getCarNum());
             // holder.type.setText(t.getCarType());
             // holder.company.setText(t.getContent());
-            holder.self.setText(t.getLoc());
+            // if (t.getLoc().length() > 10) {
+            // t.setLoc(t.getLoc().substring(0, 10));
+            // }
+            // holder.self.setText(t.getLoc());
             holder.total.setText(t.getDealResult());
-            // holder.pay.setText(t.getPayResult());
+            holder.pay.setText(t.getPayResult());
             if (signle) {
                 convertView.setBackgroundColor(Color.DKGRAY);
             }
