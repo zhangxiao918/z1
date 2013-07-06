@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content" >
+
+    <LinearLayout
+        android:id="@+id/main_violation_container"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_generic_row_bg" >
+
+        <View
+            android:id="@+id/main_violation_left_color"
+            android:layout_width="4.0dip"
+            android:layout_height="fill_parent"
+            android:background="#ff8ed85d" />
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_margin="10.0dip" >
+
+            <ImageView
+                android:id="@+id/main_violation_share_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="2.0dip"
+                android:contentDescription="TODO"
+                android:src="@drawable/main_violation_share_icon" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@id/main_violation_share_icon"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/main_violation_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2012年07月28日 星期六 01:09"
+                    android:textColor="#ff333333"
+                    android:textSize="14.0sp" />
+
+                <TextView
+                    android:id="@+id/main_violation_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4.0dip"
+                    android:layout_marginTop="4.0dip"
+                    android:text="延安高架南侧石门一路入口匝道"
+                    android:textColor="#ff3870a6"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/main_violation_detail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="机动车违反规定停放，临时停车驾驶人不在现场，妨碍其他车辆（违法代码：10390）"
+                    android:textColor="#ff333333"
+                    android:textSize="14.0sp" />
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3.0dip" >
+
+                    <TextView
+                        android:id="@+id/main_violation_money"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="处罚金额：200"
+                        android:textColor="#ff333333"
+                        android:textSize="14.0sp" />
+
+                    <TextView
+                        android:id="@+id/main_violation_point"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20.0dip"
+                        android:text="扣分：0"
+                        android:textColor="#ff333333"
+                        android:textSize="14.0sp" />
+                </LinearLayout>
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+
+</RelativeLayout>

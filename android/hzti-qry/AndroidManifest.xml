@@ -25,11 +25,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.bluestome.hzti.qry.GridShowActivity"
+            android:name="com.bluestome.hzti.qry.activity.GridShowActivity"
             android:label="@string/app_name"
             android:alwaysRetainTaskState="false"/>
         <activity
-            android:name="com.bluestome.hzti.qry.LoginActivity"
+            android:name="com.bluestome.hzti.qry.activity.LoginActivity"
             android:label="@string/app_name" 
             android:alwaysRetainTaskState="false"/>
     </application>

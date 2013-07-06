@@ -1,14 +1,8 @@
 
 package com.bluestome.hzti.qry.activity;
 
-import java.io.IOException;
-import java.util.List;
-
-import org.htmlparser.util.ParserException;
-
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,6 +19,11 @@ import android.widget.Toast;
 import com.bluestome.hzti.qry.R;
 import com.bluestome.hzti.qry.bean.TBean;
 import com.bluestome.hzti.qry.net.ParserHtml;
+
+import org.htmlparser.util.ParserException;
+
+import java.io.IOException;
+import java.util.List;
 
 public class GridShowActivity extends Activity {
 
@@ -116,40 +115,25 @@ public class GridShowActivity extends Activity {
                 holder = new ItemHolderView();
                 convertView = LayoutInflater.from(mContext).inflate(
                         R.layout.list_item, null);
-                holder.index = (TextView)
-                        convertView.findViewById(R.id.item_index_id);
-                holder.date = (TextView) convertView.findViewById(R.id.item_date);
-                // holder.type = (TextView)
-                // convertView.findViewById(R.id.item_type);
-                // holder.company = (TextView)
-                // convertView.findViewById(R.id.item_company);
-                // holder.self = (TextView)
-                // convertView.findViewById(R.id.item_self);
+                holder.date = (TextView) convertView.findViewById(R.id.main_violation_time);
+                holder.company = (TextView)
+                        convertView.findViewById(R.id.main_violation_detail);
+                holder.self = (TextView)
+                        convertView.findViewById(R.id.main_violation_address);
                 holder.total = (TextView)
-                        convertView.findViewById(R.id.item_total);
+                        convertView.findViewById(R.id.main_violation_point);
                 holder.pay = (TextView)
-                        convertView.findViewById(R.id.item_pay);
+                        convertView.findViewById(R.id.main_violation_money);
                 convertView.setTag(holder);
             } else {
                 holder = (ItemHolderView) convertView.getTag();
             }
             TBean t = datas.get(position);
             holder.date.setText(t.getDate());
-            holder.index.setText(t.getCarNum());
-            // holder.type.setText(t.getCarType());
-            // holder.company.setText(t.getContent());
-            // if (t.getLoc().length() > 10) {
-            // t.setLoc(t.getLoc().substring(0, 10));
-            // }
-            // holder.self.setText(t.getLoc());
+            holder.company.setText(t.getContent());
+            holder.self.setText(t.getLoc());
             holder.total.setText(t.getDealResult());
             holder.pay.setText(t.getPayResult());
-            if (signle) {
-                convertView.setBackgroundColor(Color.DKGRAY);
-            }
-            else {
-                convertView.setBackgroundColor(Color.LTGRAY);
-            }
             return convertView;
         }
     }
