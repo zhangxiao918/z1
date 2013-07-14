@@ -76,15 +76,6 @@ public class IndexActivity extends BaseActivity implements Initialization {
     public void init() {
         Intent intent = getIntent();
         result = (ResultBean) intent.getSerializableExtra("RESULT_INFO");
-        // ImageBean bean = null;
-        // for (int i = 0; i < 10; i++) {
-        // bean = new ImageBean();
-        // bean.setTitle("随机标题" + System.currentTimeMillis());
-        // bean.setImageUrl("http://pic.6188.com/upload_6188s/articlefile/20130713/137371722337328567549.jpg");
-        // bean.setUploadTime("2013-01-01 11:11:11");
-        // bean.setScreensize("1024x768");
-        // list.add(bean);
-        // }
         adapter = new ItemAdapter(null);
         adapter.notifyDataSetChanged();
         indexImageList.setAdapter(adapter);
@@ -119,6 +110,10 @@ public class IndexActivity extends BaseActivity implements Initialization {
                 Log.d(TAG, "列表数量为:" + adapter.getCount());
                 ImageBean bean = (ImageBean) adapter.getItemAtPosition(position);
                 if (null != bean) {
+                    // Intent i = new Intent();
+                    // i.setClass(IndexActivity.this, GalleryActivity.class);
+                    // i.putExtra("DETAIL_URL", bean.getDetailLink());
+                    // startActivity(i);
                     Uri uri = Uri.parse(bean.getDetailLink());
                     startActivity(new Intent(Intent.ACTION_VIEW, uri));
                 }
@@ -170,7 +165,6 @@ public class IndexActivity extends BaseActivity implements Initialization {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                loadMoreButton.setText("查看更多..."); // 恢复按钮文字
                                 new Thread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -190,6 +184,7 @@ public class IndexActivity extends BaseActivity implements Initialization {
                                                     } else {
                                                         Log.e(TAG, "没有获取到首页图片数据");
                                                     }
+                                                    loadMoreButton.setText("查看更多..."); // 恢复按钮文字
                                                 }
                                             });
                                         } catch (final Exception e) {
@@ -289,6 +284,7 @@ public class IndexActivity extends BaseActivity implements Initialization {
                         imageLoader = new AsyncImageLoader(holder.image);
                         imageLoader.execute(url);
                     }
+                    holder.image.setImageResource(R.drawable.item_image_loading);
                     holder.imageDesc.setText(Html.fromHtml(bean.getImageDesc()));
                     holder.title.setText(bean.getTitle());
                 }
