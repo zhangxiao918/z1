@@ -44,10 +44,14 @@ public class AsyncImageLoader extends AsyncTask<String, Void, byte[]> {
     }
 
     @Override
-    protected void onPostExecute(byte[] result) {
+    protected void onPostExecute(final byte[] result) {
         if (null != result) {
-            Bitmap bm = BitmapFactory.decodeByteArray(result, 0, result.length);
-            imageView.setImageBitmap(bm);
+            final Bitmap bm = BitmapFactory.decodeByteArray(result, 0, result.length);
+            imageView.post(new Runnable() {
+                public void run() {
+                    imageView.setImageBitmap(bm);
+                }
+            });
         }
     }
 
