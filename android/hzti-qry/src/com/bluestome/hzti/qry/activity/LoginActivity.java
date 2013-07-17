@@ -1,8 +1,6 @@
 
 package com.bluestome.hzti.qry.activity;
 
-import java.util.concurrent.atomic.AtomicLong;
-
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -26,6 +24,10 @@ import com.bluestome.hzti.qry.common.Constants;
 import com.bluestome.hzti.qry.utils.ByteUtils;
 import com.bluestome.hzti.qry.utils.StringUtils;
 
+import java.lang.ref.WeakReference;
+import java.util.StringTokenizer;
+import java.util.concurrent.atomic.AtomicLong;
+
 public class LoginActivity extends BaseActivity {
 
     private static final String TAG = LoginActivity.class.getCanonicalName();
@@ -40,38 +42,23 @@ public class LoginActivity extends BaseActivity {
     AtomicLong lastRequestTimes = new AtomicLong(0L);
     String rCookie = null;
 
-    private Handler handler2 = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            if (null != msg) {
-                switch (msg.what) {
-                    case 0x1000:
-                        ((ImageView) LoginActivity.this.findViewById(msg.arg1))
-                                .setImageBitmap((Bitmap) msg.obj);
-                        break;
-                    case LOADING_CHECKCODE_IMG:
-                        showDialog(LOADING_CHECKCODE_IMG);
-                        break;
-                    case LOADING_CHECKCODE_IMG - 1:
-                        removeDialog(LOADING_CHECKCODE_IMG);
-                        break;
-                    case LOADING:
-                        showDialog(LOADING);
-                        break;
-                    case LOADING - 1:
-                        removeDialog(LOADING);
-                        break;
-                    case QUERYING:
-                        showDialog(QUERYING);
-                        break;
-                    case QUERYING - 1:
-                        removeDialog(QUERYING);
-                        break;
-                }
-            }
+    public static class MyHandler extends Handler {
+        private WeakReference<LoginActivity> mActivity;
+
+        public MyHandler(LoginActivity activity) {
+            mActivity = new WeakReference<LoginActivity>(activity);
         }
 
-    };
+        @Override
+        public void handleMessage(Message msg) {
+            LoginActivity activity = mActivity.get();
+            if (null != activity) {
+                // TODO
+            }
+        }
+    }
+
+    private MyHandler mHandler = new MyHandler(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,19 +127,24 @@ public class LoginActivity extends BaseActivity {
      * 初始化网络信息
      */
     private void initNetwork() {
-        handler2.sendEmptyMessage(LOADING);
+        showDialog(LOADING);
         new Thread(new Runnable() {
             @Override
             public void run() {
                 body = go.request(rCookie, Constants.URL);
                 if (!ByteUtils.isBlank(body)) {
+                    mHandler.post(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            removeDialog(LOADING);
+                        }
+                    });
                     if (!StringUtils.isBlank(go.getCookie())) {
                         rCookie = go.getCookie();
                     }
-                    handler2.sendEmptyMessage(LOADING - 1);
                     loadImage2(Constants.AUTH_CODE_URL, R.id.checkCodeView);
                 } else {
-                    handler2.sendEmptyMessage(LOADING - 1);
                     runOnUiThread(new Runnable() {
                         public void run() {
                             Toast.makeText(getApplicationContext(), "未获取服务端返回的内容,请重试..",
@@ -187,7 +179,7 @@ public class LoginActivity extends BaseActivity {
             Toast.makeText(getApplicationContext(), "请填写验证码", Toast.LENGTH_SHORT).show();
             return;
         }
-        handler2.sendEmptyMessage(QUERYING);
+        showDialog(QUERYING);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -195,19 +187,67 @@ public class LoginActivity extends BaseActivity {
                     lastRequestTimes.set(System.currentTimeMillis());
                     final String content = go.doQuery(body, rCookie, Constants.URL, s0, s1, s2, s3);
                     if (!StringUtils.isNull(content)) {
-                        Intent i = new Intent(LoginActivity.this, GridShowActivity.class);
-                        i.putExtra("content", content);
-                        if (!StringUtils.isNull(rCookie)) {
-                            rCookie = go.getCookie();
+                        StringTokenizer tokenizer = new StringTokenizer(content, "\r\n");
+                        String firstLine = "";
+                        while (tokenizer.hasMoreTokens()) {
+                            firstLine = tokenizer.nextToken();
+                            break;
                         }
-                        i.putExtra("cookie", rCookie);
-                        handler2.sendEmptyMessage(QUERYING - 1);
-                        startActivity(i);
-                        finish();
+                        Log.d(TAG, "firstLine:" + firstLine);
+                        tokenizer = new StringTokenizer(firstLine, "|");
+                        String code = "8672";
+                        while (tokenizer.hasMoreTokens()) {
+                            code = tokenizer.nextToken().trim();
+                            break;
+                        }
+                        final String sc = code;
+                        Log.d(TAG, "业务响应码:" + code);
+                        if (code.equalsIgnoreCase("8672")) {
+                            Intent i = new Intent(LoginActivity.this, GridShowActivity.class);
+                            i.putExtra("content", content);
+                            if (!StringUtils.isNull(rCookie)) {
+                                rCookie = go.getCookie();
+                            }
+                            i.putExtra("cookie", rCookie);
+                            startActivity(i);
+                            finish();
+                        } else if (code.equalsIgnoreCase("6879")) {
+                            mHandler.post(new Runnable() {
+                                public void run() {
+                                    // TODO 提示验证码不正确
+                                    Toast.makeText(LoginActivity.this, "没有查询到有效数据[" + sc + "]",
+                                            Toast.LENGTH_LONG).show();
+                                    // TODO 重新刷新验证码
+                                    loadImage2(Constants.AUTH_CODE_URL, R.id.checkCodeView);
+                                }
+                            });
+                        } else if (code.equalsIgnoreCase("6880")) {
+                            mHandler.post(new Runnable() {
+                                public void run() {
+                                    // TODO 提示验证码不正确
+                                    // TODO 重新刷新验证码
+                                    loadImage2(Constants.AUTH_CODE_URL, R.id.checkCodeView);
+                                    // TODO 提示验证码不正确
+                                    Toast.makeText(LoginActivity.this, "验证码不正确,请重新输入![" + sc + "]",
+                                            Toast.LENGTH_LONG).show();
+                                }
+                            });
+                        } else {
+                            mHandler.post(new Runnable() {
+                                public void run() {
+                                    // TODO 提示验证码不正确
+                                    // TODO 重新刷新验证码
+                                    loadImage2(Constants.AUTH_CODE_URL, R.id.checkCodeView);
+                                    // TODO 提示验证码不正确
+                                    Toast.makeText(LoginActivity.this, "未知错误:" + sc,
+                                            Toast.LENGTH_LONG).show();
+                                }
+                            });
+
+                        }
                     } else {
                         runOnUiThread(new Runnable() {
                             public void run() {
-                                handler2.sendEmptyMessage(QUERYING - 1);
                                 Toast.makeText(getApplicationContext(), "未获取查询结果",
                                         Toast.LENGTH_SHORT)
                                         .show();
@@ -215,10 +255,15 @@ public class LoginActivity extends BaseActivity {
                             }
                         });
                     }
+                    mHandler.post(new Runnable() {
+                        public void run() {
+                            removeDialog(QUERYING);
+                        }
+                    });
                 } else {
                     runOnUiThread(new Runnable() {
                         public void run() {
-                            handler2.sendEmptyMessage(QUERYING - 1);
+                            removeDialog(QUERYING);
                             authCode.setText("");
                             Toast.makeText(getApplicationContext(), "获取服务端正文为空",
                                     Toast.LENGTH_SHORT)
@@ -257,7 +302,11 @@ public class LoginActivity extends BaseActivity {
      * @param id
      */
     void loadImage2(final String site, final int id) {
-        handler2.sendEmptyMessage(LOADING_CHECKCODE_IMG);
+        mHandler.post(new Runnable() {
+            public void run() {
+                showDialog(LOADING_CHECKCODE_IMG);
+            }
+        });
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -269,15 +318,21 @@ public class LoginActivity extends BaseActivity {
                             rCookie = go.getCookie();
                         }
                         if (!ByteUtils.isBlank(bit)) {
-                            Bitmap bitMap = BitmapFactory.decodeByteArray(bit, 0,
+                            final Bitmap bitMap = BitmapFactory.decodeByteArray(bit, 0,
                                     bit.length);
-                            Message message = new Message();
-                            message.what = 0x1000;
-                            message.arg1 = R.id.checkCodeView;
-                            message.obj = bitMap;
-                            handler2.sendMessage(message);
+                            mHandler.post(new Runnable() {
+                                public void run() {
+                                    ImageView checkCodeImgView = ((ImageView) LoginActivity.this
+                                            .findViewById(R.id.checkCodeView));
+                                    checkCodeImgView.setImageBitmap(bitMap);
+                                }
+                            });
                         }
-                        handler2.sendEmptyMessage(LOADING_CHECKCODE_IMG - 1);
+                        mHandler.post(new Runnable() {
+                            public void run() {
+                                removeDialog(LOADING_CHECKCODE_IMG);
+                            }
+                        });
                     }
                 }
             }
