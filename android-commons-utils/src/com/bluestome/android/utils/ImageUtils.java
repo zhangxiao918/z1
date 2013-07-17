@@ -4,6 +4,8 @@
 
 package com.bluestome.android.utils;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.util.Log;
 
@@ -24,11 +26,11 @@ public class ImageUtils {
 
     private final static String TAG = ImageUtils.class.getCanonicalName();
     private static HashMap<String, SoftReference<byte[]>> byteArrayCache = new HashMap<String, SoftReference<byte[]>>();
-    // 斗地主的根目录
+    // 图片主目录
     public static final String DDZ_PATH = Environment.getExternalStorageDirectory()
             .getAbsolutePath() + "/bluestome/";
 
-    // 斗地主的图片目录
+    // 当前应用图片保存目录
     public static final String IMAGE_PATH = DDZ_PATH + "image/";
 
     /**
@@ -152,5 +154,30 @@ public class ImageUtils {
 
     void release() {
         byteArrayCache.clear();
+    }
+
+    public static Bitmap decodeFile(byte[] body) {
+        // decode image size
+        BitmapFactory.Options o = new BitmapFactory.Options();
+        o.inJustDecodeBounds = true;
+        BitmapFactory.decodeByteArray(body, 0, body.length);
+
+        // Find the correct scale value. It should be the power of 2.
+        final int REQUIRED_SIZE = 100;
+        int width_tmp = o.outWidth, height_tmp = o.outHeight;
+        int scale = 1;
+        while (true) {
+            if (width_tmp / 2 < REQUIRED_SIZE
+                    || height_tmp / 2 < REQUIRED_SIZE)
+                break;
+            width_tmp /= 2;
+            height_tmp /= 2;
+            scale *= 2;
+        }
+
+        // decode with inSampleSize
+        BitmapFactory.Options o2 = new BitmapFactory.Options();
+        o2.inSampleSize = scale;
+        return BitmapFactory.decodeByteArray(body, 0, body.length);
     }
 }
