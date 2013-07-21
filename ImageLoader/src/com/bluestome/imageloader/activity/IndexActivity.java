@@ -1,11 +1,15 @@
 
 package com.bluestome.imageloader.activity;
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.AbsListView.RecyclerListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
@@ -31,8 +36,11 @@ import com.bluestome.imageloader.common.Constants;
 import com.bluestome.imageloader.domain.ImageBean;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class IndexActivity extends BaseActivity implements Initialization {
 
@@ -41,7 +49,6 @@ public class IndexActivity extends BaseActivity implements Initialization {
     private List<ImageBean> list = new ArrayList<ImageBean>();
     private ItemAdapter adapter = new ItemAdapter(null);
     private ResultBean result = null;
-    private AsyncImageLoader imageLoader;
 
     private View loadMoreView;
     private Button loadMoreButton;
@@ -49,7 +56,26 @@ public class IndexActivity extends BaseActivity implements Initialization {
     private int count = 1;
     private int state = 0; // 0:等待, 1:正在提取数据并更新
 
-    private Handler mHandler = new Handler();
+    private Map<Integer, View> cacheHolder = new HashMap<Integer, View>(10);
+
+    private static class MyHandler extends Handler {
+        private WeakReference<IndexActivity> mActivity;
+
+        public MyHandler(IndexActivity activity) {
+            mActivity = new WeakReference<IndexActivity>(activity);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            IndexActivity activity = mActivity.get();
+            if (null != activity) {
+                super.handleMessage(msg);
+            }
+        }
+
+    }
+
+    private MyHandler mHandler = new MyHandler(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,11 +99,51 @@ public class IndexActivity extends BaseActivity implements Initialization {
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        mHandler.post(new Runnable() {
+            public void run() {
+                // TODO 清理文件夹
+                int pid = android.os.Process.myPid();
+                android.os.Process.killProcess(pid);
+            }
+        });
+        finish();
+    }
+
+    public final int LOADING = 1001;
+
+    /*
+     * (non-Javadoc)
+     * @see android.app.Activity#onCreateDialog(int)
+     */
+    @Override
+    @Deprecated
+    protected Dialog onCreateDialog(int id) {
+        ProgressDialog dialog = null;
+        switch (id) {
+            case LOADING:
+                dialog = new ProgressDialog(this);
+                dialog.setTitle(null);
+                dialog.setMessage("数据正在加载中...");
+                dialog.setOnCancelListener(new OnCancelListener() {
+
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        client.cancelRequests(IndexActivity.this, true);
+                    }
+                });
+                return dialog;
+            default:
+                return super.onCreateDialog(id);
+        }
+    }
+
+    @Override
     public void init() {
         Intent intent = getIntent();
         result = (ResultBean) intent.getSerializableExtra("RESULT_INFO");
         adapter = new ItemAdapter(null);
-        adapter.notifyDataSetChanged();
         indexImageList.setAdapter(adapter);
     }
 
@@ -91,31 +157,38 @@ public class IndexActivity extends BaseActivity implements Initialization {
             @Override
             public void onClick(View v) {
                 loadMoreButton.setText("正在加载中..."); // 设置按钮文字
-                mHandler.postDelayed(new Runnable() {
-
+                mHandler.post(new Runnable() {
                     @Override
                     public void run() {
                         loadMoreData();
                     }
-                }, 500L);
+                });
 
             }
         });
         indexImageList = (ListView) findViewById(R.id.index_image_list_id);
         indexImageList.addFooterView(loadMoreView); // 设置列表底部视图
+        indexImageList.setRecyclerListener(new RecyclerListener() {
+
+            @Override
+            public void onMovedToScrapHeap(View view) {
+                ImageView imageView = (ImageView) view.findViewById(R.id.item_image_id);
+                if (null != imageView) {
+                    imageView.setImageBitmap(null);
+                }
+            }
+        });
         indexImageList.setOnItemClickListener(new OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
-                Log.d(TAG, "列表数量为:" + adapter.getCount());
-                ImageBean bean = (ImageBean) adapter.getItemAtPosition(position);
+                final ImageBean bean = (ImageBean) adapter.getItemAtPosition(position);
                 if (null != bean) {
-                    // Intent i = new Intent();
-                    // i.setClass(IndexActivity.this, GalleryActivity.class);
-                    // i.putExtra("DETAIL_URL", bean.getDetailLink());
-                    // startActivity(i);
-                    Uri uri = Uri.parse(bean.getDetailLink());
-                    startActivity(new Intent(Intent.ACTION_VIEW, uri));
+                    Intent i = new Intent();
+                    i.setClass(IndexActivity.this, GalleryActivity.class);
+                    i.putExtra("DETAIL_URL", bean.getDetailLink());
+                    i.putExtra("IMAGE_URL", bean.getImageUrl());
+                    startActivity(i);
                 }
             }
         });
@@ -157,55 +230,55 @@ public class IndexActivity extends BaseActivity implements Initialization {
 
     @Override
     public void initData() {
+        showDialog(LOADING);
         client.get(this, Constants.URL + "/index/" + count + ".html", null,
                 new AsyncHttpResponseHandler() {
                     @Override
                     public void onSuccess(final String content) {
-
-                        runOnUiThread(new Runnable() {
+                        new Thread(new Runnable() {
                             @Override
                             public void run() {
-                                new Thread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        try {
-                                            final List<ImageBean> lst = ParserBiz
-                                                    .getImageBeanList(content);
-                                            runOnUiThread(new Runnable() {
+                                try {
+                                    final List<ImageBean> lst = ParserBiz
+                                            .getImageBeanList(content);
+                                    mHandler.post(new Runnable() {
 
-                                                @Override
-                                                public void run() {
-                                                    if (null != lst && lst.size() > 0) {
-                                                        Log.d(TAG, "获取首页的图片数据数量为:" + list.size());
-                                                        for (ImageBean bean : lst) {
-                                                            adapter.addItem(bean);
-                                                        }
-                                                        adapter.notifyDataSetChanged();
-                                                    } else {
-                                                        Log.e(TAG, "没有获取到首页图片数据");
-                                                    }
-                                                    loadMoreButton.setText("查看更多..."); // 恢复按钮文字
+                                        @Override
+                                        public void run() {
+                                            removeDialog(LOADING);
+                                            if (null != lst && lst.size() > 0) {
+                                                loadMoreView.setVisibility(View.VISIBLE);
+                                                Log.d(TAG, "获取首页的图片数据数量为:" + list.size());
+                                                adapter.addAllItems(lst);
+                                                // 设置新数据的起始列位置
+                                                int pos = adapter.getCount() - lst.size() - 1;
+                                                if (pos > 0) {
+                                                    indexImageList.setSelection(pos);
+                                                } else {
+                                                    indexImageList.setSelection(0);
                                                 }
-                                            });
-                                        } catch (final Exception e) {
-                                            e.printStackTrace();
-                                            String tip = "解析首页分页数据异常," + e.getMessage();
-                                            Log.e(TAG, tip);
+                                            } else {
+                                                Log.e(TAG, "没有获取到首页图片数据");
+                                            }
+                                            loadMoreButton.setText("查看更多..."); // 恢复按钮文字
                                         }
-                                    }
-                                }).start();
+                                    });
+                                } catch (final Exception e) {
+                                    e.printStackTrace();
+                                    String tip = "解析首页分页数据异常," + e.getMessage();
+                                    Log.e(TAG, tip);
+                                }
                             }
-                        });
+                        }).start();
                         count++;
                     }
 
                     @Override
                     public void onFailure(final Throwable error, String content) {
-                        runOnUiThread(new Runnable() {
+                        mHandler.post(new Runnable() {
                             @Override
                             public void run() {
                                 error.printStackTrace();
-                                Log.e(TAG, error.getMessage());
                                 Toast.makeText(IndexActivity.this, "获取图片列表失败!", Toast.LENGTH_LONG)
                                         .show();
                                 finish();
@@ -278,10 +351,10 @@ public class IndexActivity extends BaseActivity implements Initialization {
             if (list != null && list.size() > position) {
                 final ImageBean bean = list.get(position);
                 if (null != bean) {
-                    String url = bean.getImageUrl();
+                    final String url = bean.getImageUrl();
                     if (!StringUtil.isBlank(url)) {
                         // TODO 异步下载图片
-                        imageLoader = new AsyncImageLoader(holder.image);
+                        AsyncImageLoader imageLoader = new AsyncImageLoader(holder.image);
                         imageLoader.execute(url);
                     }
                     holder.image.setImageResource(R.drawable.item_image_loading);
@@ -300,7 +373,14 @@ public class IndexActivity extends BaseActivity implements Initialization {
          */
         public void addItem(ImageBean bean) {
             list.add(bean);
+            notifyDataSetChanged();
         }
+
+        public void addAllItems(List<ImageBean> tList) {
+            list.addAll(tList);
+            notifyDataSetChanged();
+        }
+
     }
 
     class ViewHolder {

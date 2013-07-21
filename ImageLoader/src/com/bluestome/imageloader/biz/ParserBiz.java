@@ -6,6 +6,7 @@ import com.bluestome.android.bean.ResultBean;
 import com.bluestome.imageloader.common.Constants;
 import com.bluestome.imageloader.domain.ImageBean;
 
+import org.htmlparser.Node;
 import org.htmlparser.NodeFilter;
 import org.htmlparser.Parser;
 import org.htmlparser.PrototypicalNodeFactory;
@@ -149,6 +150,87 @@ public class ParserBiz {
                                     bean.setImageUrl(imageUrl);
                                     bean.setDetailLink(link);
                                     result.add(bean);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (null != parser)
+                parser = null;
+        }
+        return result;
+    }
+
+    public static List<ImageBean> getArticleImageList(final String content) {
+        List<ImageBean> result = new ArrayList<ImageBean>(10);
+        Parser parser = null;
+        NodeFilter filter = null;
+        try {
+            parser = new Parser();
+
+            PrototypicalNodeFactory factory = new PrototypicalNodeFactory();
+            factory.registerTag(new ULTag());
+            parser.setNodeFactory(factory);
+
+            parser.setInputHTML(content);
+            parser.setEncoding("UTF-8");
+            // 获取指定ID的DIV内容
+            filter = new NodeClassFilter(ULTag.class);
+            NodeList list = parser.extractAllNodesThatMatch(filter)
+                    .extractAllNodesThatMatch(
+                            new HasAttributeFilter("id", "listimg"));
+            if (null != list && list.size() > 0) {
+
+                ULTag div = (ULTag) list.elementAt(0);
+                parser = new Parser();
+                factory = new PrototypicalNodeFactory();
+                factory.registerTag(new LITag());
+                parser.setNodeFactory(factory);
+
+                parser.setInputHTML(div.toHtml());
+                filter = new NodeClassFilter(LITag.class);
+                NodeList list2 = parser.extractAllNodesThatMatch(filter);
+                if (null != list2 && list2.size() > 0) {
+                    ImageBean bean = null;
+                    for (int i = 0; i < list2.size(); i++) {
+                        LITag li = (LITag) list2.elementAt(i);
+                        NodeList tmpNode = li.getChildren();
+                        if (null != tmpNode && tmpNode.size() > 0) {
+                            for (int k = 0; k < tmpNode.size(); k++) {
+                                Node node = tmpNode.elementAt(k);
+                                if (node instanceof LinkTag) {
+                                    LinkTag linkTag = (LinkTag) node;
+                                    String link = Constants.URL;
+                                    if (null != linkTag) {
+
+                                        if (!linkTag.getLink().startsWith("http://")) {
+                                            link = Constants.URL + linkTag.getLink();
+                                        } else {
+                                            link = linkTag.getLink();
+                                        }
+                                        NodeList tmpNode3 = linkTag.getChildren();
+                                        for (int n = 0; n < tmpNode3.size(); n++) {
+                                            node = tmpNode3.elementAt(n);
+                                            if (node instanceof ImageTag) {
+                                                if (null != tmpNode3 && tmpNode3.size() > 0) {
+                                                    ImageTag imgTag = (ImageTag) node;
+                                                    String title = imgTag.getAttribute("alt");
+                                                    String imageUrl = imgTag.getImageURL();
+                                                    bean = new ImageBean();
+                                                    // bean.setImageDesc(tmpNode.elementAt(5).toHtml());
+                                                    bean.setTitle(title);
+                                                    bean.setImageUrl(imageUrl);
+                                                    bean.setDetailLink(link);
+                                                    result.add(bean);
+                                                }
+                                            }
+                                        }
+                                    }
+                                    break;
                                 }
                             }
                         }

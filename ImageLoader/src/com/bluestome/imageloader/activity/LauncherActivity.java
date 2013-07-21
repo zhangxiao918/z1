@@ -1,6 +1,10 @@
 
 package com.bluestome.imageloader.activity;
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -33,6 +37,30 @@ public class LauncherActivity extends BaseActivity implements Initialization {
         super.onResume();
     }
 
+    public static final int LOADING_NETWORK = 1001;
+    public static final int LOADING_IMG = 1002;
+
+    @Override
+    @Deprecated
+    protected Dialog onCreateDialog(int id) {
+        ProgressDialog dialog = null;
+        switch (id) {
+            case LOADING_NETWORK:
+                dialog = new ProgressDialog(this);
+                dialog.setTitle(null);
+                dialog.setMessage("网络连接中...");
+                dialog.setOnCancelListener(new OnCancelListener() {
+
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        client.cancelRequests(LauncherActivity.this, true);
+                    }
+                });
+                return dialog;
+        }
+        return super.onCreateDialog(id);
+    }
+
     @Override
     public void init() {
 
@@ -45,12 +73,14 @@ public class LauncherActivity extends BaseActivity implements Initialization {
 
     @Override
     public void initData() {
+        showDialog(LOADING_NETWORK);
         client.get(this, Constants.URL, null, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(final String content) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        removeDialog(LOADING_NETWORK);
                         initView();
                         Toast.makeText(LauncherActivity.this, "连接网站成功!", Toast.LENGTH_LONG).show();
                         new Thread(new Runnable() {
@@ -107,10 +137,10 @@ public class LauncherActivity extends BaseActivity implements Initialization {
 
                     @Override
                     public void run() {
+                        removeDialog(LOADING_NETWORK);
                         error.printStackTrace();
                         Log.e(TAG, error.getMessage());
                         Toast.makeText(LauncherActivity.this, "连接网站失败!", Toast.LENGTH_LONG).show();
-                        finish();
                     }
                 });
             }

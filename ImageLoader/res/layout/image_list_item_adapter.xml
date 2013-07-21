@@ -2,60 +2,30 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="6.66dip" >
+    android:layout_marginBottom="6.66dip"
+    android:background="#FFFFFF" >
+
+    <ImageView
+        android:id="@+id/item_image_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_margin="3.33dip"
+        android:src="@drawable/item_image_loading" />
 
     <TextView
         android:id="@+id/item_title_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_margin="3.33dip"
-        android:gravity="center"
+        android:layout_toRightOf="@id/item_image_id"
+        android:layout_alignTop="@id/item_image_id"
+        android:layout_alignBottom="@id/item_image_id"
+        android:layout_marginLeft="9.99dip"
+        android:gravity="left|center_vertical"
         android:text="标题"
-        android:textSize="15sp" />
-
-    <ImageView
-        android:id="@+id/item_image_id"
-        android:layout_width="166.67dip"
-        android:layout_height="106.67dip"
-        android:layout_below="@id/item_title_id"
-        android:background="@android:color/darker_gray"
-        android:src="@drawable/item_image_loading" />
-
-    <!--
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/item_image_id"
-        android:layout_marginLeft="6.66dip"
-        android:layout_toRightOf="@+id/item_image_id"
-        android:text="上传时间:" />
-
-    <TextView
-        android:id="@+id/item_image_upload_time_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textView1"
-        android:layout_alignLeft="@+id/textView1"
-        android:text="2013-07-13 20:07:03" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="6.66dip"
-        android:layout_alignLeft="@id/textView1"
-        android:layout_below="@+id/item_image_upload_time_id"
-        android:text="分辨率" />
-    <TextView
-        android:id="@+id/item_image_resolution_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/textView2"
-        android:layout_below="@+id/textView2"
-        android:text="1920x1200" />-->
+        android:textSize="15sp"
+        android:visibility="visible" />
 
     <TextView
         android:id="@+id/item_image_desc_total_id"
@@ -67,7 +37,7 @@
         android:layout_marginLeft="3.33dp"
         android:layout_toRightOf="@+id/item_image_id"
         android:gravity="left|center_vertical"
-        android:text="" 
-        android:visibility="gone"/>
+        android:text=""
+        android:visibility="gone" />
 
 </RelativeLayout>
