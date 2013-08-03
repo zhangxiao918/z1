@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
+import java.util.Map;
 import java.util.Properties;
 
 public class MemcacheClient {
@@ -54,7 +55,7 @@ public class MemcacheClient {
         };
 
         // 获取socke连接池的实例对象
-        SockIOPool pool = SockIOPool.getInstance("pool_0");
+        SockIOPool pool = SockIOPool.getInstance();
 
         // 设置服务器信息
         pool.setServers(servers);
@@ -62,16 +63,21 @@ public class MemcacheClient {
 
         // 设置初始连接数、最小和最大连接数以及最大处理时间
         int iConn = Integer.valueOf(properties.getProperty("init_conn", "1"));
+        Log.d(TAG, "iConn:" + iConn);
         pool.setInitConn(iConn);
         int minConn = Integer.valueOf(properties.getProperty("min_conn", "1"));
+        Log.d(TAG, "minConn:" + minConn);
         pool.setMinConn(minConn);
         int maxConn = Integer.valueOf(properties.getProperty("max_conn", "1"));
+        Log.d(TAG, "maxConn:" + maxConn);
         pool.setMaxConn(maxConn);
         int maxIdle = Integer.valueOf(properties.getProperty("max_idle", "360000"));
+        Log.d(TAG, "maxIdle:" + maxIdle);
         pool.setMaxIdle(maxIdle);
 
         // 设置主线程的睡眠时间
         int mainSleep = Integer.valueOf(properties.getProperty("main_sleep_time", "30"));
+        Log.d(TAG, "mainSleep:" + mainSleep);
         pool.setMaintSleep(mainSleep);
 
         // 设置TCP的参数，连接超时等
@@ -159,8 +165,10 @@ public class MemcacheClient {
         return cache.get(key);
     }
 
-    public synchronized void release() {
-
+    public Map getStats() {
+        if (null != cache) {
+            return cache.stats();
+        }
+        return null;
     }
-
 }
