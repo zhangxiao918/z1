@@ -28,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bluestome.android.bean.ResultBean;
+import com.bluestome.android.cache.MemcacheClient;
 import com.bluestome.android.utils.AsyncImageLoader;
 import com.bluestome.android.utils.StringUtil;
 import com.bluestome.imageloader.R;
@@ -58,6 +59,8 @@ public class IndexActivity extends BaseActivity implements Initialization {
 
     private Map<Integer, View> cacheHolder = new HashMap<Integer, View>(10);
 
+    private MemcacheClient cacheClient;
+
     private static class MyHandler extends Handler {
         private WeakReference<IndexActivity> mActivity;
 
@@ -83,8 +86,13 @@ public class IndexActivity extends BaseActivity implements Initialization {
         super.onCreate(savedInstanceState);
         initView();
         init();
-        initData();
     }
+
+    private Runnable mInitCacheClient = new Runnable() {
+        public void run() {
+            cacheClient = MemcacheClient.getInstance(getContext());
+        }
+    };
 
     @Override
     protected void onDestroy() {
@@ -112,6 +120,7 @@ public class IndexActivity extends BaseActivity implements Initialization {
     }
 
     public final int LOADING = 1001;
+    public final int INIT_CACHE = 1002;
 
     /*
      * (non-Javadoc)
@@ -134,6 +143,18 @@ public class IndexActivity extends BaseActivity implements Initialization {
                     }
                 });
                 return dialog;
+            case INIT_CACHE:
+                dialog = new ProgressDialog(this);
+                dialog.setTitle(null);
+                dialog.setMessage("数据正在加载中...");
+                dialog.setOnCancelListener(new OnCancelListener() {
+
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        mHandler.removeCallbacks(mInitCacheClient);
+                    }
+                });
+                return dialog;
             default:
                 return super.onCreateDialog(id);
         }
@@ -145,6 +166,18 @@ public class IndexActivity extends BaseActivity implements Initialization {
         result = (ResultBean) intent.getSerializableExtra("RESULT_INFO");
         adapter = new ItemAdapter(null);
         indexImageList.setAdapter(adapter);
+        if (null != cacheClient) {
+            initData();
+        } else {
+            mHandler.post(mInitCacheClient);
+            mHandler.postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+                    initData();
+                }
+            }, 5 * 1000L);
+        }
     }
 
     @Override
@@ -231,7 +264,8 @@ public class IndexActivity extends BaseActivity implements Initialization {
     @Override
     public void initData() {
         showDialog(LOADING);
-        client.get(this, Constants.URL + "/index/" + count + ".html", null,
+        final String url = Constants.URL + "/index/" + count + ".html";
+        client.get(this, url, null,
                 new AsyncHttpResponseHandler() {
                     @Override
                     public void onSuccess(final String content) {
@@ -239,19 +273,34 @@ public class IndexActivity extends BaseActivity implements Initialization {
                             @Override
                             public void run() {
                                 try {
-                                    final List<ImageBean> lst = ParserBiz
-                                            .getImageBeanList(content);
+                                    List<ImageBean> lst = null;
+                                    if (null == cacheClient) {
+                                        Log.e(TAG, "cacheClient is null");
+                                        lst = ParserBiz
+                                                .getImageBeanList(content);
+                                    } else {
+                                        if (null == cacheClient.get(url)) {
+                                            lst = ParserBiz
+                                                    .getImageBeanList(content);
+                                            cacheClient.add(url, lst);
+                                            Log.d(TAG, "add value to cache server");
+                                        } else {
+                                            lst = (List<ImageBean>) cacheClient.get(url);
+                                            Log.d(TAG, "get value from cache server");
+                                        }
+                                    }
+                                    final List<ImageBean> lst2 = lst;
                                     mHandler.post(new Runnable() {
 
                                         @Override
                                         public void run() {
                                             removeDialog(LOADING);
-                                            if (null != lst && lst.size() > 0) {
+                                            if (null != lst2 && lst2.size() > 0) {
                                                 loadMoreView.setVisibility(View.VISIBLE);
                                                 Log.d(TAG, "获取首页的图片数据数量为:" + list.size());
-                                                adapter.addAllItems(lst);
+                                                adapter.addAllItems(lst2);
                                                 // 设置新数据的起始列位置
-                                                int pos = adapter.getCount() - lst.size() - 1;
+                                                int pos = adapter.getCount() - lst2.size() - 1;
                                                 if (pos > 0) {
                                                     indexImageList.setSelection(pos);
                                                 } else {
@@ -349,7 +398,19 @@ public class IndexActivity extends BaseActivity implements Initialization {
                 holder = (ViewHolder) convertView.getTag();
             }
             if (list != null && list.size() > position) {
-                final ImageBean bean = list.get(position);
+                String key = "index_list_position_" + position;
+                ImageBean bean = null;
+                if (null != cacheClient) {
+                    if (null == cacheClient.get(key)) {
+                        bean = list.get(position);
+                        cacheClient.add(key, bean);
+                    } else {
+                        bean = (ImageBean) cacheClient.get(key);
+                    }
+                } else {
+                    bean = list.get(position);
+                }
+
                 if (null != bean) {
                     final String url = bean.getImageUrl();
                     if (!StringUtil.isBlank(url)) {
@@ -361,7 +422,6 @@ public class IndexActivity extends BaseActivity implements Initialization {
                     holder.imageDesc.setText(Html.fromHtml(bean.getImageDesc()));
                     holder.title.setText(bean.getTitle());
                 }
-
             }
             return convertView;
         }
@@ -392,4 +452,7 @@ public class IndexActivity extends BaseActivity implements Initialization {
         TextView uploadTime;
     }
 
+    private Context getContext() {
+        return this;
+    }
 }

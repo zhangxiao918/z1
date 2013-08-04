@@ -4,6 +4,7 @@ package com.bluestome.imageloader.activity;
 import android.app.Activity;
 import android.os.Bundle;
 
+import com.bluestome.android.cache.MemcacheClient;
 import com.loopj.android.http.AsyncHttpClient;
 
 /**
@@ -14,6 +15,7 @@ import com.loopj.android.http.AsyncHttpClient;
 public class BaseActivity extends Activity {
 
     protected static AsyncHttpClient client = new AsyncHttpClient();
+    protected MemcacheClient cacheClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
